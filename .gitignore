@@ -1,0 +1,10 @@
+coverage
+pkg
+ruby/
+.bundle
+*.gem
+Gemfile.lock
+.coveralls.yml
+.ruby-version
+.ruby-gemset
+.idea
