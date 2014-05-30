@@ -45,5 +45,5 @@ Installation
 
 .. code-block:: bash
 
-    gem "stream"
+    gem "stream-ruby"
 

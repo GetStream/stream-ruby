@@ -2,7 +2,7 @@ $:.unshift File.expand_path('../lib', __FILE__)
 require 'stream/version'
 
 Gem::Specification.new do |gem|
-  gem.name = "stream"
+  gem.name = "stream-ruby"
   gem.version = Stream::VERSION
   gem.platform = Gem::Platform::RUBY
   gem.summary = "A gem that provides a client interface for getstream.io"
