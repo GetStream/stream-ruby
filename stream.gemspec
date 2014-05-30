@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.extra_rdoc_files = ["README.md", "LICENSE"]
   gem.files = Dir['lib/**/*']
   gem.license = 'Apache-2.0'
-
+  gem.add_dependency 'httparty'
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec", "~> 2.10"
 end
