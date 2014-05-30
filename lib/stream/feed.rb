@@ -46,7 +46,7 @@ module Stream
             self.get_http_client.make_http_request(method, relative_url, default_params, data, @auth_headers)
         end
 
-        def get(**params)
+        def get(params = {})
             uri = "/feed/#{@feed_url}/"
             self.make_request(:get, uri, params)
         end
