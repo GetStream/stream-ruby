@@ -39,7 +39,6 @@ describe "Integration tests" do
             @feed42.get
             @feed42.get(:limit=>5)
             @feed42.get(:offset=> 4, :limit=>5)
-            @feed42.get(:id_lt=> 14014774300137, :offset=> 4, :limit=>5)
         end
 
     end
