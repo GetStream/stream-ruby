@@ -1,8 +1,8 @@
 stream-ruby
 =========
 
-.. image:: https://circleci.com/gh/tbarbugli/stream-ruby.png
-   :target: https://circleci.com/gh/tbarbugli/stream-ruby.png/tree/master
+.. image:: https://circleci.com/gh/tbarbugli/stream-ruby.png?circle-token=48e057f56404d834093a73d6b783a94b5f6d6270
+   :target: https://circleci.com/gh/tbarbugli/stream-ruby/tree/master
 
 
 stream-ruby is a Ruby client for `Stream <https://getstream.io/>`_.
