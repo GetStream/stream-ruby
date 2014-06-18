@@ -12,6 +12,7 @@ stream-ruby is a Ruby client for `Stream <https://getstream.io/>`_.
     # Instantiate a new client
     require 'stream'
     client = Stream::Client.new('YOUR_API_KEY', 'API_KEY_SECRET')
+    # Find your API keys here https://getstream.io/dashboard/
 
     # Instantiate a feed object
     user_feed_1 = client.feed('user:1')
