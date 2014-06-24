@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.homepage = "http://github.com/tbarbugli/stream-ruby"
   gem.authors = ["Tommaso Barbugli"]
   gem.has_rdoc = true
-  gem.extra_rdoc_files = ["README.md", "LICENSE"]
+  gem.extra_rdoc_files = ["README.rst", "LICENSE"]
   gem.files = Dir['lib/**/*']
   gem.license = 'Apache-2.0'
   gem.add_dependency 'httparty'

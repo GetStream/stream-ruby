@@ -1,6 +1,6 @@
 require 'httparty'
 require 'stream/signer'
-
+require 'stream/exceptions'
 
 module Stream
 
@@ -10,7 +10,13 @@ module Stream
         base_uri 'https://getstream.io/api'
 
         def make_http_request(method, relative_url, params=nil, data=nil, headers=nil)
-            response = self.class.send(method, relative_url, headers: headers, query: params, body: data)
+            response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => data)
+            case response.code
+              when 200..203
+                return response
+              when 204...600
+                raise StreamApiResponseException, response
+            end
         end
 
     end
@@ -43,7 +49,7 @@ module Stream
             data = data.nil? ? {} : data
             default_params = self.get_default_params
             default_params.merge!(params)
-            self.get_http_client.make_http_request(method, relative_url, default_params, data, @auth_headers)
+            response = self.get_http_client.make_http_request(method, relative_url, default_params, data, @auth_headers)
         end
 
         def get(params = {})

@@ -15,6 +15,10 @@ describe "Integration tests" do
             response.should include("id", "actor", "verb", "object", "target", "time")
         end
 
+        example "posting a broken activity" do
+            expect { @feed42.add_activity({:actor => 1, :verb => 'tweet', :object => 1, :bogus=>42}) }.to raise_error(Stream::StreamApiResponseException)
+        end
+
         example "posting and get one activity" do
             response = @feed42.add_activity(@test_activity)
             results = @feed42.get(:limit=>1)["results"]

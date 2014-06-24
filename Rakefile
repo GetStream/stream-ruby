@@ -1,8 +1,8 @@
 require 'rake'
 require 'rubygems/package_task'
-require 'stream'
 
 gemspec = eval(IO.read('stream.gemspec'))
+require 'stream'
 
 Gem::PackageTask.new(gemspec).define
 
