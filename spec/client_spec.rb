@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'stream'
 
 describe Stream::Client do
