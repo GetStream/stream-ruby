@@ -1,8 +1,18 @@
-stream-ruby =========
+stream-ruby
+===========
 
 stream-ruby is a Ruby client for [Stream](https://getstream.io/).
 
-``` {.sourceCode .ruby}
+### Installation
+
+```bash
+gem install "stream-ruby"
+```
+
+
+### Usage
+
+```ruby
 # Instantiate a new client
 require 'stream'
 client = Stream::Client.new('YOUR_API_KEY', 'API_KEY_SECRET')
@@ -32,9 +42,3 @@ user_feed_1.unfollow('flat:42')
 
 Docs are available on [GetStream.io](http://getstream.io/docs/).
 
-Installation
-============
-
-``` {.sourceCode .bash}
-gem install "stream-ruby"
-```
