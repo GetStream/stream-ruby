@@ -2,6 +2,10 @@ require 'spec_helper'
 require 'stream'
 
 describe Stream::Client do
+  
+    after do
+        ENV.delete 'STREAM_URL'
+    end
 
     it "feed returns a Feed instance with clean feed_id" do
         client = Stream::Client.new('key', 'secret')
@@ -18,7 +22,7 @@ describe Stream::Client do
         client.api_key.should eq 'thierry'
         client.api_secret.should eq 'pass'
         client.site.should eq '1'
-        ENV.delete 'STREAM_URL'
+        
     end
     
     it "but overwriting environment variables should be possible" do
