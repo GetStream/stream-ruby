@@ -38,6 +38,9 @@ user_feed_1.follow('flat:42')
 
 # Stop following another feed
 user_feed_1.unfollow('flat:42')
+
+# Remove a feed and its content
+user_feed_1.delete
 ```
 
 Docs are available on [GetStream.io](http://getstream.io/docs/).
