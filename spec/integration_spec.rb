@@ -3,7 +3,7 @@ require 'stream'
 describe "Integration tests" do
 
     before do
-        @client = Stream::Client.new('5crf3bhfzesn', 'tfq2sdqpj9g446sbv653x3aqmgn33hsn8uzdc9jpskaw8mj6vsnhzswuwptuj9su')
+        @client = Stream::Client.new('ahj2ndz7gsan', 'gthc2t9gh7pzq52f6cky8w4r4up9dr6rju9w3fjgmkv6cdvvav2ufe5fv7e2r9qy')
         @feed42 = @client.feed('flat:42')
         @test_activity = {:actor => 1, :verb => 'tweet', :object => 1}
     end
@@ -35,7 +35,7 @@ describe "Integration tests" do
             response.should include("id", "actor", "verb", "object", "target", "time")
             @feed42.delete
             response = @feed42.get
-            response['results'].length.should eq []
+            response['results'].length.should eq 0
         end
 
         example "following a feed" do
