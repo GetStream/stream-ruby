@@ -67,6 +67,11 @@ module Stream
             self.make_request(:delete, uri)
         end
 
+        def delete()
+            uri = "/feed/#{@feed_url}/"
+            self.make_request(:delete, uri)
+        end
+
         def follow(target_feed_id)
             uri = "/feed/#{@feed_url}/follows/"
             follow_data = {:target => target_feed_id}

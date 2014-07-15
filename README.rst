@@ -31,7 +31,9 @@ stream-ruby is a Ruby client for `Stream <https://getstream.io/>`_.
 
     # Stop following another feed
     user_feed_1.unfollow('flat:42')
-    
+
+    # Delete a feed and its content
+    user_feed_1.delete
     
 Docs are available on `GetStream.io`_.
 

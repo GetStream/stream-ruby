@@ -30,6 +30,14 @@ describe "Integration tests" do
             @feed42.remove(activity["id"])
         end
 
+        example "delete a feed" do
+            response = @feed42.add_activity(@test_activity)
+            response.should include("id", "actor", "verb", "object", "target", "time")
+            @feed42.delete
+            response = @feed42.get
+            response['results'].length.should eq []
+        end
+
         example "following a feed" do
             @feed42.follow('flat:43')
         end
@@ -39,6 +47,7 @@ describe "Integration tests" do
             @feed42.unfollow('flat:43')
         end
 
+        # TODO: add pagination tests here
         example "read from a feed" do
             @feed42.get
             @feed42.get(:limit=>5)
