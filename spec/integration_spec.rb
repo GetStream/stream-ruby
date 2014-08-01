@@ -1,4 +1,6 @@
+require 'date'
 require 'stream'
+
 
 describe "Integration tests" do
 
@@ -15,8 +17,37 @@ describe "Integration tests" do
             response.should include("id", "actor", "verb", "object", "target", "time")
         end
 
-        example "posting a broken activity" do
-            expect { @feed42.add_activity({:actor => 1, :verb => 'tweet', :object => 1, :bogus=>42}) }.to raise_error(Stream::StreamApiResponseException)
+        example "posting an activity with datetime object" do
+            activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => DateTime.now}
+            response = @feed42.add_activity(activity)
+            response.should include("id", "actor", "verb", "object", "target", "time")
+        end
+
+        example "localised datetimes should be returned in UTC correctly" do
+            now = DateTime.now.new_offset(5)
+            activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => now}
+            response = @feed42.add_activity(activity)
+            response.should include("id", "actor", "verb", "object", "target", "time")
+            response = @feed42.get(:limit=>5)
+            DateTime.iso8601(response["results"][0]["time"]).should be_within(1).of(now.new_offset(0))
+        end
+
+        example "posting a custom field as a hash" do
+            hash_value = {'a' => 42}
+            activity = {:actor => 1, :verb => 'tweet', :object => 1, :hash_data => hash_value}
+            response = @feed42.add_activity(activity)
+            response.should include("id", "actor", "verb", "object", "target", "hash_data")
+            results = @feed42.get(:limit=>1)["results"]
+            results[0]["hash_data"].should eq hash_value
+        end
+
+        example "posting a custom field as a list" do
+            list_value = [1,2,3]
+            activity = {:actor => 1, :verb => 'tweet', :object => 1, :hash_data => list_value}
+            response = @feed42.add_activity(activity)
+            response.should include("id", "actor", "verb", "object", "target", "hash_data")
+            results = @feed42.get(:limit=>1)["results"]
+            results[0]["hash_data"].should eq list_value
         end
 
         example "posting and get one activity" do

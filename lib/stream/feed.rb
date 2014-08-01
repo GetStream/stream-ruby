@@ -10,7 +10,8 @@ module Stream
         base_uri 'https://getstream.io/api'
 
         def make_http_request(method, relative_url, params=nil, data=nil, headers=nil)
-            response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => data)
+            headers['Content-Type'] = 'application/json'
+            response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => data.to_json )
             case response.code
               when 200..203
                 return response
