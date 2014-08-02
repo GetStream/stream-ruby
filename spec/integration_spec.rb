@@ -17,6 +17,10 @@ describe "Integration tests" do
             response.should include("id", "actor", "verb", "object", "target", "time")
         end
 
+        example "expose token from user feed" do
+            @feed42.token.should match('.+')
+        end
+
         example "posting an activity with datetime object" do
             activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => DateTime.now}
             response = @feed42.add_activity(activity)
@@ -57,8 +61,22 @@ describe "Integration tests" do
         end
 
         example "removing an activity" do
-            activity = @feed42.add_activity(@test_activity)
-            @feed42.remove(activity["id"])
+            response = @feed42.add_activity(@test_activity)
+            results = @feed42.get(:limit=>1)["results"]
+            results[0]["id"].should eq response["id"]
+            @feed42.remove(response["id"])
+            results = @feed42.get(:limit=>1)["results"]
+            results[0]["id"].should_not eq response["id"]
+        end
+
+        example "removing an activity by foreign_id" do
+            activity = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'ruby:42'}
+            activity = @feed42.add_activity(activity)
+            activity = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'ruby:43'}
+            activity = @feed42.add_activity(activity)
+            @feed42.remove('ruby:43', foreign_id=true)
+            results = @feed42.get(:limit=>2)["results"]
+            results[0]["foreign_id"].should eq 'ruby:42'
         end
 
         example "delete a feed" do

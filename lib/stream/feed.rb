@@ -26,11 +26,13 @@ module Stream
         @@http_client = nil
 
         attr_reader :feed_id
+        attr_reader :token
 
         def initialize(feed_id, api_key, signature)
             @feed_id = Stream::clean_feed_id(feed_id)
             @feed_url = feed_id.sub(':', '/')
             @api_key = api_key
+            @token = signature
             @auth_headers = {'Authorization' => "#{@feed_id} #{signature}"}
         end
 
@@ -63,9 +65,13 @@ module Stream
             self.make_request(:post, uri, nil, activity_data)
         end
 
-        def remove(activity_id)
+        def remove(activity_id, foreign_id=false)
             uri = "/feed/#{@feed_url}/#{activity_id}/"
-            self.make_request(:delete, uri)
+            params = nil
+            if foreign_id
+                params = {'foreign_id' => 1}
+            end
+            self.make_request(:delete, uri, params)
         end
 
         def delete()
