@@ -17,6 +17,17 @@ describe "Integration tests" do
             response.should include("id", "actor", "verb", "object", "target", "time")
         end
 
+        example "posting many activities" do
+            activities = [
+                {:actor => 'tommaso', :verb => 'tweet', :object => 1},
+                {:actor => 'thierry', :verb => 'tweet', :object => 1},
+            ]
+            actors = ['tommaso', 'thierry']
+            @feed42.add_activities(activities)
+            response = @feed42.get(:limit=>5)["results"]
+            [response[0]['actor'], response[1]['actor']].should =~ actors
+        end
+
         example "expose token from user feed" do
             @feed42.token.should match('.+')
         end

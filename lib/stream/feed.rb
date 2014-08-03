@@ -65,6 +65,12 @@ module Stream
             self.make_request(:post, uri, nil, activity_data)
         end
 
+        def add_activities(activities)
+            uri = "/feed/#{@feed_url}/"
+            data = {:activities => activities}
+            self.make_request(:post, uri, nil, data)
+        end
+
         def remove(activity_id, foreign_id=false)
             uri = "/feed/#{@feed_url}/#{activity_id}/"
             params = nil

@@ -42,6 +42,13 @@ user_feed_1.follow('flat:42')
 # Stop following another feed
 user_feed_1.unfollow('flat:42')
 
+# Batch adding activities
+activities = [
+    [:actor => '1', :verb => 'tweet', :object => '1'],
+    [:actor => '2', :verb => 'like', :object => '3])
+];
+user_feed_1.addActivities(activities);
+
 # Remove a feed and its content
 user_feed_1.delete
 
