@@ -28,7 +28,8 @@ module Stream
         attr_reader :feed_id
         attr_reader :token
 
-        def initialize(feed_id, api_key, signature)
+        def initialize(client, feed_id, api_key, signature)
+            @client = client
             @feed_id = Stream::clean_feed_id(feed_id)
             @feed_url = feed_id.sub(':', '/')
             @api_key = api_key
@@ -87,7 +88,10 @@ module Stream
 
         def follow(target_feed_id)
             uri = "/feed/#{@feed_url}/follows/"
-            follow_data = {:target => target_feed_id}
+            follow_data = {
+                :target => target_feed_id,
+                :target_token => @client.feed(target_feed_id).token
+            }
             self.make_request(:post, uri, nil, follow_data)
         end
 

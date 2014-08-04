@@ -102,6 +102,10 @@ describe "Integration tests" do
             @feed42.follow('flat:43')
         end
 
+        example "following a private feed" do
+            @feed42.follow('secret:44')
+        end
+
         example "unfollowing a feed" do
             @feed42.follow('flat:43')
             @feed42.unfollow('flat:43')

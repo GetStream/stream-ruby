@@ -26,7 +26,7 @@ module Stream
         def feed(feed_id)
             cleaned_feed_id = Stream::clean_feed_id(feed_id)
             signature = @signer.signature(cleaned_feed_id)
-            Stream::Feed.new(feed_id, @api_key, signature)
+            Stream::Feed.new(self, feed_id, @api_key, signature)
         end
 
     end
