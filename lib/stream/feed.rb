@@ -95,6 +95,34 @@ module Stream
             self.make_request(:post, uri, nil, follow_data)
         end
 
+        def parse_follow_data(response)
+            return {
+                'count' => response['count'],
+                'results' => response['results']
+            }
+        end
+
+        def followers(limit=100, page=1)
+            uri = "/feed/#{@feed_url}/followers/"
+            params = {
+                'limit' => limit,
+                'page' => page
+            }
+            response = self.make_request(:get, uri, params)
+            self.parse_follow_data(response)
+        end
+
+        def following(limit=100, page=1, filter=[])
+            uri = "/feed/#{@feed_url}/follows/"
+            params = {
+                'limit' => limit,
+                'page' => page,
+                'filter' => filter.join(",")
+            }
+            response = self.make_request(:get, uri, params)
+            self.parse_follow_data(response)
+        end
+
         def unfollow(target_feed_id)
             uri = "/feed/#{@feed_url}/follows/#{target_feed_id}/"
             self.make_request(:delete, uri)
