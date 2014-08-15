@@ -45,14 +45,14 @@ user_feed_1.unfollow('flat:42')
 # Batch adding activities
 activities = [
     [:actor => '1', :verb => 'tweet', :object => '1'],
-    [:actor => '2', :verb => 'like', :object => '3])
+    [:actor => '2', :verb => 'like', :object => '3']
 ];
 user_feed_1.addActivities(activities);
 
 # Add an activity and push it to other feeds too using the `to` field
 data = [
     :actor_id => "1",
-    :verb => like",
+    :verb => "like",
     :object_id => "3",
     :to => ["user:44", "user:45"]
 ];
