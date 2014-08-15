@@ -45,7 +45,7 @@ user_feed_1.unfollow('flat:42')
 # Batch adding activities
 activities = [
     [:actor => '1', :verb => 'tweet', :object => '1'],
-    [:actor => '2', :verb => 'like', :object => '3])
+    [:actor => '2', :verb => 'like', :object => '3']
 ];
 user_feed_1.addActivities(activities);
 
