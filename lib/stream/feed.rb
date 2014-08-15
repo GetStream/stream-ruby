@@ -61,13 +61,29 @@ module Stream
             self.make_request(:get, uri, params)
         end
 
+        def sign_to_field(to)
+            to.map do |feed|
+                feed_id = Stream::clean_feed_id(feed)
+                token = @client.feed(feed_id).token
+                "#{feed} #{token}"
+            end
+        end
+
         def add_activity(activity_data)
             uri = "/feed/#{@feed_url}/"
+            if !activity_data[:to].nil?
+                activity_data[:to] = self.sign_to_field(activity_data[:to])
+            end
             self.make_request(:post, uri, nil, activity_data)
         end
 
         def add_activities(activities)
             uri = "/feed/#{@feed_url}/"
+            activities.each do |activity|
+                if !activity[:to].nil?
+                    activity[:to] = self.sign_to_field(activity[:to])
+                end
+            end
             data = {:activities => activities}
             self.make_request(:post, uri, nil, data)
         end

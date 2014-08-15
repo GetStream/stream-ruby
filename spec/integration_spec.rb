@@ -33,17 +33,19 @@ describe "Integration tests" do
         end
 
         example "posting an activity with datetime object" do
+            feed = @client.feed('flat:time42')
             activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => DateTime.now}
-            response = @feed42.add_activity(activity)
+            response = feed.add_activity(activity)
             response.should include("id", "actor", "verb", "object", "target", "time")
         end
 
         example "localised datetimes should be returned in UTC correctly" do
+            feed = @client.feed('flat:time43')
             now = DateTime.now.new_offset(5)
             activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => now}
-            response = @feed42.add_activity(activity)
+            response = feed.add_activity(activity)
             response.should include("id", "actor", "verb", "object", "target", "time")
-            response = @feed42.get(:limit=>5)
+            response = feed.get(:limit=>5)
             DateTime.iso8601(response["results"][0]["time"]).should be_within(1).of(now.new_offset(0))
         end
 
@@ -160,7 +162,30 @@ describe "Integration tests" do
             @feed42.unfollow('flat:43')
         end
 
-        # TODO: add pagination tests here
+        example "posting activity using to" do
+            recipient = 'flat:toruby11'
+            activity = {
+                :actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient]
+            }
+            @feed42.add_activity(activity)
+            target_feed = @client.feed(recipient)
+            response = target_feed.get(:limit=>5)["results"]
+            response[0]['actor'].should eq 'tommaso'
+        end
+
+        example "posting many activities using to" do
+            recipient = 'flat:toruby1'
+            activities = [
+                {:actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient]},
+                {:actor => 'thierry', :verb => 'tweet', :object => 1, :to => [recipient]},
+            ]
+            actors = ['tommaso', 'thierry']
+            @feed42.add_activities(activities)
+            target_feed = @client.feed(recipient)
+            response = target_feed.get(:limit=>5)["results"]
+            [response[0]['actor'], response[1]['actor']].should =~ actors
+        end
+
         example "read from a feed" do
             @feed42.get
             @feed42.get(:limit=>5)
