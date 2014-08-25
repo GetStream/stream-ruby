@@ -29,6 +29,13 @@ result = user_feed_1.get(:limit=>5, :id_lt=>'e561de8f-00f1-11e4-b400-0cc47a024be
 # Create a new activity
 activity_data = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'tweet:1'}
 activity_response = user_feed_1.add_activity(activity_data)
+# Create a bit more complex activity
+activity_data = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'tweet:1',
+	:course => {:name => 'Golden Gate park', :distance => 10},
+	:participants => ['Thierry', 'Tommaso'],
+	:started_at => DateTime.now()
+};
+activity_response = user_feed_1.add_activity(activity_data)
 
 # Remove an activity by its id
 user_feed_1.remove('e561de8f-00f1-11e4-b400-0cc47a024be0')
