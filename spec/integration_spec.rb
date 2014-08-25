@@ -107,15 +107,13 @@ describe "Integration tests" do
         example "retrieve feed with no followers" do
             lonely = @client.feed('flat:lonely')
             response = lonely.followers()
-            response['count'].should eq 0
             response['results'].should eq []
         end
 
         example "retrieve feed followers with limit and offset" do
             @client.feed('flat:43').follow('flat:42')
             @client.feed('flat:44').follow('flat:42')
-            response = @feed42.followers(limit=1, page=1)
-            response['count'].should eq 2
+            response = @feed42.followers(limit=1, offset=0)
             response['results'][0]['feed_id'].should eq 'flat:44'
             response['results'][0]['target_id'].should eq 'flat:42'
         end
@@ -123,7 +121,6 @@ describe "Integration tests" do
         example "retrieve feed with no followings" do
             asocial = @client.feed('flat:asocial')
             response = asocial.following()
-            response['count'].should eq 0
             response['results'].should eq []
         end
 
@@ -131,24 +128,24 @@ describe "Integration tests" do
             social = @client.feed('flat:r2social')
             social.follow('flat:r43')
             social.follow('flat:r44')
-            response = social.following(limit=1, page=2)
-            response['count'].should eq 2
+            response = social.following(limit=1, offset=1)
             response['results'][0]['feed_id'].should eq 'flat:r2social'
             response['results'][0]['target_id'].should eq 'flat:r43'
         end
 
         example "i dont follow" do
             social = @client.feed('flat:social')
-            response = social.following(limit=10, page=1, filter=['flat:asocial'])
-            response['count'].should eq 0
+            response = social.following(limit=10, offset=0, filter=['flat:asocial'])
+            response['results'].should eq []
         end
 
         example "do i follow" do
             social = @client.feed('flat:rsocial')
             social.follow('flat:r43')
             social.follow('flat:r244')
-            response = social.following(limit=10, page=1, filter=['flat:r244'])
-            response['count'].should eq 1
+            response = social.following(limit=10, offset=1, filter=['flat:r244'])
+            response['results'].should eq []
+            response = social.following(limit=10, offset=0, filter=['flat:r244'])
             response['results'][0]['feed_id'].should eq 'flat:rsocial'
             response['results'][0]['target_id'].should eq 'flat:r244'
         end

@@ -118,21 +118,21 @@ module Stream
             }
         end
 
-        def followers(limit=100, page=1)
+        def followers(limit=100, offset=0)
             uri = "/feed/#{@feed_url}/followers/"
             params = {
-                'limit' => limit,
-                'page' => page
+                'offset' => offset,
+                'limit' => limit
             }
             response = self.make_request(:get, uri, params)
             self.parse_follow_data(response)
         end
 
-        def following(limit=100, page=1, filter=[])
+        def following(limit=100, offset=0, filter=[])
             uri = "/feed/#{@feed_url}/follows/"
             params = {
                 'limit' => limit,
-                'page' => page,
+                'offset' => offset,
                 'filter' => filter.join(",")
             }
             response = self.make_request(:get, uri, params)
