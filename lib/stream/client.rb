@@ -2,21 +2,26 @@ require 'stream/signer'
 require 'stream/feed'
 
 module Stream
+    STREAM_URL_RE = /https\:\/\/(?<key>\w+)\:(?<secret>\w+).*site=(?<site>\d+)/i
+
     class Client
         attr_reader :api_key
         attr_reader :api_secret
         attr_reader :site
 
         def initialize(api_key='', api_secret='', site=0)
-            # Support the Heroku STREAM_URL environment variable
             
-            if ENV['STREAM_URL'] != nil and api_key == ''
-                matches = /https\:\/\/(?<key>\w+)\:(?<secret>\w+).*site=(?<site>\d+)/i.match(ENV['STREAM_URL'])
+            if ENV['STREAM_URL'] =~ Stream::STREAM_URL_RE and api_key == ''
+                matches = Stream::STREAM_URL_RE.match(ENV['STREAM_URL'])
                 api_key = matches['key']
                 api_secret = matches['secret']
                 site = matches['site']
             end
-          
+
+            if api_key == ''
+                raise ArgumentError, 'empty api_key parameter and missing or invalid STREAM_URL env variable'
+            end
+
             @api_key = api_key
             @api_secret = api_secret
             @site = site

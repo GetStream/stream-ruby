@@ -22,9 +22,13 @@ describe Stream::Client do
         client.api_key.should eq 'thierry'
         client.api_secret.should eq 'pass'
         client.site.should eq '1'
-        
     end
-    
+
+    it "wrong heroku vars" do
+        ENV['STREAM_URL'] = 'https://thierry:pass@getstream.io/?a=1'
+        expect{Stream::Client.new()}.to raise_error(ArgumentError)
+    end
+
     it "but overwriting environment variables should be possible" do
         ENV['STREAM_URL'] = 'https://thierry:pass@getstream.io/?site=1'
         client = Stream::Client.new('1','2','3')
