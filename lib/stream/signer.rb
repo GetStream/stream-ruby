@@ -7,7 +7,7 @@ module Stream
 
         def initialize(key)
             @key = key.to_s
-            @sha1 = OpenSSL::Digest::Digest.new('sha1')
+            @sha1 = OpenSSL::Digest.new('sha1')
         end
 
         def urlSafeB64encode(value)
