@@ -128,14 +128,14 @@ describe "Integration tests" do
             social = @client.feed('flat:r2social')
             social.follow('flat:r43')
             social.follow('flat:r44')
-            response = social.following(limit=1, offset=1)
+            response = social.following(1, 1)
             response['results'][0]['feed_id'].should eq 'flat:r2social'
             response['results'][0]['target_id'].should eq 'flat:r43'
         end
 
         example "i dont follow" do
             social = @client.feed('flat:social')
-            response = social.following(limit=10, offset=0, filter=['flat:asocial'])
+            response = social.following(0, 10, filter=['flat:asocial'])
             response['results'].should eq []
         end
 
@@ -143,9 +143,9 @@ describe "Integration tests" do
             social = @client.feed('flat:rsocial')
             social.follow('flat:r43')
             social.follow('flat:r244')
-            response = social.following(limit=10, offset=1, filter=['flat:r244'])
+            response = social.following(1, 10, filter=['flat:r244'])
             response['results'].should eq []
-            response = social.following(limit=10, offset=0, filter=['flat:r244'])
+            response = social.following(0, 10, filter=['flat:r244'])
             response['results'][0]['feed_id'].should eq 'flat:rsocial'
             response['results'][0]['target_id'].should eq 'flat:r244'
         end
