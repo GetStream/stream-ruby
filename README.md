@@ -70,17 +70,17 @@ token = user_feed_1.token
 # Retrieve first 10 followers of a feed
 user_feed_1.followers(limit=10);
 
-# Retrieve 10 followers of a feed starting from 11th (2nd page)
-user_feed_1.followers(limit=10, page=2);
+# Retrieve followers from 10 to 20
+user_feed_1.followers(limit=10, offset=10);
 
 # Retrieve 10 feeds followed by user_feed_1
 user_feed_1.following(limit=10);
 
-# Retrieve 10 feeds followed by user_feed_1 starting from 11th (2nd page)
-user_feed_1.following(limit=10, page=2);
+# Retrieve 10 feeds followed by user_feed_1 starting from the 11th
+user_feed_1.following(limit=10, offset=10);
 
 # Check if user_feed_1 follows specific feeds
-user_feed_1.following(limit=2, page=1, filter=['user:42', 'user:43']);
+user_feed_1.following(limit=2, offset=0, filter=['user:42', 'user:43']);
 
 ```
 
