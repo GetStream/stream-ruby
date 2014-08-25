@@ -111,32 +111,23 @@ module Stream
             self.make_request(:post, uri, nil, follow_data)
         end
 
-        def parse_follow_data(response)
-            return {
-                'count' => response['count'],
-                'results' => response['results']
-            }
-        end
-
-        def followers(limit=100, offset=0)
+        def followers(limit=25, offset=0)
             uri = "/feed/#{@feed_url}/followers/"
             params = {
                 'offset' => offset,
                 'limit' => limit
             }
-            response = self.make_request(:get, uri, params)
-            self.parse_follow_data(response)
+            self.make_request(:get, uri, params)
         end
 
-        def following(limit=100, offset=0, filter=[])
+        def following(limit=25, offset=0, filter=[])
             uri = "/feed/#{@feed_url}/follows/"
             params = {
                 'limit' => limit,
                 'offset' => offset,
                 'filter' => filter.join(",")
             }
-            response = self.make_request(:get, uri, params)
-            self.parse_follow_data(response)
+            self.make_request(:get, uri, params)
         end
 
         def unfollow(target_feed_id)
