@@ -104,12 +104,15 @@ describe "Integration tests" do
         end
 
         example "removing an activity" do
-            response = @feed42.add_activity(@test_activity)
-            results = @feed42.get(:limit=>1)["results"]
+            feed = @client.feed('flat:removing_an_activity')
+            response = feed.add_activity(@test_activity)
+            results = feed.get(:limit=>1)["results"]
             results[0]["id"].should eq response["id"]
-            @feed42.remove(response["id"])
-            results = @feed42.get(:limit=>1)["results"]
-            results[0]["id"].should_not eq response["id"]
+            feed.remove(response["id"])
+            results = feed.get(:limit=>1)["results"]
+            if results.count > 0
+                results[0]["id"].should_not eq response["id"]
+            end
         end
 
         example "removing an activity by foreign_id" do
