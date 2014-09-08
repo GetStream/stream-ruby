@@ -32,6 +32,36 @@ describe "Integration tests" do
             @feed42.token.should match('.+')
         end
 
+        example "set feed as read" do
+            feed = @client.feed('notification:rb1')
+            feed.add_activity({:actor => 1, :verb => 'tweet', :object => 1})
+            feed.add_activity({:actor => 2, :verb => 'share', :object => 1})
+            feed.add_activity({:actor => 3, :verb => 'run', :object => 1})
+            response = feed.get(:limit=>5)
+            response["results"][0]["is_read"].should eq false
+            response["results"][1]["is_read"].should eq false
+            response["results"][2]["is_read"].should eq false
+            response = feed.get(:limit=>5, :mark_read=>true)
+            response = feed.get(:limit=>5)
+            response["results"][0]["is_read"].should eq true
+            response["results"][1]["is_read"].should eq true
+            response["results"][2]["is_read"].should eq true
+        end
+
+        example "set activities as read" do
+            feed = @client.feed('notification:rb2')
+            feed.add_activity({:actor => 1, :verb => 'tweet', :object => 1})
+            feed.add_activity({:actor => 2, :verb => 'share', :object => 1})
+            feed.add_activity({:actor => 3, :verb => 'run', :object => 1})
+            response = feed.get(:limit=>2)
+            ids = response["results"].collect{|a| a['id']}
+            response = feed.get(:limit=>5, :mark_read=>ids)
+            response = feed.get(:limit=>5)
+            response["results"][0]["is_read"].should eq true
+            response["results"][1]["is_read"].should eq true
+            response["results"][2]["is_read"].should eq false
+        end
+
         example "posting an activity with datetime object" do
             feed = @client.feed('flat:time42')
             activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => DateTime.now}
