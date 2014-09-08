@@ -2,6 +2,17 @@
  Change history
 ================
 
+1.0.1
+=====
+:release-date: 2014-09-08 10:00 A.M GMT
+:by: Tommaso Barbugli
+
+Fixes
+-----
+
+* Fix mark_read as boolean
+
+
 1.0.0
 =====
 :release-date: 2014-09-08 08:00 A.M GMT

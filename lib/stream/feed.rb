@@ -58,7 +58,7 @@ module Stream
 
         def get(params = {})
             uri = "/feed/#{@feed_url}/"
-            if params[:mark_read]
+            if params[:mark_read] and params[:mark_read].kind_of?(Array)
                 params[:mark_read] = params[:mark_read].join(",")
             end
             self.make_request(:get, uri, params)
