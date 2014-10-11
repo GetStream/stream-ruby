@@ -61,6 +61,9 @@ module Stream
             if params[:mark_read] and params[:mark_read].kind_of?(Array)
                 params[:mark_read] = params[:mark_read].join(",")
             end
+            if params[:mark_seen] and params[:mark_seen].kind_of?(Array)
+                params[:mark_seen] = params[:mark_seen].join(",")
+            end
             self.make_request(:get, uri, params)
         end
 
