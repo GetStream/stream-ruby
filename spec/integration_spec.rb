@@ -32,6 +32,44 @@ describe "Integration tests" do
             @feed42.token.should match('.+')
         end
 
+        example "mark_seen=true should not mark read" do
+            feed = @client.feed('notification:rb1')
+            feed.add_activity({:actor => 1, :verb => 'tweet', :object => 1})
+            feed.add_activity({:actor => 2, :verb => 'share', :object => 1})
+            feed.add_activity({:actor => 3, :verb => 'run', :object => 1})
+            response = feed.get(:limit=>5)
+            response["results"][0]["is_seen"].should eq false
+            response["results"][1]["is_seen"].should eq false
+            response["results"][2]["is_seen"].should eq false
+            response = feed.get(:limit=>5, :mark_seen=>true)
+            response = feed.get(:limit=>5)
+            response["results"][0]["is_seen"].should eq true
+            response["results"][1]["is_seen"].should eq true
+            response["results"][2]["is_seen"].should eq true
+            response["results"][0]["is_read"].should eq false
+            response["results"][1]["is_read"].should eq false
+            response["results"][2]["is_read"].should eq false
+        end
+
+        example "mark_read=true should not mark seen" do
+            feed = @client.feed('notification:rb1')
+            feed.add_activity({:actor => 1, :verb => 'tweet', :object => 1})
+            feed.add_activity({:actor => 2, :verb => 'share', :object => 1})
+            feed.add_activity({:actor => 3, :verb => 'run', :object => 1})
+            response = feed.get(:limit=>5)
+            response["results"][0]["is_read"].should eq false
+            response["results"][1]["is_read"].should eq false
+            response["results"][2]["is_read"].should eq false
+            response = feed.get(:limit=>5, :mark_read=>true)
+            response = feed.get(:limit=>5)
+            response["results"][0]["is_read"].should eq true
+            response["results"][1]["is_read"].should eq true
+            response["results"][2]["is_read"].should eq true
+            response["results"][0]["is_seen"].should eq false
+            response["results"][1]["is_seen"].should eq false
+            response["results"][2]["is_seen"].should eq false
+        end
+
         example "set feed as read" do
             feed = @client.feed('notification:rb1')
             feed.add_activity({:actor => 1, :verb => 'tweet', :object => 1})
