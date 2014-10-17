@@ -1,5 +1,6 @@
 stream-ruby
 ===========
+[![Gem Version](https://badge.fury.io/rb/stream-ruby.svg)](http://badge.fury.io/rb/stream-ruby)
 
 stream-ruby is a Ruby client for [Stream](https://getstream.io/).
 
