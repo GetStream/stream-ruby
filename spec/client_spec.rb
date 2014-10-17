@@ -13,7 +13,7 @@ describe Stream::Client do
         client.api_secret.should eq 'secret'
         feed = client.feed('feed:42')
         expect(feed).to be_instance_of Stream::Feed
-        feed.feed_id.should eq 'feed42'
+        feed.feed_id.should eq 'feed:42'
     end
     
     it "on heroku we connect using environment variables" do

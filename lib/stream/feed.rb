@@ -30,11 +30,12 @@ module Stream
 
         def initialize(client, feed_id, api_key, signature)
             @client = client
-            @feed_id = Stream::clean_feed_id(feed_id)
+            @feed_id = feed_id
             @feed_url = feed_id.sub(':', '/')
             @api_key = api_key
             @token = signature
-            @auth_headers = {'Authorization' => "#{@feed_id} #{signature}"}
+            cleaned_feed_id = Stream::clean_feed_id(feed_id)
+            @auth_headers = {'Authorization' => "#{cleaned_feed_id} #{signature}"}
         end
 
         def get_http_client
