@@ -11,14 +11,14 @@ module Stream
 
         def initialize(api_key='', api_secret='', site=0)
             
-            if ENV['STREAM_URL'] =~ Stream::STREAM_URL_RE and api_key == ''
+            if ENV['STREAM_URL'] =~ Stream::STREAM_URL_RE and (api_key.nil? || api_key.empty?)
                 matches = Stream::STREAM_URL_RE.match(ENV['STREAM_URL'])
                 api_key = matches['key']
                 api_secret = matches['secret']
                 site = matches['site']
             end
 
-            if api_key == ''
+            if api_key.nil? || api_key.empty?
                 raise ArgumentError, 'empty api_key parameter and missing or invalid STREAM_URL env variable'
             end
 
