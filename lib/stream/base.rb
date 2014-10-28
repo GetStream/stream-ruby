@@ -1,3 +1,4 @@
+require 'json'
 require 'stream/client'
 require 'stream/version'
 require 'stream/signer'
