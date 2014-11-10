@@ -6,7 +6,7 @@ describe "Integration tests" do
 
     before do
         @client = Stream::Client.new('ahj2ndz7gsan', 'gthc2t9gh7pzq52f6cky8w4r4up9dr6rju9w3fjgmkv6cdvvav2ufe5fv7e2r9qy')
-        @feed42 = @client.feed('flat:r42')
+        @feed42 = @client.feed('flat', 'r42')
         @test_activity = {:actor => 1, :verb => 'tweet', :object => 1}
     end
 
@@ -33,7 +33,7 @@ describe "Integration tests" do
         end
 
         example "mark_seen=true should not mark read" do
-            feed = @client.feed('notification:rb1')
+            feed = @client.feed('notification','rb1')
             feed.add_activity({:actor => 1, :verb => 'tweet', :object => 1})
             feed.add_activity({:actor => 2, :verb => 'share', :object => 1})
             feed.add_activity({:actor => 3, :verb => 'run', :object => 1})
@@ -52,7 +52,7 @@ describe "Integration tests" do
         end
 
         example "mark_read=true should not mark seen" do
-            feed = @client.feed('notification:rb1')
+            feed = @client.feed('notification', 'rb1')
             feed.add_activity({:actor => 1, :verb => 'tweet', :object => 1})
             feed.add_activity({:actor => 2, :verb => 'share', :object => 1})
             feed.add_activity({:actor => 3, :verb => 'run', :object => 1})
@@ -71,7 +71,7 @@ describe "Integration tests" do
         end
 
         example "set feed as read" do
-            feed = @client.feed('notification:rb1')
+            feed = @client.feed('notification', 'b1')
             feed.add_activity({:actor => 1, :verb => 'tweet', :object => 1})
             feed.add_activity({:actor => 2, :verb => 'share', :object => 1})
             feed.add_activity({:actor => 3, :verb => 'run', :object => 1})
@@ -87,7 +87,7 @@ describe "Integration tests" do
         end
 
         example "set activities as read" do
-            feed = @client.feed('notification:rb2')
+            feed = @client.feed('notification', 'rb2')
             feed.add_activity({:actor => 1, :verb => 'tweet', :object => 1})
             feed.add_activity({:actor => 2, :verb => 'share', :object => 1})
             feed.add_activity({:actor => 3, :verb => 'run', :object => 1})
@@ -101,7 +101,7 @@ describe "Integration tests" do
         end
 
         example "set feed as seen" do
-            feed = @client.feed('notification:rb3')
+            feed = @client.feed('notification', 'rb3')
             feed.add_activity({:actor => 1, :verb => 'tweet', :object => 1})
             feed.add_activity({:actor => 2, :verb => 'share', :object => 1})
             feed.add_activity({:actor => 3, :verb => 'run', :object => 1})
@@ -117,7 +117,7 @@ describe "Integration tests" do
         end
 
         example "set activities as seen" do
-            feed = @client.feed('notification:rb4')
+            feed = @client.feed('notification', 'rb4')
             feed.add_activity({:actor => 1, :verb => 'tweet', :object => 1})
             feed.add_activity({:actor => 2, :verb => 'share', :object => 1})
             feed.add_activity({:actor => 3, :verb => 'run', :object => 1})
@@ -131,14 +131,14 @@ describe "Integration tests" do
         end
 
         example "posting an activity with datetime object" do
-            feed = @client.feed('flat:time42')
+            feed = @client.feed('flat', 'time42')
             activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => DateTime.now}
             response = feed.add_activity(activity)
             response.should include("id", "actor", "verb", "object", "target", "time")
         end
 
         example "localised datetimes should be returned in UTC correctly" do
-            feed = @client.feed('flat:time43')
+            feed = @client.feed('flat', 'time43')
             now = DateTime.now.new_offset(5)
             activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => now}
             response = feed.add_activity(activity)
@@ -172,7 +172,7 @@ describe "Integration tests" do
         end
 
         example "removing an activity" do
-            feed = @client.feed('flat:removing_an_activity')
+            feed = @client.feed('flat', 'removing_an_activity')
             response = feed.add_activity(@test_activity)
             results = feed.get(:limit=>1)["results"]
             results[0]["id"].should eq response["id"]
@@ -202,48 +202,48 @@ describe "Integration tests" do
         end
 
         example "following a feed" do
-            @feed42.follow('flat:43')
+            @feed42.follow('flat', '43')
         end
 
         example "retrieve feed with no followers" do
-            lonely = @client.feed('flat:lonely')
+            lonely = @client.feed('flat', 'rlonely')
             response = lonely.followers()
             response['results'].should eq []
         end
 
         example "retrieve feed followers with limit and offset" do
-            @client.feed('flat:43').follow('flat:r42')
-            @client.feed('flat:44').follow('flat:r42')
+            @client.feed('flat' ,'r43').follow('flat', 'r42')
+            @client.feed('flat' ,'r44').follow('flat', 'r42')
             response = @feed42.followers()
-            response['results'][0]['feed_id'].should eq 'flat:44'
+            response['results'][0]['feed_id'].should eq 'flat:r44'
             response['results'][0]['target_id'].should eq 'flat:r42'
         end
 
         example "retrieve feed with no followings" do
-            asocial = @client.feed('flat:asocial')
+            asocial = @client.feed('flat', 'rasocial')
             response = asocial.following()
             response['results'].should eq []
         end
 
         example "retrieve feed followings with limit and offset" do
-            social = @client.feed('flat:r2social')
-            social.follow('flat:r43')
-            social.follow('flat:r44')
+            social = @client.feed('flat', 'r2social')
+            social.follow('flat', 'r43')
+            social.follow('flat', 'r44')
             response = social.following(1, 1)
             response['results'][0]['feed_id'].should eq 'flat:r2social'
             response['results'][0]['target_id'].should eq 'flat:r43'
         end
 
         example "i dont follow" do
-            social = @client.feed('flat:social')
+            social = @client.feed('flat', 'social')
             response = social.following(0, 10, filter=['flat:asocial'])
             response['results'].should eq []
         end
 
         example "do i follow" do
-            social = @client.feed('flat:rsocial')
-            social.follow('flat:r43')
-            social.follow('flat:r244')
+            social = @client.feed('flat', 'rsocial')
+            social.follow('flat', 'r43')
+            social.follow('flat', 'r244')
             response = social.following(1, 10, filter=['flat:r244'])
             response['results'].should eq []
             response = social.following(0, 10, filter=['flat:r244'])
@@ -252,34 +252,34 @@ describe "Integration tests" do
         end
 
         example "following a private feed" do
-            @feed42.follow('secret:44')
+            @feed42.follow('secret', '44')
         end
 
         example "unfollowing a feed" do
-            @feed42.follow('flat:43')
-            @feed42.unfollow('flat:43')
+            @feed42.follow('flat', '43')
+            @feed42.unfollow('flat', '43')
         end
 
         example "posting activity using to" do
-            recipient = 'flat:toruby11'
+            recipient = 'flat','toruby11'
             activity = {
-                :actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient]
+                :actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient.join(':')]
             }
             @feed42.add_activity(activity)
-            target_feed = @client.feed(recipient)
+            target_feed = @client.feed(*recipient)
             response = target_feed.get(:limit=>5)["results"]
             response[0]['actor'].should eq 'tommaso'
         end
 
         example "posting many activities using to" do
-            recipient = 'flat:toruby1'
+            recipient = 'flat','toruby1'
             activities = [
-                {:actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient]},
-                {:actor => 'thierry', :verb => 'tweet', :object => 1, :to => [recipient]},
+                {:actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient.join(':')]},
+                {:actor => 'thierry', :verb => 'tweet', :object => 1, :to => [recipient.join(':')]},
             ]
             actors = ['tommaso', 'thierry']
             @feed42.add_activities(activities)
-            target_feed = @client.feed(recipient)
+            target_feed = @client.feed(*recipient)
             response = target_feed.get(:limit=>5)["results"]
             [response[0]['actor'], response[1]['actor']].should =~ actors
         end

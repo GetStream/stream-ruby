@@ -14,10 +14,12 @@ module Stream
             value.gsub('+', '-').gsub('/', '_').gsub(/^=+/, '').gsub(/=+$/, '')
         end
 
-        def signature(message)
+        def sign(feed_slug, user_id)
+            message = "#{feed_slug}#{user_id}"
             key = Digest::SHA1.digest @key.to_s
-            signature = Base64.strict_encode64(OpenSSL::HMAC.digest(@sha1, key, message.to_s))
-            self.urlSafeB64encode(signature)
+            token = Base64.strict_encode64(OpenSSL::HMAC.digest(@sha1, key, message))
+            self.urlSafeB64encode(token)
         end
+
     end
 end

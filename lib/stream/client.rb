@@ -2,20 +2,20 @@ require 'stream/signer'
 require 'stream/feed'
 
 module Stream
-    STREAM_URL_RE = /https\:\/\/(?<key>\w+)\:(?<secret>\w+).*site=(?<site>\d+)/i
+    STREAM_URL_RE = /https\:\/\/(?<key>\w+)\:(?<secret>\w+).*app_id=(?<app_id>\d+)/i
 
     class Client
         attr_reader :api_key
         attr_reader :api_secret
-        attr_reader :site
+        attr_reader :app_id
+        attr_reader :api_version
 
-        def initialize(api_key='', api_secret='', site=0)
-            
+        def initialize(api_key='', api_secret='', app_id=nil)
             if ENV['STREAM_URL'] =~ Stream::STREAM_URL_RE and (api_key.nil? || api_key.empty?)
                 matches = Stream::STREAM_URL_RE.match(ENV['STREAM_URL'])
                 api_key = matches['key']
                 api_secret = matches['secret']
-                site = matches['site']
+                app_id = matches['app_id']
             end
 
             if api_key.nil? || api_key.empty?
@@ -24,14 +24,13 @@ module Stream
 
             @api_key = api_key
             @api_secret = api_secret
-            @site = site
+            @app_id = app_id
             @signer = Stream::Signer.new(api_secret)
         end
 
-        def feed(feed_id)
-            cleaned_feed_id = Stream::clean_feed_id(feed_id)
-            signature = @signer.signature(cleaned_feed_id)
-            Stream::Feed.new(self, feed_id, @api_key, signature)
+        def feed(feed_slug, user_id)
+            token = @signer.sign(feed_slug, user_id)
+            Stream::Feed.new(self, feed_slug, user_id, token)
         end
 
     end

@@ -7,7 +7,7 @@ module Stream
     class StreamHTTPClient
 
         include HTTParty
-        base_uri 'https://getstream.io/api'
+        base_uri 'https://getstream.io/api/v1.0'
 
         def make_http_request(method, relative_url, params=nil, data=nil, headers=nil)
             headers['Content-Type'] = 'application/json'
@@ -20,34 +20,34 @@ module Stream
                 raise StreamApiResponseException, response
             end
         end
-
     end
 
     class Feed
         @@http_client = nil
 
-        attr_reader :feed_id
+        attr_reader :id
+        attr_reader :feed_slug
+        attr_reader :user_id
         attr_reader :token
+        attr_reader :signature
 
-        def initialize(client, feed_id, api_key, signature)
+        def initialize(client, feed_slug, user_id, token)
+            @id = "#{feed_slug}:#{user_id}"
             @client = client
-            @feed_id = feed_id
-            @feed_url = feed_id.sub(':', '/')
-            @api_key = api_key
-            @token = signature
-            cleaned_feed_id = Stream::clean_feed_id(feed_id)
-            @auth_headers = {'Authorization' => "#{cleaned_feed_id} #{signature}"}
+            @user_id = user_id
+            @feed_slug = feed_slug
+            @feed_url = "#{feed_slug}/#{user_id}"
+            @token = token
+            @signature = "#{@feed_slug}#{user_id} #{token}"
+            @auth_headers = {'Authorization' => @signature}
         end
 
         def get_http_client
-            if @@http_client.nil?
-                @@http_client = StreamHTTPClient.new
-            end
-            @@http_client
+            @@http_client ||= StreamHTTPClient.new
         end
 
         def get_default_params
-            {:api_key => @api_key}
+            {:api_key => @client.api_key}
         end
 
         def make_request(method, relative_url, params=nil, data=nil)
@@ -70,27 +70,23 @@ module Stream
         end
 
         def sign_to_field(to)
-            to.map do |feed|
-                feed_id = Stream::clean_feed_id(feed)
-                token = @client.feed(feed_id).token
-                "#{feed} #{token}"
+            to.map do |feed_id|
+                feed_slug, user_id = feed_id.split(':')
+                feed = @client.feed(feed_slug, user_id)
+                "#{feed.id} #{feed.token}"
             end
         end
 
         def add_activity(activity_data)
             uri = "/feed/#{@feed_url}/"
-            if !activity_data[:to].nil?
-                activity_data[:to] = self.sign_to_field(activity_data[:to])
-            end
+            activity_data[:to] &&= self.sign_to_field(activity_data[:to])
             self.make_request(:post, uri, nil, activity_data)
         end
 
         def add_activities(activities)
             uri = "/feed/#{@feed_url}/"
             activities.each do |activity|
-                if !activity[:to].nil?
-                    activity[:to] = self.sign_to_field(activity[:to])
-                end
+                activity[:to] &&= self.sign_to_field(activity[:to])
             end
             data = {:activities => activities}
             self.make_request(:post, uri, nil, data)
@@ -110,11 +106,11 @@ module Stream
             self.make_request(:delete, uri)
         end
 
-        def follow(target_feed_id)
+        def follow(feed_slug, user_id)
             uri = "/feed/#{@feed_url}/follows/"
             follow_data = {
-                :target => target_feed_id,
-                :target_token => @client.feed(target_feed_id).token
+                :target => "#{feed_slug}:#{user_id}",
+                :target_token => @client.feed(feed_slug, user_id).token
             }
             self.make_request(:post, uri, nil, follow_data)
         end
@@ -138,8 +134,8 @@ module Stream
             self.make_request(:get, uri, params)
         end
 
-        def unfollow(target_feed_id)
-            uri = "/feed/#{@feed_url}/follows/#{target_feed_id}/"
+        def unfollow(feed_slug, user_id)
+            uri = "/feed/#{@feed_url}/follows/#{feed_slug}:#{user_id}/"
             self.make_request(:delete, uri)
         end
 

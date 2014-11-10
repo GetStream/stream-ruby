@@ -9,7 +9,7 @@ module Stream
             Stream::Client.new(api_key, api_secret)
         end
 
-        def clean_feed_id(feed_id)
+        def get_feed_slug_and_id(feed_id)
             feed_id.sub(':', '')
         end
     end
