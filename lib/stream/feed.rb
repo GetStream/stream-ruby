@@ -17,7 +17,7 @@ module Stream
               when 200..203
                 return response
               when 204...600
-                raise StreamApiResponseException, response
+                raise StreamApiResponseException, "#{response['exception']} details: #{response['detail']}"
             end
         end
     end

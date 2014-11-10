@@ -290,6 +290,12 @@ describe "Integration tests" do
             @feed42.get(:offset=> 4, :limit=>5)
         end
 
+        example "add incomplete activity" do
+            expect { 
+                @feed42.add_activity(Hash.new)
+            }.to raise_error Stream::StreamApiResponseException
+        end
+
     end
 
 end
