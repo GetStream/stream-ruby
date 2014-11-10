@@ -45,10 +45,10 @@ user_feed_1.remove('e561de8f-00f1-11e4-b400-0cc47a024be0')
 user_feed_1.remove('tweet:1', foreign_id=true)
 
 # Follow another feed
-user_feed_1.follow('flat:42')
+user_feed_1.follow('flat', '42')
 
 # Stop following another feed
-user_feed_1.unfollow('flat:42')
+user_feed_1.unfollow('flat', '42')
 
 # Batch adding activities
 activities = [
@@ -76,19 +76,19 @@ token = user_feed_1.token
 # user1 = client.feed('user:1', '{{ token }}');
 
 # Retrieve first 10 followers of a feed
-user_feed_1.followers(0, 10);
+user_feed_1.followers(0, 10)
 
 # Retrieve followers from 10 to 20
-user_feed_1.followers(10, 10);
+user_feed_1.followers(10, 10)
 
 # Retrieve 10 feeds followed by user_feed_1
-user_feed_1.following(10);
+user_feed_1.following(10)
 
 # Retrieve 10 feeds followed by user_feed_1 starting from the 11th
-user_feed_1.following(10, 10);
+user_feed_1.following(10, 10)
 
 # Check if user_feed_1 follows specific feeds
-user_feed_1.following(0, 2, filter=['user:42', 'user:43']);
+user_feed_1.following(0, 2, filter=['user:42', 'user:43'])
 
 ```
 
