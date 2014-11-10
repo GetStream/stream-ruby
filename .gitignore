@@ -8,3 +8,4 @@ Gemfile.lock
 .ruby-version
 .ruby-gemset
 .idea
+*.DS_Store
