@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.platform = Gem::Platform::RUBY
   gem.summary = "A gem that provides a client interface for getstream.io"
   gem.email = "tbarbugli@gmail.com"
-  gem.homepage = "http://github.com/tbarbugli/stream-ruby"
+  gem.homepage = "http://github.com/GetStream/stream-ruby"
   gem.authors = ["Tommaso Barbugli"]
   gem.has_rdoc = true
   gem.extra_rdoc_files = ["README.md", "LICENSE"]

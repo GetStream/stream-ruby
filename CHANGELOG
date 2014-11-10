@@ -5,6 +5,15 @@
 
 * Add support for mark seen
 
+2.0.1
+=====
+:release-date: 2014-11-10 15:00 A.M GMT
+:by: Tommaso Barbugli
+
+Simplified syntax to create feeds, follow and unfollow feeds.
+Default HTTP timeout of 3s
+Better exception messages
+
 
 1.0.1
 =====

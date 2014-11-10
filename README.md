@@ -10,6 +10,8 @@ stream-ruby is a Ruby client for [Stream](https://getstream.io/).
 gem install "stream-ruby"
 ```
 
+**Users of versions < 2.0.0, Stream::Feed constructor signature and other method has changed. Please read this before upgrading:** [Breaking Changes](http://github.com/GetStream/stream-ruby/blob/master/upgrading.txt)
+
 
 ### Usage
 
