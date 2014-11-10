@@ -20,7 +20,7 @@ client = Stream::Client.new('YOUR_API_KEY', 'API_KEY_SECRET')
 # Find your API keys here https://getstream.io/dashboard/
 
 # Instantiate a feed object
-user_feed_1 = client.feed('user:1')
+user_feed_1 = client.feed('user', '1')
 
 # Get activities from 5 to 10 (slow pagination)
 result = user_feed_1.get(:limit=>5, :offset=>5)
