@@ -3,6 +3,7 @@ require 'stream/version'
 
 Gem::Specification.new do |gem|
   gem.name = "stream-ruby"
+  gem.description = "Ruby client for getstream.io service"
   gem.version = Stream::VERSION
   gem.platform = Gem::Platform::RUBY
   gem.summary = "A gem that provides a client interface for getstream.io"
@@ -13,8 +14,8 @@ Gem::Specification.new do |gem|
   gem.extra_rdoc_files = ["README.md", "LICENSE"]
   gem.files = Dir['lib/**/*']
   gem.license = 'Apache-2.0'
-  gem.add_dependency 'httparty'
-  gem.add_development_dependency "rake"
-  gem.add_development_dependency "rspec", "~> 2.10"
-  gem.add_development_dependency "simplecov", "~> 0.7.1"
+  gem.add_dependency 'httparty', '~> 0'
+  gem.add_development_dependency 'rake', '~> 0'
+  gem.add_development_dependency 'rspec', '~> 2.10'
+  gem.add_development_dependency 'simplecov', '~> 0.7'
 end
