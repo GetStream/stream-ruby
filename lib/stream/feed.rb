@@ -1,30 +1,9 @@
-require 'httparty'
 require 'stream/signer'
-require 'stream/exceptions'
+
 
 module Stream
 
-    class StreamHTTPClient
-
-        include HTTParty
-        base_uri 'https://getstream.io/api/v1.0'
-        default_timeout 3
-
-        def make_http_request(method, relative_url, params=nil, data=nil, headers=nil)
-            headers['Content-Type'] = 'application/json'
-            headers['User-Agent'] = "stream-ruby-#{Stream::VERSION}"
-            response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => data.to_json )
-            case response.code
-              when 200..203
-                return response
-              when 204...600
-                raise StreamApiResponseException, "#{response['exception']} details: #{response['detail']}"
-            end
-        end
-    end
-
     class Feed
-        @@http_client = nil
 
         attr_reader :id
         attr_reader :feed_slug
@@ -40,23 +19,6 @@ module Stream
             @feed_url = "#{feed_slug}/#{user_id}"
             @token = token
             @signature = "#{@feed_slug}#{user_id} #{token}"
-            @auth_headers = {'Authorization' => @signature}
-        end
-
-        def get_http_client
-            @@http_client ||= StreamHTTPClient.new
-        end
-
-        def get_default_params
-            {:api_key => @client.api_key}
-        end
-
-        def make_request(method, relative_url, params=nil, data=nil)
-            params = params.nil? ? {} : params
-            data = data.nil? ? {} : data
-            default_params = self.get_default_params
-            default_params.merge!(params)
-            response = self.get_http_client.make_http_request(method, relative_url, default_params, data, @auth_headers)
         end
 
         def get(params = {})
@@ -67,7 +29,7 @@ module Stream
             if params[:mark_seen] and params[:mark_seen].kind_of?(Array)
                 params[:mark_seen] = params[:mark_seen].join(",")
             end
-            self.make_request(:get, uri, params)
+            @client.make_request(:get, uri, @signature, params)
         end
 
         def sign_to_field(to)
@@ -81,7 +43,7 @@ module Stream
         def add_activity(activity_data)
             uri = "/feed/#{@feed_url}/"
             activity_data[:to] &&= self.sign_to_field(activity_data[:to])
-            self.make_request(:post, uri, nil, activity_data)
+            @client.make_request(:post, uri, @signature, nil, activity_data)
         end
 
         def add_activities(activities)
@@ -90,7 +52,7 @@ module Stream
                 activity[:to] &&= self.sign_to_field(activity[:to])
             end
             data = {:activities => activities}
-            self.make_request(:post, uri, nil, data)
+            @client.make_request(:post, uri, @signature, nil, data)
         end
 
         def remove(activity_id, foreign_id=false)
@@ -99,12 +61,12 @@ module Stream
             if foreign_id
                 params = {'foreign_id' => 1}
             end
-            self.make_request(:delete, uri, params)
+            @client.make_request(:delete, uri, @signature, params)
         end
 
         def delete()
             uri = "/feed/#{@feed_url}/"
-            self.make_request(:delete, uri)
+            @client.make_request(:delete, uri, @signature)
         end
 
         def follow(feed_slug, user_id)
@@ -113,7 +75,7 @@ module Stream
                 :target => "#{feed_slug}:#{user_id}",
                 :target_token => @client.feed(feed_slug, user_id).token
             }
-            self.make_request(:post, uri, nil, follow_data)
+            @client.make_request(:post, uri, @signature, nil, follow_data)
         end
 
         def followers(offset=0, limit=25)
@@ -122,7 +84,7 @@ module Stream
                 'offset' => offset,
                 'limit' => limit
             }
-            self.make_request(:get, uri, params)
+            @client.make_request(:get, uri, @signature, params)
         end
 
         def following(offset=0, limit=25, filter=[])
@@ -132,12 +94,12 @@ module Stream
                 'offset' => offset,
                 'filter' => filter.join(",")
             }
-            self.make_request(:get, uri, params)
+            @client.make_request(:get, uri, @signature, params)
         end
 
         def unfollow(feed_slug, user_id)
             uri = "/feed/#{@feed_url}/follows/#{feed_slug}:#{user_id}/"
-            self.make_request(:delete, uri)
+            @client.make_request(:delete, uri, @signature)
         end
 
     end

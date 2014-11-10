@@ -1,10 +1,14 @@
-require 'stream/signer'
+require 'httparty'
+require 'stream/exceptions'
 require 'stream/feed'
+require 'stream/signer'
+
 
 module Stream
     STREAM_URL_RE = /https\:\/\/(?<key>\w+)\:(?<secret>\w+).*app_id=(?<app_id>\d+)/i
 
     class Client
+        @@http_client = nil
         attr_reader :api_key
         attr_reader :api_secret
         attr_reader :app_id
@@ -33,5 +37,42 @@ module Stream
             Stream::Feed.new(self, feed_slug, user_id, token)
         end
 
+        def get_default_params
+            {:api_key => @api_key}
+        end
+
+        def get_http_client
+            @@http_client ||= StreamHTTPClient.new
+        end
+
+        def make_request(method, relative_url, signature, params=nil, data=nil)
+            auth_headers = {'Authorization' => signature}
+            params = params.nil? ? {} : params
+            data = data.nil? ? {} : data
+            default_params = self.get_default_params
+            default_params.merge!(params)
+            response = self.get_http_client.make_http_request(method, relative_url, default_params, data, auth_headers)
+        end
+
     end
+
+    class StreamHTTPClient
+
+        include HTTParty
+        base_uri 'https://getstream.io/api/v1.0'
+        default_timeout 3
+
+        def make_http_request(method, relative_url, params=nil, data=nil, headers=nil)
+            headers['Content-Type'] = 'application/json'
+            headers['User-Agent'] = "stream-ruby-#{Stream::VERSION}"
+            response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => data.to_json )
+            case response.code
+              when 200..203
+                return response
+              when 204...600
+                raise StreamApiResponseException, "#{response['exception']} details: #{response['detail']}"
+            end
+        end
+    end
+
 end
