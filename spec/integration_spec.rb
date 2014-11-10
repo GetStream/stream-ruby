@@ -235,20 +235,20 @@ describe "Integration tests" do
         end
 
         example "i dont follow" do
-            social = @client.feed('flat', 'social')
+            social = @client.feed('flat', 'rsocial1')
             response = social.following(0, 10, filter=['flat:asocial'])
             response['results'].should eq []
         end
 
         example "do i follow" do
-            social = @client.feed('flat', 'rsocial')
+            social = @client.feed('flat', 'rsocial2')
             social.follow('flat', 'r43')
             social.follow('flat', 'r244')
+            response = social.following(0, 10, filter=['flat:r244'])
+            response['results'][0]['feed_id'].should eq 'flat:rsocial2'
+            response['results'][0]['target_id'].should eq 'flat:r244'
             response = social.following(1, 10, filter=['flat:r244'])
             response['results'].should eq []
-            response = social.following(0, 10, filter=['flat:r244'])
-            response['results'][0]['feed_id'].should eq 'flat:rsocial'
-            response['results'][0]['target_id'].should eq 'flat:r244'
         end
 
         example "following a private feed" do

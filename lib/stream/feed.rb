@@ -6,7 +6,7 @@ module Stream
     class Feed
 
         attr_reader :id
-        attr_reader :feed_slug
+        attr_reader :slug
         attr_reader :user_id
         attr_reader :token
         attr_reader :signature
@@ -15,10 +15,10 @@ module Stream
             @id = "#{feed_slug}:#{user_id}"
             @client = client
             @user_id = user_id
-            @feed_slug = feed_slug
+            @slug = feed_slug
             @feed_url = "#{feed_slug}/#{user_id}"
             @token = token
-            @signature = "#{@feed_slug}#{user_id} #{token}"
+            @signature = "#{feed_slug}#{user_id} #{token}"
         end
 
         def get(params = {})
@@ -69,11 +69,11 @@ module Stream
             @client.make_request(:delete, uri, @signature)
         end
 
-        def follow(feed_slug, user_id)
+        def follow(target_feed_slug, target_user_id)
             uri = "/feed/#{@feed_url}/follows/"
             follow_data = {
-                :target => "#{feed_slug}:#{user_id}",
-                :target_token => @client.feed(feed_slug, user_id).token
+                :target => "#{target_feed_slug}:#{target_user_id}",
+                :target_token => @client.feed(target_feed_slug, target_user_id).token
             }
             @client.make_request(:post, uri, @signature, nil, follow_data)
         end
@@ -97,8 +97,8 @@ module Stream
             @client.make_request(:get, uri, @signature, params)
         end
 
-        def unfollow(feed_slug, user_id)
-            uri = "/feed/#{@feed_url}/follows/#{feed_slug}:#{user_id}/"
+        def unfollow(target_feed_slug, target_user_id)
+            uri = "/feed/#{@feed_url}/follows/#{target_feed_slug}:#{target_user_id}/"
             @client.make_request(:delete, uri, @signature)
         end
 

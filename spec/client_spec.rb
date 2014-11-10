@@ -14,6 +14,7 @@ describe Stream::Client do
         feed = client.feed('feed', '42')
         expect(feed).to be_instance_of Stream::Feed
         feed.user_id.should eq '42'
+        feed.slug.should eq 'feed'
         feed.id.should eq 'feed:42'
     end
     
