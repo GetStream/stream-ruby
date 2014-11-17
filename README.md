@@ -1,6 +1,10 @@
 stream-ruby
 ===========
-[![Gem Version](https://badge.fury.io/rb/stream-ruby.svg)](http://badge.fury.io/rb/stream-ruby)
+
+[![Build Status](https://travis-ci.org/GetStream/stream-ruby.svg?branch=master)](https://travis-ci.org/GetStream/stream-ruby) [![Gem Version](https://badge.fury.io/rb/stream-ruby.svg)](http://badge.fury.io/rb/stream-ruby)
+
+
+
 
 stream-ruby is a Ruby client for [Stream](https://getstream.io/).
 

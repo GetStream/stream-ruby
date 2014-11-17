@@ -90,8 +90,8 @@ module Stream
         def following(offset=0, limit=25, filter=[])
             uri = "/feed/#{@feed_url}/follows/"
             params = {
-                'limit' => limit,
                 'offset' => offset,
+                'limit' => limit,
                 'filter' => filter.join(",")
             }
             @client.make_request(:get, uri, @signature, params)
