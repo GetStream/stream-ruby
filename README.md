@@ -8,14 +8,14 @@ stream-ruby
 
 stream-ruby is a Ruby client for [Stream](https://getstream.io/).
 
+**Users of versions < 2.0.0, Stream::Feed constructor signature and other methods has changed. Please read this before upgrading:** [Breaking Changes](http://github.com/GetStream/stream-ruby/blob/master/upgrading.txt)
+
+
 ### Installation
 
 ```bash
 gem install "stream-ruby"
 ```
-
-**Users of versions < 2.0.0, Stream::Feed constructor signature and other methods has changed. Please read this before upgrading:** [Breaking Changes](http://github.com/GetStream/stream-ruby/blob/master/upgrading.txt)
-
 
 ### Usage
 
@@ -79,7 +79,7 @@ user_feed_1.delete
 token = user_feed_1.token
 
 # Javascript client side feed initialization
-# user1 = client.feed('user:1', '{{ token }}');
+# user1 = client.feed('user', '1', '{{ token }}');
 
 # Retrieve first 10 followers of a feed
 user_feed_1.followers(0, 10)
