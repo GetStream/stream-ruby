@@ -2,6 +2,7 @@ require 'json'
 require 'stream/client'
 require 'stream/version'
 require 'stream/signer'
+require 'stream/exceptions'
 
 module Stream
     class << self

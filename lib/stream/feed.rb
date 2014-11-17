@@ -12,6 +12,15 @@ module Stream
         attr_reader :signature
 
         def initialize(client, feed_slug, user_id, token)
+
+            if !self.valid_feed_slug feed_slug
+                raise StreamInputData, "feed_slug can only contain alphanumeric characters plus \"_\""
+            end
+
+            if !self.valid_user_id user_id
+                raise StreamInputData, "user_id can only contain alphanumeric characters plus \"_\""
+            end
+
             @id = "#{feed_slug}:#{user_id}"
             @client = client
             @user_id = user_id
@@ -19,6 +28,14 @@ module Stream
             @feed_url = "#{feed_slug}/#{user_id}"
             @token = token
             @signature = "#{feed_slug}#{user_id} #{token}"
+        end
+
+        def valid_feed_slug(feed_slug)
+            !feed_slug[/^\w+$/].nil?
+        end
+
+        def valid_user_id(user_id)
+            !user_id[/^\w+$/].nil?
         end
 
         def get(params = {})
