@@ -35,7 +35,7 @@ module Stream
         end
 
         def valid_user_id(user_id)
-            !user_id[/^\w+$/].nil?
+            !user_id.to_s[/^\w+$/].nil?
         end
 
         def get(params = {})
