@@ -18,7 +18,7 @@ module Stream
             end
 
             if !self.valid_user_id user_id
-                raise StreamInputData, "user_id can only contain alphanumeric characters plus \"_\""
+                raise StreamInputData, "user_id can only contain alphanumeric characters plus underscores and dashes"
             end
 
             @id = "#{feed_slug}:#{user_id}"
@@ -35,7 +35,7 @@ module Stream
         end
 
         def valid_user_id(user_id)
-            !user_id.to_s[/^\w+$/].nil?
+            !user_id.to_s[/^[\w-]+$/].nil?
         end
 
         def get(params = {})
