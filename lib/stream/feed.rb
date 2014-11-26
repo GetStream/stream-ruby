@@ -73,6 +73,10 @@ module Stream
         end
 
         def remove(activity_id, foreign_id=false)
+            self.remove_activity(activity_id, foreign_id)
+        end
+
+        def remove_activity(activity_id, foreign_id=false)
             uri = "/feed/#{@feed_url}/#{activity_id}/"
             params = nil
             if foreign_id

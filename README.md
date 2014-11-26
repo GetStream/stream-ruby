@@ -45,10 +45,10 @@ activity_data = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'tw
 activity_response = user_feed_1.add_activity(activity_data)
 
 # Remove an activity by its id
-user_feed_1.remove('e561de8f-00f1-11e4-b400-0cc47a024be0')
+user_feed_1.remove_activity('e561de8f-00f1-11e4-b400-0cc47a024be0')
 
 # Remove activities by their foreign_id
-user_feed_1.remove('tweet:1', foreign_id=true)
+user_feed_1.remove_activity('tweet:1', foreign_id=true)
 
 # Follow another feed
 user_feed_1.follow('flat', '42')

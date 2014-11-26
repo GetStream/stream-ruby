@@ -176,7 +176,7 @@ describe "Integration tests" do
             response = feed.add_activity(@test_activity)
             results = feed.get(:limit=>1)["results"]
             results[0]["id"].should eq response["id"]
-            feed.remove(response["id"])
+            feed.remove_activity(response["id"])
             results = feed.get(:limit=>1)["results"]
             if results.count > 0
                 results[0]["id"].should_not eq response["id"]
@@ -188,7 +188,7 @@ describe "Integration tests" do
             activity = @feed42.add_activity(activity)
             activity = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'ruby:43'}
             activity = @feed42.add_activity(activity)
-            @feed42.remove('ruby:43', foreign_id=true)
+            @feed42.remove_activity('ruby:43', foreign_id=true)
             results = @feed42.get(:limit=>2)["results"]
             results[0]["foreign_id"].should eq 'ruby:42'
         end
