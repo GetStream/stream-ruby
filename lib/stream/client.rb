@@ -59,7 +59,7 @@ module Stream
     class StreamHTTPClient
 
         include HTTParty
-        base_uri 'https://getstream.io/api/v1.0'
+        base_uri 'https://api.getstream.io/api/v1.0'
         default_timeout 3
 
         def make_http_request(method, relative_url, params=nil, data=nil, headers=nil)
