@@ -5,7 +5,7 @@ require 'stream'
 describe "Integration tests" do
 
     before do
-        @client = Stream::Client.new('ahj2ndz7gsan', 'gthc2t9gh7pzq52f6cky8w4r4up9dr6rju9w3fjgmkv6cdvvav2ufe5fv7e2r9qy')
+        @client = Stream::Client.new('ahj2ndz7gsan', 'gthc2t9gh7pzq52f6cky8w4r4up9dr6rju9w3fjgmkv6cdvvav2ufe5fv7e2r9qy', nil, {})
         @feed42 = @client.feed('flat', 'r42')
         @test_activity = {:actor => 1, :verb => 'tweet', :object => 1}
     end

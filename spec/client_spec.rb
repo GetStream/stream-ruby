@@ -40,4 +40,16 @@ describe Stream::Client do
         ENV.delete 'STREAM_URL'
     end
 
+    it "should handle default location as api.getstream.io" do
+        client = Stream::Client.new('1','2')
+        http_client = client.get_http_client
+        http_client.class.base_uri.should eq 'https://api.getstream.io/api/v1.0'
+    end
+
+    it "should handle us-east location as api.getstream.io" do
+        client = Stream::Client.new('1','2', nil, :location => 'us-east')
+        http_client = client.get_http_client
+        http_client.class.base_uri.should eq 'https://us-east-api.getstream.io/api/v1.0'
+    end
+
 end
