@@ -2,6 +2,14 @@
  Change history
 ================
 
+2.1.0
+=====
+:release-date: 2014-12-18 20:00 A.M GMT
+:by: Tommaso Barbugli
+
+* Configurable API location
+* Configurable API version
+
 2.0.1
 =====
 :release-date: 2014-11-10 15:00 A.M GMT
