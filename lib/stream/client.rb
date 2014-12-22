@@ -5,7 +5,7 @@ require 'stream/signer'
 
 
 module Stream
-    STREAM_URL_RE = /https\:\/\/(?<key>\w+)\:(?<secret>\w+).*app_id=(?<app_id>\d+)/i
+    STREAM_URL_RE = /https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|(api-(?<location>[-\w]+)\.))?getstream\.io\/?*.app_id=(?<app_id>\d+)/i
 
     class Client
         attr_reader :api_key
@@ -15,11 +15,13 @@ module Stream
         attr_reader :location
 
         def initialize(api_key='', api_secret='', app_id=nil, opts={})
+
             if ENV['STREAM_URL'] =~ Stream::STREAM_URL_RE and (api_key.nil? || api_key.empty?)
                 matches = Stream::STREAM_URL_RE.match(ENV['STREAM_URL'])
                 api_key = matches['key']
                 api_secret = matches['secret']
                 app_id = matches['app_id']
+                opts[:location] = matches['location']
             end
 
             if api_key.nil? || api_key.empty?
