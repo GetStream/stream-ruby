@@ -25,6 +25,7 @@ describe Stream::Client do
         client.api_secret.should eq 'pass'
         client.app_id.should eq '1'
         client.location.should eq nil
+        client.get_http_client.class.base_uri.should eq 'https://api.getstream.io/api/v1.0'
     end
 
     it "old heroku url" do
@@ -34,15 +35,17 @@ describe Stream::Client do
         client.api_secret.should eq 'pass'
         client.app_id.should eq '1'
         client.location.should eq nil
+        client.get_http_client.class.base_uri.should eq 'https://api.getstream.io/api/v1.0'
     end
 
     it "heroku url with location" do
-        ENV['STREAM_URL'] = 'https://thierry:pass@api-eu-west.getstream.io/?app_id=1'
+        ENV['STREAM_URL'] = 'https://thierry:pass@eu-west.getstream.io/?app_id=1'
         client = Stream::Client.new()
         client.api_key.should eq 'thierry'
         client.api_secret.should eq 'pass'
         client.app_id.should eq '1'
         client.location.should eq 'eu-west'
+        client.get_http_client.class.base_uri.should eq 'https://eu-west-api.getstream.io/api/v1.0'
     end
 
     it "wrong heroku vars" do
