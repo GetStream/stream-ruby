@@ -22,7 +22,7 @@ gem install "stream-ruby"
 ```ruby
 # Instantiate a new client
 require 'stream'
-client = Stream::Client.new('YOUR_API_KEY', 'API_KEY_SECRET')
+client = Stream::Client.new('YOUR_API_KEY', 'API_KEY_SECRET', 'APP_ID', :location => 'us-east')
 # Find your API keys here https://getstream.io/dashboard/
 
 # Instantiate a feed object
