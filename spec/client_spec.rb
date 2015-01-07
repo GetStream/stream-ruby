@@ -48,6 +48,16 @@ describe Stream::Client do
         client.get_http_client.class.base_uri.should eq 'https://eu-west-api.getstream.io/api/v1.0'
     end
 
+    it "heroku url with location and extra vars" do
+        ENV['STREAM_URL'] = 'https://thierry:pass@eu-west.getstream.io/?something_else=2&app_id=1&something_more=3'
+        client = Stream::Client.new()
+        client.api_key.should eq 'thierry'
+        client.api_secret.should eq 'pass'
+        client.app_id.should eq '1'
+        client.location.should eq 'eu-west'
+        client.get_http_client.class.base_uri.should eq 'https://eu-west-api.getstream.io/api/v1.0'
+    end
+
     it "wrong heroku vars" do
         ENV['STREAM_URL'] = 'https://thierry:pass@getstream.io/?a=1'
         expect{Stream::Client.new()}.to raise_error(ArgumentError)
