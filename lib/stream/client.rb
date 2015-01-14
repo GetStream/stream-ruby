@@ -62,7 +62,7 @@ module Stream
     class StreamHTTPClient
 
         include HTTParty
-        default_timeout 3
+        default_timeout 10
 
         def initialize(api_version='v1.0', location=nil)
             if location.nil?
