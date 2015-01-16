@@ -12,9 +12,9 @@ module Stream
         attr_reader :app_id
         attr_reader :api_version
         attr_reader :location
+        attr_reader :default_timeout
 
         def initialize(api_key='', api_secret='', app_id=nil, opts={})
-
             if ENV['STREAM_URL'] =~ Stream::STREAM_URL_RE and (api_key.nil? || api_key.empty?)
                 matches = Stream::STREAM_URL_RE.match(ENV['STREAM_URL'])
                 api_key = matches['key']
@@ -32,6 +32,7 @@ module Stream
             @app_id = app_id
             @location = opts[:location]
             @api_version = opts.fetch(:api_version, 'v1.0')
+            @default_timeout = opts.fetch(:default_timeout, 3)
             @signer = Stream::Signer.new(api_secret)
         end
 
@@ -45,7 +46,7 @@ module Stream
         end
 
         def get_http_client
-            StreamHTTPClient.new(@api_version, @location)
+            StreamHTTPClient.new(@api_version, @location, @default_timeout)
         end
 
         def make_request(method, relative_url, signature, params=nil, data=nil)
@@ -62,15 +63,15 @@ module Stream
     class StreamHTTPClient
 
         include HTTParty
-        default_timeout 3
 
-        def initialize(api_version='v1.0', location=nil)
+        def initialize(api_version='v1.0', location=nil, default_timeout=3)
             if location.nil?
                 location_name = "api"
             else
                 location_name = "#{location}-api"
             end
             self.class.base_uri "https://#{location_name}.getstream.io/api/#{api_version}"
+            self.class.default_timeout default_timeout
         end
 
         def make_http_request(method, relative_url, params=nil, data=nil, headers=nil)

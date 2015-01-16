@@ -2,6 +2,14 @@
  Change history
 ================
 
+2.1.4
+=====
+:release-date: 2015-01-16 10:00 A.M CET
+:by: Tommaso Barbugli
+
+* Configurable API timeout
+
+
 2.1.0
 =====
 :release-date: 2014-12-18 20:00 A.M GMT
