@@ -41,7 +41,7 @@ activity_data = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'tw
 	:course => {:name => 'Golden Gate park', :distance => 10},
 	:participants => ['Thierry', 'Tommaso'],
 	:started_at => DateTime.now()
-};
+}
 activity_response = user_feed_1.add_activity(activity_data)
 
 # Remove an activity by its id
@@ -60,8 +60,8 @@ user_feed_1.unfollow('flat', '42')
 activities = [
     [:actor => '1', :verb => 'tweet', :object => '1'],
     [:actor => '2', :verb => 'like', :object => '3']
-];
-user_feed_1.addActivities(activities);
+]
+user_feed_1.addActivities(activities)
 
 # Add an activity and push it to other feeds too using the `to` field
 data = [
@@ -69,8 +69,8 @@ data = [
     :verb => "like",
     :object_id => "3",
     :to => ["user:44", "user:45"]
-];
-user_feed_1.add_activity(data);
+]
+user_feed_1.add_activity(data)
 
 # Remove a feed and its content
 user_feed_1.delete
