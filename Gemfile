@@ -6,4 +6,5 @@ group :test do
   gem "rack"
   gem "httparty"
   gem "simplecov"
+  gem "yard"
 end
