@@ -297,11 +297,11 @@ describe "Integration tests" do
         end
 
         it "should be able to send signed requests" do
-            @client.make_signed_request('get', '/test/auth/digest/')
+            @client.make_signed_request(:get, '/test/auth/digest/')
         end
 
         it "should be able to send signed requests with data" do
-            @client.make_signed_request('post', '/test/auth/digest/', nil, :var=>[1, 2, '3'])
+            @client.make_signed_request(:post, '/test/auth/digest/', {}, :var=>[1, 2, '3'])
         end
 
         it "should be able to follow many feeds in one request" do

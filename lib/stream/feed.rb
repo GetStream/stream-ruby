@@ -78,7 +78,7 @@ module Stream
 
         def remove_activity(activity_id, foreign_id=false)
             uri = "/feed/#{@feed_url}/#{activity_id}/"
-            params = nil
+            params = {}
             if foreign_id
                 params = {'foreign_id' => 1}
             end

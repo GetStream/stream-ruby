@@ -138,7 +138,6 @@ module Stream
             end
             @base_path = "/api/#{api_version}"
             self.class.base_uri "https://#{location_name}.getstream.io#{@base_path}"
-            self.class.base_uri "http://localhost:8000#{@base_path}"
             self.class.default_timeout default_timeout
         end
 
