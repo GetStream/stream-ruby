@@ -2,6 +2,10 @@
  Change history
 ================
 
+* Added new request signing (using HTTP Signatures draft specification)
+* Added code docs
+* Added support for follow_many
+
 2.1.4
 =====
 :release-date: 2015-01-16 10:00 A.M CET

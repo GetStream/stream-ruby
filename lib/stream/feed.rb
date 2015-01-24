@@ -60,7 +60,7 @@ module Stream
         def add_activity(activity_data)
             uri = "/feed/#{@feed_url}/"
             activity_data[:to] &&= self.sign_to_field(activity_data[:to])
-            @client.make_request(:post, uri, @signature, nil, activity_data)
+            @client.make_request(:post, uri, @signature, {}, activity_data)
         end
 
         def add_activities(activities)
@@ -69,7 +69,7 @@ module Stream
                 activity[:to] &&= self.sign_to_field(activity[:to])
             end
             data = {:activities => activities}
-            @client.make_request(:post, uri, @signature, nil, data)
+            @client.make_request(:post, uri, @signature, {}, data)
         end
 
         def remove(activity_id, foreign_id=false)
@@ -96,7 +96,7 @@ module Stream
                 :target => "#{target_feed_slug}:#{target_user_id}",
                 :target_token => @client.feed(target_feed_slug, target_user_id).token
             }
-            @client.make_request(:post, uri, @signature, nil, follow_data)
+            @client.make_request(:post, uri, @signature, {}, follow_data)
         end
 
         def followers(offset=0, limit=25)

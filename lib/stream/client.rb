@@ -1,7 +1,11 @@
+require "net/http"
+require "time"
+require "http_signatures"
 require 'httparty'
 require 'stream/exceptions'
 require 'stream/feed'
 require 'stream/signer'
+
 
 module Stream
     STREAM_URL_RE = /https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)/i
@@ -72,7 +76,7 @@ module Stream
         # client.follow_many([['flat:4', 'user:1'], ['flat:4', 'user:2']])
         # 
         def follow_many(follows)
-            self.make_signed_request(:post, '/follow_many/', nil, follows)
+            self.make_signed_request(:post, '/follow_many/', {}, follows)
         end
 
         def get_default_params
@@ -83,18 +87,40 @@ module Stream
             StreamHTTPClient.new(@api_version, @location, @default_timeout)
         end
 
-        def make_request(method, relative_url, signature, params=nil, data=nil)
-            auth_headers = {'Authorization' => signature}
-            params = params.nil? ? {} : params
-            data = data.nil? ? {} : data
-            default_params = self.get_default_params
-            default_params.merge!(params)
-            response = self.get_http_client.make_http_request(method, relative_url, default_params, data, auth_headers)
+        def make_query_params(params)
+            self.get_default_params.merge(params)
         end
 
-        def make_signed_request(method, relative_url, params=nil, data={})
-            signature = @signer.sign_message("#{method.upcase}/api#{relative_url}#{data.to_json}")
-            self.make_request(method, relative_url, signature, params, data)
+        def make_request(method, relative_url, signature, params={}, data={}, headers={})
+            headers['Authorization'] = signature
+            self.get_http_client.make_http_request(method, relative_url, self.make_query_params(params), data, headers)
+        end
+
+        def make_signed_request(method, relative_url, params={}, data={})
+            query_params = self.make_query_params(params)
+            context = HttpSignatures::Context.new(
+                keys: {@api_key => @api_secret},
+                algorithm: "hmac-sha256",
+                headers: ["(request-target)", "Date"],
+            )
+            method_map = {
+                :get => Net::HTTP::Get,
+                :delete => Net::HTTP::Delete,
+                :put => Net::HTTP::Put,
+                :post => Net::HTTP::Post,
+            }
+            request_date = Time.now.rfc822
+            message = method_map[method].new(
+              "#{self.get_http_client.base_path}#{relative_url}?#{URI.encode_www_form(query_params)}",
+              'Date' => request_date,
+            )
+            context.signer.sign(message)
+            headers = {
+                'Authorization' => message["Signature"],
+                'Date' => request_date,
+                'X-Api-Key' => self.api_key
+            }
+            self.get_http_client.make_http_request(method, relative_url, query_params, data, headers)
         end
 
     end
@@ -102,6 +128,7 @@ module Stream
     class StreamHTTPClient
 
         include HTTParty
+        attr_reader :base_path
 
         def initialize(api_version='v1.0', location=nil, default_timeout=3)
             if location.nil?
@@ -109,7 +136,9 @@ module Stream
             else
                 location_name = "#{location}-api"
             end
-            self.class.base_uri "https://#{location_name}.getstream.io/api/#{api_version}"
+            @base_path = "/api/#{api_version}"
+            self.class.base_uri "https://#{location_name}.getstream.io#{@base_path}"
+            self.class.base_uri "http://localhost:8000#{@base_path}"
             self.class.default_timeout default_timeout
         end
 
