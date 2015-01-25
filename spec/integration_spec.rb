@@ -312,6 +312,12 @@ describe "Integration tests" do
             @client.follow_many(follows)
         end
 
+        it "should be able to add one activity to many feeds in one request" do
+            feeds = ['flat:1', 'flat:2', 'flat:3', 'flat:4']
+            activity_data = {:actor => 'tommaso', :verb => 'tweet', :object => 1}
+            @client.add_to_many(activity_data, feeds)
+        end
+
     end
 
 end

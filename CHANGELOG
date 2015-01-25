@@ -2,6 +2,7 @@
  Change history
 ================
 
+* Added support for add_to_many
 * Added new request signing (using HTTP Signatures draft specification)
 * Added code docs
 * Added support for follow_many

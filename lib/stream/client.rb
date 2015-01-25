@@ -79,7 +79,24 @@ module Stream
             self.make_signed_request(:post, '/follow_many/', {}, follows)
         end
 
+        #
+        # Adds an activity to many feeds in one single request
+        #
+        # @param [Hash] activity_data the activity do add
+        # @param [Array<string>] feeds list of feeds (eg. 'user:1', 'flat:2')
+        #
+        # @return [nil]
+        # 
+        def add_to_many(activity_data, feeds)
+            data = {
+                :feeds => feeds,
+                :activity => activity_data
+            }
+            self.make_signed_request(:post, '/feed/add_to_many/', {}, data)
+        end
+
         def get_default_params
+
             {:api_key => @api_key}
         end
 
