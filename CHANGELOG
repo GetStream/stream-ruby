@@ -2,6 +2,11 @@
  Change history
 ================
 
+2.2
+====
+:release-date: 2015-01-25 4:50 P.M EST
+:by: Tommaso Barbugli
+
 * Added support for add_to_many
 * Added new request signing (using HTTP Signatures draft specification)
 * Added code docs
