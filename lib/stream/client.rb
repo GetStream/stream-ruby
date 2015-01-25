@@ -1,6 +1,3 @@
-require "net/http"
-require "time"
-require "http_signatures"
 require 'httparty'
 require 'stream/exceptions'
 require 'stream/feed'
@@ -17,6 +14,13 @@ module Stream
         attr_reader :api_version
         attr_reader :location
         attr_reader :default_timeout
+
+        if RUBY_VERSION >= "2.0"
+            require 'stream/batch'
+            require 'stream/signedrequest'
+            include Stream::SignedRequest
+            include Stream::Batch
+        end
 
         #
         # initializes a Stream API Client
@@ -64,39 +68,7 @@ module Stream
             Stream::Feed.new(self, feed_slug, user_id, token)
         end
 
-        #
-        # Follows many feeds in one single request
-        #
-        # @param [Array<Hash<:source, :target>>] follows the list of follows
-        #
-        # @return [nil]
-        # 
-        # @example
-        # 
-        # client.follow_many([['flat:4', 'user:1'], ['flat:4', 'user:2']])
-        # 
-        def follow_many(follows)
-            self.make_signed_request(:post, '/follow_many/', {}, follows)
-        end
-
-        #
-        # Adds an activity to many feeds in one single request
-        #
-        # @param [Hash] activity_data the activity do add
-        # @param [Array<string>] feeds list of feeds (eg. 'user:1', 'flat:2')
-        #
-        # @return [nil]
-        # 
-        def add_to_many(activity_data, feeds)
-            data = {
-                :feeds => feeds,
-                :activity => activity_data
-            }
-            self.make_signed_request(:post, '/feed/add_to_many/', {}, data)
-        end
-
         def get_default_params
-
             {:api_key => @api_key}
         end
 
@@ -111,33 +83,6 @@ module Stream
         def make_request(method, relative_url, signature, params={}, data={}, headers={})
             headers['Authorization'] = signature
             self.get_http_client.make_http_request(method, relative_url, self.make_query_params(params), data, headers)
-        end
-
-        def make_signed_request(method, relative_url, params={}, data={})
-            query_params = self.make_query_params(params)
-            context = HttpSignatures::Context.new(
-                keys: {@api_key => @api_secret},
-                algorithm: "hmac-sha256",
-                headers: ["(request-target)", "Date"],
-            )
-            method_map = {
-                :get => Net::HTTP::Get,
-                :delete => Net::HTTP::Delete,
-                :put => Net::HTTP::Put,
-                :post => Net::HTTP::Post,
-            }
-            request_date = Time.now.rfc822
-            message = method_map[method].new(
-              "#{self.get_http_client.base_path}#{relative_url}?#{URI.encode_www_form(query_params)}",
-              'Date' => request_date,
-            )
-            context.signer.sign(message)
-            headers = {
-                'Authorization' => message["Signature"],
-                'Date' => request_date,
-                'X-Api-Key' => self.api_key
-            }
-            self.get_http_client.make_http_request(method, relative_url, query_params, data, headers)
         end
 
     end
