@@ -296,7 +296,7 @@ describe "Integration tests" do
             }.to raise_error Stream::StreamApiResponseException
         end
 
-        if Stream::Client.respond_to?('make_signed_request')
+        if Stream::Client.respond_to?('supports_signed_requests')
             it "should be able to send signed requests" do
                 @client.make_signed_request(:get, '/test/auth/digest/')
             end

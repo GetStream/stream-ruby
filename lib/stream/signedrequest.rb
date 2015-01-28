@@ -5,6 +5,16 @@ require "time"
 module Stream
 
   module SignedRequest
+
+    module ClassMethods
+        def supports_signed_requests()
+        end
+    end
+
+    def self.included(klass)
+        klass.extend ClassMethods
+    end
+
     def make_signed_request(method, relative_url, params={}, data={})
         query_params = self.make_query_params(params)
         context = HttpSignatures::Context.new(
