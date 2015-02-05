@@ -15,7 +15,7 @@ module Stream
         attr_reader :location
         attr_reader :default_timeout
 
-        if RUBY_VERSION.to_f >= 2.0
+        if RUBY_VERSION.to_f >= 2.1
             require 'stream/batch'
             require 'stream/signedrequest'
 
