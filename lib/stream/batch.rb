@@ -10,7 +10,12 @@ module Stream
       # 
       # @example
       # 
-      # client.follow_many([['flat:4', 'user:1'], ['flat:4', 'user:2']])
+      # 
+      # follows = [
+      #   {:source => 'flat:1', :target => 'user:1'},
+      #   {:source => 'flat:1', :target => 'user:3'}
+      # ]
+      # @client.follow_many(follows)
       # 
       def follow_many(follows)
           self.make_signed_request(:post, '/follow_many/', {}, follows)
