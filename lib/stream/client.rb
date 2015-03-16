@@ -107,7 +107,10 @@ module Stream
         def make_http_request(method, relative_url, params=nil, data=nil, headers=nil)
             headers['Content-Type'] = 'application/json'
             headers['User-Agent'] = "stream-ruby-#{Stream::VERSION}"
-            response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => data.to_json )
+            if ['post', 'put'].include? method.to_s 
+                body = data.to_json
+            end
+            response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => body )
             case response.code
               when 200..203
                 return response
