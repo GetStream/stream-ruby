@@ -31,7 +31,7 @@ module Stream
         end
 
         def valid_feed_slug(feed_slug)
-            !feed_slug[/^\w+$/].nil?
+            !feed_slug[/^[^_\W]+$/].nil?
         end
 
         def valid_user_id(user_id)
