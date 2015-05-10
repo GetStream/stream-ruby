@@ -14,7 +14,7 @@ module Stream
         def initialize(client, feed_slug, user_id, token)
 
             if !self.valid_feed_slug feed_slug
-                raise StreamInputData, "feed_slug can only contain alphanumeric characters plus \"_\""
+                raise StreamInputData, "feed_slug can only contain alphanumeric characters"
             end
 
             if !self.valid_user_id user_id
