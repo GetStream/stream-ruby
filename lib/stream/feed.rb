@@ -9,11 +9,11 @@ module Stream
     attr_reader :signature
 
     def initialize(client, feed_slug, user_id, token)
-      unless self.valid_feed_slug feed_slug
+      unless valid_feed_slug feed_slug
         raise StreamInputData, "feed_slug can only contain alphanumeric characters"
       end
 
-      unless self.valid_user_id user_id
+      unless valid_user_id user_id
         raise StreamInputData, "user_id can only contain alphanumeric characters plus underscores and dashes"
       end
 
@@ -55,21 +55,21 @@ module Stream
 
     def add_activity(activity_data)
       uri = "/feed/#{@feed_url}/"
-      activity_data[:to] &&= self.sign_to_field(activity_data[:to])
+      activity_data[:to] &&= sign_to_field(activity_data[:to])
       @client.make_request(:post, uri, @signature, {}, activity_data)
     end
 
     def add_activities(activities)
       uri = "/feed/#{@feed_url}/"
       activities.each do |activity|
-        activity[:to] &&= self.sign_to_field(activity[:to])
+        activity[:to] &&= sign_to_field(activity[:to])
       end
       data = {:activities => activities}
       @client.make_request(:post, uri, @signature, {}, data)
     end
 
     def remove(activity_id, foreign_id=false)
-      self.remove_activity(activity_id, foreign_id)
+      remove_activity(activity_id, foreign_id)
     end
 
     def remove_activity(activity_id, foreign_id=false)

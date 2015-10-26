@@ -14,7 +14,7 @@ module Stream
     end
 
     def make_signed_request(method, relative_url, params={}, data={})
-      query_params = self.make_query_params(params)
+      query_params = make_query_params(params)
       context = HttpSignatures::Context.new(
         keys: {@api_key => @api_secret},
         algorithm: "hmac-sha256",
@@ -28,16 +28,16 @@ module Stream
       }
       request_date = Time.now.rfc822
       message = method_map[method].new(
-        "#{self.get_http_client.base_path}#{relative_url}?#{URI.encode_www_form(query_params)}",
+        "#{get_http_client.base_path}#{relative_url}?#{URI.encode_www_form(query_params)}",
         'Date' => request_date,
       )
       context.signer.sign(message)
       headers = {
         'Authorization' => message["Signature"],
         'Date' => request_date,
-        'X-Api-Key' => self.api_key
+        'X-Api-Key' => api_key
       }
-      self.get_http_client.make_http_request(method, relative_url, query_params, data, headers)
+      get_http_client.make_http_request(method, relative_url, query_params, data, headers)
     end
   end
 end

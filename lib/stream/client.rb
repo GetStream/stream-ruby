@@ -77,12 +77,12 @@ module Stream
     end
 
     def make_query_params(params)
-      self.get_default_params.merge(params)
+      get_default_params.merge(params)
     end
 
     def make_request(method, relative_url, signature, params={}, data={}, headers={})
       headers['Authorization'] = signature
-      self.get_http_client.make_http_request(method, relative_url, self.make_query_params(params), data, headers)
+      get_http_client.make_http_request(method, relative_url, make_query_params(params), data, headers)
     end
   end
 

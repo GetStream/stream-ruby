@@ -191,12 +191,7 @@ Style/NegatedIf:
 # Offense count: 16
 # Cop supports --auto-correct.
 Style/RedundantSelf:
-  Exclude:
-    - 'lib/stream/batch.rb'
-    - 'lib/stream/client.rb'
-    - 'lib/stream/feed.rb'
-    - 'lib/stream/signedrequest.rb'
-    - 'lib/stream/signer.rb'
+  Enabled: true
 
 # Offense count: 1
 # Cop supports --auto-correct.
