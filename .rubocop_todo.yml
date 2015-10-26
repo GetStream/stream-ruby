@@ -176,9 +176,7 @@ Style/IndentationWidth:
 # Offense count: 8
 # Cop supports --auto-correct.
 Style/MethodCallParentheses:
-  Exclude:
-    - 'spec/client_spec.rb'
-    - 'spec/integration_spec.rb'
+  Enabled: true
 
 # Offense count: 1
 # Configuration parameters: EnforcedStyle, SupportedStyles.

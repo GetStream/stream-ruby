@@ -202,21 +202,21 @@ describe "Integration tests" do
 
     example "retrieve feed with no followers" do
       lonely = @client.feed('flat', 'rlonely')
-      response = lonely.followers()
+      response = lonely.followers
       response['results'].should eq []
     end
 
     example "retrieve feed followers with limit and offset" do
       @client.feed('flat' ,'r43').follow('flat', 'r42')
       @client.feed('flat' ,'r44').follow('flat', 'r42')
-      response = @feed42.followers()
+      response = @feed42.followers
       response['results'][0]['feed_id'].should eq 'flat:r44'
       response['results'][0]['target_id'].should eq 'flat:r42'
     end
 
     example "retrieve feed with no followings" do
       asocial = @client.feed('flat', 'rasocial')
-      response = asocial.following()
+      response = asocial.following
       response['results'].should eq []
     end
 

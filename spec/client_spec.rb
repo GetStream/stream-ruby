@@ -20,7 +20,7 @@ describe Stream::Client do
     
   it "on heroku we connect using environment variables" do
     ENV['STREAM_URL'] = 'https://thierry:pass@getstream.io/?app_id=1'
-    client = Stream::Client.new()
+    client = Stream::Client.new
     client.api_key.should eq 'thierry'
     client.api_secret.should eq 'pass'
     client.app_id.should eq '1'
@@ -30,7 +30,7 @@ describe Stream::Client do
 
   it "old heroku url" do
     ENV['STREAM_URL'] = 'https://thierry:pass@api.getstream.io/?app_id=1'
-    client = Stream::Client.new()
+    client = Stream::Client.new
     client.api_key.should eq 'thierry'
     client.api_secret.should eq 'pass'
     client.app_id.should eq '1'
@@ -40,7 +40,7 @@ describe Stream::Client do
 
   it "heroku url with location" do
     ENV['STREAM_URL'] = 'https://thierry:pass@eu-west.getstream.io/?app_id=1'
-    client = Stream::Client.new()
+    client = Stream::Client.new
     client.api_key.should eq 'thierry'
     client.api_secret.should eq 'pass'
     client.app_id.should eq '1'
@@ -50,7 +50,7 @@ describe Stream::Client do
 
   it "heroku url with location and extra vars" do
     ENV['STREAM_URL'] = 'https://thierry:pass@eu-west.getstream.io/?something_else=2&app_id=1&something_more=3'
-    client = Stream::Client.new()
+    client = Stream::Client.new
     client.api_key.should eq 'thierry'
     client.api_secret.should eq 'pass'
     client.app_id.should eq '1'
@@ -60,7 +60,7 @@ describe Stream::Client do
 
   it "wrong heroku vars" do
     ENV['STREAM_URL'] = 'https://thierry:pass@getstream.io/?a=1'
-    expect{Stream::Client.new()}.to raise_error(ArgumentError)
+    expect{Stream::Client.new}.to raise_error(ArgumentError)
   end
 
   it "but overwriting environment variables should be possible" do
