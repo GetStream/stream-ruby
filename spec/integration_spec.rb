@@ -175,9 +175,7 @@ describe "Integration tests" do
             results[0]["id"].should eq response["id"]
             feed.remove_activity(response["id"])
             results = feed.get(:limit=>1)["results"]
-            if results.count > 0
-                results[0]["id"].should_not eq response["id"]
-            end
+            results[0]["id"].should_not eq response["id"] if results.count > 0
         end
 
         example "removing an activity by foreign_id" do

@@ -154,10 +154,7 @@ Style/HashSyntax:
 # Cop supports --auto-correct.
 # Configuration parameters: MaxLineLength.
 Style/IfUnlessModifier:
-  Exclude:
-    - 'lib/stream/client.rb'
-    - 'lib/stream/feed.rb'
-    - 'spec/integration_spec.rb'
+  Enabled: true
 
 # Offense count: 3
 # Cop supports --auto-correct.
