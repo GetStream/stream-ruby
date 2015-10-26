@@ -23,6 +23,5 @@ module Stream
         def sign(feed_slug, user_id)
             self.sign_message("#{feed_slug}#{user_id}")
         end
-
     end
 end

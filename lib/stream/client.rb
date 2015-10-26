@@ -84,11 +84,9 @@ module Stream
             headers['Authorization'] = signature
             self.get_http_client.make_http_request(method, relative_url, self.make_query_params(params), data, headers)
         end
-
     end
 
     class StreamHTTPClient
-
         include HTTParty
         attr_reader :base_path
 

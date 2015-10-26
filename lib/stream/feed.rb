@@ -3,7 +3,6 @@ require 'stream/signer'
 module Stream
 
     class Feed
-
         attr_reader :id
         attr_reader :slug
         attr_reader :user_id
@@ -121,6 +120,5 @@ module Stream
             uri = "/feed/#{@feed_url}/follows/#{target_feed_slug}:#{target_user_id}/"
             @client.make_request(:delete, uri, @signature)
         end
-
     end
 end
