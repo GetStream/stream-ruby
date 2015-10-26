@@ -30,7 +30,7 @@ describe "Integration tests" do
     end
 
     example "mark_seen=true should not mark read" do
-      feed = @client.feed('notification','rb1')
+      feed = @client.feed('notification', 'rb1')
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
@@ -154,7 +154,7 @@ describe "Integration tests" do
     end
 
     example "posting a custom field as a list" do
-      list_value = [1,2,3]
+      list_value = [1, 2, 3]
       activity = {:actor => 1, :verb => 'tweet', :object => 1, :hash_data => list_value}
       response = @feed42.add_activity(activity)
       response.should include("id", "actor", "verb", "object", "target", "hash_data")
@@ -207,8 +207,8 @@ describe "Integration tests" do
     end
 
     example "retrieve feed followers with limit and offset" do
-      @client.feed('flat' ,'r43').follow('flat', 'r42')
-      @client.feed('flat' ,'r44').follow('flat', 'r42')
+      @client.feed('flat' , 'r43').follow('flat', 'r42')
+      @client.feed('flat' , 'r44').follow('flat', 'r42')
       response = @feed42.followers
       response['results'][0]['feed_id'].should eq 'flat:r44'
       response['results'][0]['target_id'].should eq 'flat:r42'
@@ -256,7 +256,7 @@ describe "Integration tests" do
     end
 
     example "posting activity using to" do
-      recipient = 'flat','toruby11'
+      recipient = 'flat', 'toruby11'
       activity = {
         :actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient.join(':')]
       }
@@ -267,7 +267,7 @@ describe "Integration tests" do
     end
 
     example "posting many activities using to" do
-      recipient = 'flat','toruby1'
+      recipient = 'flat', 'toruby1'
       activities = [
         {:actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient.join(':')]},
         {:actor => 'thierry', :verb => 'tweet', :object => 1, :to => [recipient.join(':')]},

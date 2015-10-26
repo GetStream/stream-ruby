@@ -65,7 +65,7 @@ describe Stream::Client do
 
   it "but overwriting environment variables should be possible" do
     ENV['STREAM_URL'] = 'https://thierry:pass@getstream.io/?app_id=1'
-    client = Stream::Client.new('1','2','3')
+    client = Stream::Client.new('1', '2', '3')
     client.api_key.should eq '1'
     client.api_secret.should eq '2'
     client.app_id.should eq '3'
@@ -73,25 +73,25 @@ describe Stream::Client do
   end
 
   it "should handle default location as api.getstream.io" do
-    client = Stream::Client.new('1','2')
+    client = Stream::Client.new('1', '2')
     http_client = client.get_http_client
     http_client.class.base_uri.should eq 'https://api.getstream.io/api/v1.0'
   end
 
   it "should handle us-east location as api.getstream.io" do
-    client = Stream::Client.new('1','2', nil, :location => 'us-east')
+    client = Stream::Client.new('1', '2', nil, :location => 'us-east')
     http_client = client.get_http_client
     http_client.class.base_uri.should eq 'https://us-east-api.getstream.io/api/v1.0'
   end
 
   it "should have 3s default timeout" do
-    client = Stream::Client.new('1','2', nil)
+    client = Stream::Client.new('1', '2', nil)
     http_client = client.get_http_client
     http_client.class.default_options[:timeout].should eq 3
   end
 
   it "should be possible to change timeout" do
-    client = Stream::Client.new('1','2', nil, :default_timeout => 5)
+    client = Stream::Client.new('1', '2', nil, :default_timeout => 5)
     http_client = client.get_http_client
     http_client.class.default_options[:timeout].should eq 5
   end
