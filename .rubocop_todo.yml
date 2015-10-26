@@ -267,17 +267,7 @@ Style/StringLiterals:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/TrailingBlankLines:
-  Exclude:
-    - 'Rakefile'
-    - 'lib/stream.rb'
-    - 'lib/stream/base.rb'
-    - 'lib/stream/exceptions.rb'
-    - 'lib/stream/signer.rb'
-    - 'spec/client_spec.rb'
-    - 'spec/integration_spec.rb'
-    - 'spec/signer_spec.rb'
-    - 'spec/stream_spec.rb'
-    - 'stream.gemspec'
+  Enabled: true
 
 # Offense count: 5
 # Cop supports --auto-correct.
