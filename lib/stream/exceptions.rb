@@ -1,8 +1,2 @@
-module Stream
-
-    class StreamApiResponseException < Exception
-    end
-
-    class StreamInputData < Exception
-    end
-end
+warn "Requiring 'stream/exceptions' is deprecated. Use 'stream/errors' instead."
+require 'stream/errors'
