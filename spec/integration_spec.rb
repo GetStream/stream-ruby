@@ -207,8 +207,8 @@ describe "Integration tests" do
     end
 
     example "retrieve feed followers with limit and offset" do
-      @client.feed('flat' , 'r43').follow('flat', 'r42')
-      @client.feed('flat' , 'r44').follow('flat', 'r42')
+      @client.feed('flat', 'r43').follow('flat', 'r42')
+      @client.feed('flat', 'r44').follow('flat', 'r42')
       response = @feed42.followers
       response['results'][0]['feed_id'].should eq 'flat:r44'
       response['results'][0]['target_id'].should eq 'flat:r42'

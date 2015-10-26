@@ -233,8 +233,7 @@ Style/SpaceBeforeBlockBraces:
 # Offense count: 2
 # Cop supports --auto-correct.
 Style/SpaceBeforeComma:
-  Exclude:
-    - 'spec/integration_spec.rb'
+  Enabled: true
 
 # Offense count: 12
 # Cop supports --auto-correct.
