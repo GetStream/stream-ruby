@@ -16,7 +16,7 @@ module Stream
     def make_signed_request(method, relative_url, params = {}, data = {})
       query_params = make_query_params(params)
       context = HttpSignatures::Context.new(
-        keys: {@api_key => @api_secret},
+        keys: { @api_key => @api_secret },
         algorithm: "hmac-sha256",
         headers: ["(request-target)", "Date"],
       )

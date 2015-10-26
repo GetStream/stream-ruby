@@ -64,7 +64,7 @@ module Stream
       activities.each do |activity|
         activity[:to] &&= sign_to_field(activity[:to])
       end
-      data = {:activities => activities}
+      data = { :activities => activities }
       @client.make_request(:post, uri, @signature, {}, data)
     end
 
@@ -75,7 +75,7 @@ module Stream
     def remove_activity(activity_id, foreign_id = false)
       uri = "/feed/#{@feed_url}/#{activity_id}/"
       params = {}
-      params = {'foreign_id' => 1} if foreign_id
+      params = { 'foreign_id' => 1 } if foreign_id
       @client.make_request(:delete, uri, @signature, params)
     end
 

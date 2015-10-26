@@ -5,7 +5,7 @@ describe "Integration tests" do
   before do
     @client = Stream::Client.new('ahj2ndz7gsan', 'gthc2t9gh7pzq52f6cky8w4r4up9dr6rju9w3fjgmkv6cdvvav2ufe5fv7e2r9qy', nil, :location => 'us-east')
     @feed42 = @client.feed('flat', 'r42')
-    @test_activity = {:actor => 1, :verb => 'tweet', :object => 1}
+    @test_activity = { :actor => 1, :verb => 'tweet', :object => 1 }
   end
 
   context 'test client' do
@@ -16,8 +16,8 @@ describe "Integration tests" do
 
     example "posting many activities" do
       activities = [
-        {:actor => 'tommaso', :verb => 'tweet', :object => 1},
-        {:actor => 'thierry', :verb => 'tweet', :object => 1},
+        { :actor => 'tommaso', :verb => 'tweet', :object => 1 },
+        { :actor => 'thierry', :verb => 'tweet', :object => 1 },
       ]
       actors = ['tommaso', 'thierry']
       @feed42.add_activities(activities)
@@ -129,7 +129,7 @@ describe "Integration tests" do
 
     example "posting an activity with datetime object" do
       feed = @client.feed('flat', 'time42')
-      activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => DateTime.now}
+      activity = { :actor => 1, :verb => 'tweet', :object => 1, :time => DateTime.now }
       response = feed.add_activity(activity)
       response.should include("id", "actor", "verb", "object", "target", "time")
     end
@@ -137,7 +137,7 @@ describe "Integration tests" do
     example "localised datetimes should be returned in UTC correctly" do
       feed = @client.feed('flat', 'time43')
       now = DateTime.now.new_offset(5)
-      activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => now}
+      activity = { :actor => 1, :verb => 'tweet', :object => 1, :time => now }
       response = feed.add_activity(activity)
       response.should include("id", "actor", "verb", "object", "target", "time")
       response = feed.get(:limit => 5)
@@ -145,8 +145,8 @@ describe "Integration tests" do
     end
 
     example "posting a custom field as a hash" do
-      hash_value = {'a' => 42}
-      activity = {:actor => 1, :verb => 'tweet', :object => 1, :hash_data => hash_value}
+      hash_value = { 'a' => 42 }
+      activity = { :actor => 1, :verb => 'tweet', :object => 1, :hash_data => hash_value }
       response = @feed42.add_activity(activity)
       response.should include("id", "actor", "verb", "object", "target", "hash_data")
       results = @feed42.get(:limit => 1)["results"]
@@ -155,7 +155,7 @@ describe "Integration tests" do
 
     example "posting a custom field as a list" do
       list_value = [1, 2, 3]
-      activity = {:actor => 1, :verb => 'tweet', :object => 1, :hash_data => list_value}
+      activity = { :actor => 1, :verb => 'tweet', :object => 1, :hash_data => list_value }
       response = @feed42.add_activity(activity)
       response.should include("id", "actor", "verb", "object", "target", "hash_data")
       results = @feed42.get(:limit => 1)["results"]
@@ -179,9 +179,9 @@ describe "Integration tests" do
     end
 
     example "removing an activity by foreign_id" do
-      activity = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'ruby:42'}
+      activity = { :actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'ruby:42' }
       activity = @feed42.add_activity(activity)
-      activity = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'ruby:43'}
+      activity = { :actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'ruby:43' }
       activity = @feed42.add_activity(activity)
       @feed42.remove_activity('ruby:43', foreign_id = true)
       results = @feed42.get(:limit => 2)["results"]
@@ -269,8 +269,8 @@ describe "Integration tests" do
     example "posting many activities using to" do
       recipient = 'flat', 'toruby1'
       activities = [
-        {:actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient.join(':')]},
-        {:actor => 'thierry', :verb => 'tweet', :object => 1, :to => [recipient.join(':')]},
+        { :actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient.join(':')] },
+        { :actor => 'thierry', :verb => 'tweet', :object => 1, :to => [recipient.join(':')] },
       ]
       actors = ['tommaso', 'thierry']
       @feed42.add_activities(activities)
@@ -302,15 +302,15 @@ describe "Integration tests" do
 
       it "should be able to follow many feeds in one request" do
         follows = [
-          {:source => 'flat:1', :target => 'user:1'},
-          {:source => 'flat:1', :target => 'user:3'}
+          { :source => 'flat:1', :target => 'user:1' },
+          { :source => 'flat:1', :target => 'user:3' }
         ]
         @client.follow_many(follows)
       end
 
       it "should be able to add one activity to many feeds in one request" do
         feeds = ['flat:1', 'flat:2', 'flat:3', 'flat:4']
-        activity_data = {:actor => 'tommaso', :verb => 'tweet', :object => 1}
+        activity_data = { :actor => 'tommaso', :verb => 'tweet', :object => 1 }
         @client.add_to_many(activity_data, feeds)
       end
     end

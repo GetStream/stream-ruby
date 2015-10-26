@@ -69,7 +69,7 @@ module Stream
     end
 
     def get_default_params
-      {:api_key => @api_key}
+      { :api_key => @api_key }
     end
 
     def get_http_client
