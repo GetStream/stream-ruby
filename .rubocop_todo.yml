@@ -114,12 +114,7 @@ Style/EmptyLines:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/EmptyLinesAroundBlockBody:
-  Exclude:
-    - 'spec/client_spec.rb'
-    - 'spec/feed_spec.rb'
-    - 'spec/integration_spec.rb'
-    - 'spec/signer_spec.rb'
-    - 'spec/stream_spec.rb'
+  Enabled: true
 
 # Offense count: 5
 # Cop supports --auto-correct.

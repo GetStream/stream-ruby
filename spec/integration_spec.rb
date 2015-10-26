@@ -2,7 +2,6 @@ require 'date'
 require 'stream'
 
 describe "Integration tests" do
-
     before do
         @client = Stream::Client.new('ahj2ndz7gsan', 'gthc2t9gh7pzq52f6cky8w4r4up9dr6rju9w3fjgmkv6cdvvav2ufe5fv7e2r9qy', nil, :location => 'us-east')
         @feed42 = @client.feed('flat', 'r42')
@@ -10,7 +9,6 @@ describe "Integration tests" do
     end
 
     context 'test client' do
-
         example "posting an activity" do
             response = @feed42.add_activity(@test_activity)
             response.should include("id", "actor", "verb", "object", "target", "time")
@@ -318,7 +316,5 @@ describe "Integration tests" do
                 @client.add_to_many(activity_data, feeds)
             end
         end
-
     end
-
 end

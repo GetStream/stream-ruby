@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'stream'
 
 describe Stream::Feed do
-
     it "should validate feed_id" do
       feed = Stream::Feed.new(nil, 'slug', 'user_id', '')
     end
@@ -22,5 +21,4 @@ describe Stream::Feed do
     it "should refuse feed_slug with underscores" do
       expect {Stream::Feed.new(nil, 'feed_slug', 'user_id', '')}.to raise_error Stream::StreamInputData
     end
-
 end

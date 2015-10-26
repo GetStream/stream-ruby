@@ -95,5 +95,4 @@ describe Stream::Client do
         http_client = client.get_http_client
         http_client.class.default_options[:timeout].should eq 5
     end
-
 end
