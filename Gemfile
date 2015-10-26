@@ -7,4 +7,5 @@ group :test do
   gem "httparty"
   gem "simplecov"
   gem "yard"
+  gem "rubocop"
 end
