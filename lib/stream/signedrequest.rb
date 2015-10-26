@@ -16,9 +16,9 @@ module Stream
     def make_signed_request(method, relative_url, params={}, data={})
         query_params = self.make_query_params(params)
         context = HttpSignatures::Context.new(
-            keys: {@api_key => @api_secret},
-            algorithm: "hmac-sha256",
-            headers: ["(request-target)", "Date"],
+          keys: {@api_key => @api_secret},
+          algorithm: "hmac-sha256",
+          headers: ["(request-target)", "Date"],
         )
         method_map = {
             :get => Net::HTTP::Get,

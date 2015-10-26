@@ -142,8 +142,7 @@ Style/EmptyLiteral:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/FirstParameterIndentation:
-  Exclude:
-    - 'lib/stream/signedrequest.rb'
+  Enabled: true
 
 # Offense count: 162
 # Cop supports --auto-correct.
