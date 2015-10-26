@@ -1,7 +1,6 @@
 require 'date'
 require 'stream'
 
-
 describe "Integration tests" do
 
     before do

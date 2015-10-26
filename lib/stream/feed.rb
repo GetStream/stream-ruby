@@ -1,6 +1,5 @@
 require 'stream/signer'
 
-
 module Stream
 
     class Feed

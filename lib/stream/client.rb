@@ -3,7 +3,6 @@ require 'stream/exceptions'
 require 'stream/feed'
 require 'stream/signer'
 
-
 module Stream
     STREAM_URL_RE = /https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)/i
 
