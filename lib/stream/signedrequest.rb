@@ -18,18 +18,18 @@ module Stream
       context = HttpSignatures::Context.new(
         keys: { @api_key => @api_secret },
         algorithm: "hmac-sha256",
-        headers: ["(request-target)", "Date"],
+        headers: ["(request-target)", "Date"]
       )
       method_map = {
         :get => Net::HTTP::Get,
         :delete => Net::HTTP::Delete,
         :put => Net::HTTP::Put,
-        :post => Net::HTTP::Post,
+        :post => Net::HTTP::Post
       }
       request_date = Time.now.rfc822
       message = method_map[method].new(
         "#{get_http_client.base_path}#{relative_url}?#{URI.encode_www_form(query_params)}",
-        "Date" => request_date,
+        "Date" => request_date
       )
       context.signer.sign(message)
       headers = {

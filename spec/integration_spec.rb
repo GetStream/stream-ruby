@@ -17,7 +17,7 @@ describe "Integration tests" do
     example "posting many activities" do
       activities = [
         { :actor => "tommaso", :verb => "tweet", :object => 1 },
-        { :actor => "thierry", :verb => "tweet", :object => 1 },
+        { :actor => "thierry", :verb => "tweet", :object => 1 }
       ]
       actors = ["tommaso", "thierry"]
       @feed42.add_activities(activities)
@@ -270,7 +270,7 @@ describe "Integration tests" do
       recipient = "flat", "toruby1"
       activities = [
         { :actor => "tommaso", :verb => "tweet", :object => 1, :to => [recipient.join(":")] },
-        { :actor => "thierry", :verb => "tweet", :object => 1, :to => [recipient.join(":")] },
+        { :actor => "thierry", :verb => "tweet", :object => 1, :to => [recipient.join(":")] }
       ]
       actors = ["tommaso", "thierry"]
       @feed42.add_activities(activities)

@@ -273,9 +273,7 @@ Style/TrailingBlankLines:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleForMultiline, SupportedStyles.
 Style/TrailingComma:
-  Exclude:
-    - 'lib/stream/signedrequest.rb'
-    - 'spec/integration_spec.rb'
+  Enabled: true
 
 # Offense count: 12
 # Cop supports --auto-correct.
