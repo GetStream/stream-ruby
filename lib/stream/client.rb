@@ -4,7 +4,7 @@ require 'stream/feed'
 require 'stream/signer'
 
 module Stream
-  STREAM_URL_RE = /https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)/i
+  STREAM_URL_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
 
   class Client
     attr_reader :api_key
@@ -29,10 +29,10 @@ module Stream
     # @param [string] api_secret your application secret
     # @param [string] app_id the id of your application (optional)
     # @param [hash] opts extra options
-    # 
+    #
     # @example initialise the client to connect to EU-West location
     #   Stream::Client.new('my_key', 'my_secret', 'my_app_id', :location => 'us-east')
-    #   
+    #
     def initialize(api_key='', api_secret='', app_id=nil, opts={})
       if ENV['STREAM_URL'] =~ Stream::STREAM_URL_RE && (api_key.nil? || api_key.empty?)
         matches = Stream::STREAM_URL_RE.match(ENV['STREAM_URL'])
@@ -62,7 +62,7 @@ module Stream
     # @param [user_id] user_id the user_id of this feed (eg. User42)
     #
     # @return [Stream::Feed]
-    # 
+    #
     def feed(feed_slug, user_id)
       token = @signer.sign(feed_slug, user_id)
       Stream::Feed.new(self, feed_slug, user_id, token)
