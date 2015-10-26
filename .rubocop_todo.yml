@@ -45,8 +45,7 @@ Metrics/ParameterLists:
 # Offense count: 2
 # Cop supports --auto-correct.
 Performance/StringReplacement:
-  Exclude:
-    - 'lib/stream/signer.rb'
+  Enabled: true
 
 # Offense count: 2
 Style/AccessorMethodName:

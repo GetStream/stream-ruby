@@ -11,7 +11,7 @@ module Stream
     end
 
     def urlsafe_encodeb64(value)
-      value.gsub("+", "-").gsub("/", "_").gsub(/^=+/, "").gsub(/=+$/, "")
+      value.tr("+", "-").tr("/", "_").gsub(/^=+/, "").gsub(/=+$/, "")
     end
 
     def sign_message(message)
