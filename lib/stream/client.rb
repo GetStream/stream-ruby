@@ -112,9 +112,9 @@ module Stream
             end
             response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => body )
             case response.code
-              when 200..203
+            when 200..203
                 return response
-              when 204...600
+            when 204...600
                 raise StreamApiResponseException, "#{response['exception']} details: #{response['detail']}"
             end
         end
