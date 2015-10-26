@@ -255,8 +255,7 @@ Style/SpaceInsideParens:
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/SpecialGlobalVars:
-  Exclude:
-    - 'stream.gemspec'
+  Enabled: true
 
 # Offense count: 214
 # Cop supports --auto-correct.
