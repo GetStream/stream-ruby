@@ -159,8 +159,7 @@ Style/IfUnlessModifier:
 # Offense count: 3
 # Cop supports --auto-correct.
 Style/IndentArray:
-  Exclude:
-    - 'spec/integration_spec.rb'
+  Enabled: true
 
 # Offense count: 7
 # Cop supports --auto-correct.
