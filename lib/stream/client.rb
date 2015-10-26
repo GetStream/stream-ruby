@@ -35,7 +35,7 @@ module Stream
         #   Stream::Client.new('my_key', 'my_secret', 'my_app_id', :location => 'us-east')
         #   
         def initialize(api_key='', api_secret='', app_id=nil, opts={})
-            if ENV['STREAM_URL'] =~ Stream::STREAM_URL_RE and (api_key.nil? || api_key.empty?)
+            if ENV['STREAM_URL'] =~ Stream::STREAM_URL_RE && (api_key.nil? || api_key.empty?)
                 matches = Stream::STREAM_URL_RE.match(ENV['STREAM_URL'])
                 api_key = matches['key']
                 api_secret = matches['secret']
