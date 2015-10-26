@@ -35,5 +35,5 @@ module Stream
       }
       make_signed_request(:post, "/feed/add_to_many/", {}, data)
     end
-    end
+  end
 end

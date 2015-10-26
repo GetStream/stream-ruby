@@ -10,7 +10,7 @@
 # Cop supports --auto-correct.
 # Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.
 Lint/EndAlignment:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 14
 Lint/UselessAssignment:
