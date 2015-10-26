@@ -1,4 +1,4 @@
-require 'stream/signer'
+require "stream/signer"
 
 module Stream
   class Feed
@@ -47,7 +47,7 @@ module Stream
 
     def sign_to_field(to)
       to.map do |feed_id|
-        feed_slug, user_id = feed_id.split(':')
+        feed_slug, user_id = feed_id.split(":")
         feed = @client.feed(feed_slug, user_id)
         "#{feed.id} #{feed.token}"
       end
@@ -75,7 +75,7 @@ module Stream
     def remove_activity(activity_id, foreign_id = false)
       uri = "/feed/#{@feed_url}/#{activity_id}/"
       params = {}
-      params = { 'foreign_id' => 1 } if foreign_id
+      params = { "foreign_id" => 1 } if foreign_id
       @client.make_request(:delete, uri, @signature, params)
     end
 
@@ -96,8 +96,8 @@ module Stream
     def followers(offset = 0, limit = 25)
       uri = "/feed/#{@feed_url}/followers/"
       params = {
-        'offset' => offset,
-        'limit' => limit
+        "offset" => offset,
+        "limit" => limit
       }
       @client.make_request(:get, uri, @signature, params)
     end
@@ -105,9 +105,9 @@ module Stream
     def following(offset = 0, limit = 25, filter = [])
       uri = "/feed/#{@feed_url}/follows/"
       params = {
-        'offset' => offset,
-        'limit' => limit,
-        'filter' => filter.join(",")
+        "offset" => offset,
+        "limit" => limit,
+        "filter" => filter.join(",")
       }
       @client.make_request(:get, uri, @signature, params)
     end

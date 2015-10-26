@@ -17,7 +17,7 @@ module Stream
     # @client.follow_many(follows)
     # 
     def follow_many(follows)
-      make_signed_request(:post, '/follow_many/', {}, follows)
+      make_signed_request(:post, "/follow_many/", {}, follows)
     end
 
     #
@@ -33,7 +33,7 @@ module Stream
         :feeds => feeds,
         :activity => activity_data
       }
-      make_signed_request(:post, '/feed/add_to_many/', {}, data)
+      make_signed_request(:post, "/feed/add_to_many/", {}, data)
     end
     end
 end

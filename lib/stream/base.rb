@@ -1,8 +1,8 @@
-require 'json'
-require 'stream/client'
-require 'stream/version'
-require 'stream/signer'
-require 'stream/exceptions'
+require "json"
+require "stream/client"
+require "stream/version"
+require "stream/signer"
+require "stream/exceptions"
 
 module Stream
   class << self
@@ -11,7 +11,7 @@ module Stream
       end
 
       def get_feed_slug_and_id(feed_id)
-        feed_id.sub(':', '')
+        feed_id.sub(":", "")
       end
   end
 end

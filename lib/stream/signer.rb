@@ -1,5 +1,5 @@
-require 'openssl'
-require 'base64'
+require "openssl"
+require "base64"
 
 module Stream
   class Signer
@@ -7,11 +7,11 @@ module Stream
 
     def initialize(key)
       @key = key.to_s
-      @sha1 = OpenSSL::Digest.new('sha1')
+      @sha1 = OpenSSL::Digest.new("sha1")
     end
 
     def urlsafe_encodeb64(value)
-      value.gsub('+', '-').gsub('/', '_').gsub(/^=+/, '').gsub(/=+$/, '')
+      value.gsub("+", "-").gsub("/", "_").gsub(/^=+/, "").gsub(/=+$/, "")
     end
 
     def sign_message(message)
