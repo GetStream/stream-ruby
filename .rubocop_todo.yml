@@ -222,8 +222,7 @@ Style/SpaceAroundEqualsInParameterDefault:
 # Cop supports --auto-correct.
 # Configuration parameters: MultiSpaceAllowedForOperators.
 Style/SpaceAroundOperators:
-  Exclude:
-    - 'spec/integration_spec.rb'
+  Enabled: true
 
 # Offense count: 3
 # Cop supports --auto-correct.

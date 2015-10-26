@@ -21,7 +21,7 @@ describe "Integration tests" do
       ]
       actors = ['tommaso', 'thierry']
       @feed42.add_activities(activities)
-      response = @feed42.get(:limit=>5)["results"]
+      response = @feed42.get(:limit => 5)["results"]
       [response[0]['actor'], response[1]['actor']].should =~ actors
     end
 
@@ -34,12 +34,12 @@ describe "Integration tests" do
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
-      response = feed.get(:limit=>5)
+      response = feed.get(:limit => 5)
       response["results"][0]["is_seen"].should eq false
       response["results"][1]["is_seen"].should eq false
       response["results"][2]["is_seen"].should eq false
-      response = feed.get(:limit=>5, :mark_seen=>true)
-      response = feed.get(:limit=>5)
+      response = feed.get(:limit => 5, :mark_seen => true)
+      response = feed.get(:limit => 5)
       response["results"][0]["is_seen"].should eq true
       response["results"][1]["is_seen"].should eq true
       response["results"][2]["is_seen"].should eq true
@@ -53,12 +53,12 @@ describe "Integration tests" do
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
-      response = feed.get(:limit=>5)
+      response = feed.get(:limit => 5)
       response["results"][0]["is_read"].should eq false
       response["results"][1]["is_read"].should eq false
       response["results"][2]["is_read"].should eq false
-      response = feed.get(:limit=>5, :mark_read=>true)
-      response = feed.get(:limit=>5)
+      response = feed.get(:limit => 5, :mark_read => true)
+      response = feed.get(:limit => 5)
       response["results"][0]["is_read"].should eq true
       response["results"][1]["is_read"].should eq true
       response["results"][2]["is_read"].should eq true
@@ -72,12 +72,12 @@ describe "Integration tests" do
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
-      response = feed.get(:limit=>5)
+      response = feed.get(:limit => 5)
       response["results"][0]["is_read"].should eq false
       response["results"][1]["is_read"].should eq false
       response["results"][2]["is_read"].should eq false
-      response = feed.get(:limit=>5, :mark_read=>true)
-      response = feed.get(:limit=>5)
+      response = feed.get(:limit => 5, :mark_read => true)
+      response = feed.get(:limit => 5)
       response["results"][0]["is_read"].should eq true
       response["results"][1]["is_read"].should eq true
       response["results"][2]["is_read"].should eq true
@@ -88,10 +88,10 @@ describe "Integration tests" do
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
-      response = feed.get(:limit=>2)
+      response = feed.get(:limit => 2)
       ids = response["results"].collect { |a| a['id']}
-      response = feed.get(:limit=>5, :mark_read=>ids)
-      response = feed.get(:limit=>5)
+      response = feed.get(:limit => 5, :mark_read => ids)
+      response = feed.get(:limit => 5)
       response["results"][0]["is_read"].should eq true
       response["results"][1]["is_read"].should eq true
       response["results"][2]["is_read"].should eq false
@@ -102,12 +102,12 @@ describe "Integration tests" do
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
-      response = feed.get(:limit=>5)
+      response = feed.get(:limit => 5)
       response["results"][0]["is_seen"].should eq false
       response["results"][1]["is_seen"].should eq false
       response["results"][2]["is_seen"].should eq false
-      response = feed.get(:limit=>5, :mark_seen=>true)
-      response = feed.get(:limit=>5)
+      response = feed.get(:limit => 5, :mark_seen => true)
+      response = feed.get(:limit => 5)
       response["results"][0]["is_seen"].should eq true
       response["results"][1]["is_seen"].should eq true
       response["results"][2]["is_seen"].should eq true
@@ -118,10 +118,10 @@ describe "Integration tests" do
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
-      response = feed.get(:limit=>2)
+      response = feed.get(:limit => 2)
       ids = response["results"].collect { |a| a['id']}
-      response = feed.get(:limit=>5, :mark_seen=>ids)
-      response = feed.get(:limit=>5)
+      response = feed.get(:limit => 5, :mark_seen => ids)
+      response = feed.get(:limit => 5)
       response["results"][0]["is_seen"].should eq true
       response["results"][1]["is_seen"].should eq true
       response["results"][2]["is_seen"].should eq false
@@ -140,7 +140,7 @@ describe "Integration tests" do
       activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => now}
       response = feed.add_activity(activity)
       response.should include("id", "actor", "verb", "object", "target", "time")
-      response = feed.get(:limit=>5)
+      response = feed.get(:limit => 5)
       DateTime.iso8601(response["results"][0]["time"]).should be_within(1).of(now.new_offset(0))
     end
 
@@ -149,7 +149,7 @@ describe "Integration tests" do
       activity = {:actor => 1, :verb => 'tweet', :object => 1, :hash_data => hash_value}
       response = @feed42.add_activity(activity)
       response.should include("id", "actor", "verb", "object", "target", "hash_data")
-      results = @feed42.get(:limit=>1)["results"]
+      results = @feed42.get(:limit => 1)["results"]
       results[0]["hash_data"].should eq hash_value
     end
 
@@ -158,23 +158,23 @@ describe "Integration tests" do
       activity = {:actor => 1, :verb => 'tweet', :object => 1, :hash_data => list_value}
       response = @feed42.add_activity(activity)
       response.should include("id", "actor", "verb", "object", "target", "hash_data")
-      results = @feed42.get(:limit=>1)["results"]
+      results = @feed42.get(:limit => 1)["results"]
       results[0]["hash_data"].should eq list_value
     end
 
     example "posting and get one activity" do
       response = @feed42.add_activity(@test_activity)
-      results = @feed42.get(:limit=>1)["results"]
+      results = @feed42.get(:limit => 1)["results"]
       results[0]["id"].should eq response["id"]
     end
 
     example "removing an activity" do
       feed = @client.feed('flat', 'removing_an_activity')
       response = feed.add_activity(@test_activity)
-      results = feed.get(:limit=>1)["results"]
+      results = feed.get(:limit => 1)["results"]
       results[0]["id"].should eq response["id"]
       feed.remove_activity(response["id"])
-      results = feed.get(:limit=>1)["results"]
+      results = feed.get(:limit => 1)["results"]
       results[0]["id"].should_not eq response["id"] if results.count > 0
     end
 
@@ -183,8 +183,8 @@ describe "Integration tests" do
       activity = @feed42.add_activity(activity)
       activity = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'ruby:43'}
       activity = @feed42.add_activity(activity)
-      @feed42.remove_activity('ruby:43', foreign_id=true)
-      results = @feed42.get(:limit=>2)["results"]
+      @feed42.remove_activity('ruby:43', foreign_id = true)
+      results = @feed42.get(:limit => 2)["results"]
       results[0]["foreign_id"].should eq 'ruby:42'
     end
 
@@ -231,7 +231,7 @@ describe "Integration tests" do
 
     example "i dont follow" do
       social = @client.feed('flat', 'rsocial1')
-      response = social.following(0, 10, filter=['flat:asocial'])
+      response = social.following(0, 10, filter = ['flat:asocial'])
       response['results'].should eq []
     end
 
@@ -239,10 +239,10 @@ describe "Integration tests" do
       social = @client.feed('flat', 'rsocial2')
       social.follow('flat', 'r43')
       social.follow('flat', 'r244')
-      response = social.following(0, 10, filter=['flat:r244'])
+      response = social.following(0, 10, filter = ['flat:r244'])
       response['results'][0]['feed_id'].should eq 'flat:rsocial2'
       response['results'][0]['target_id'].should eq 'flat:r244'
-      response = social.following(1, 10, filter=['flat:r244'])
+      response = social.following(1, 10, filter = ['flat:r244'])
       response['results'].should eq []
     end
 
@@ -262,7 +262,7 @@ describe "Integration tests" do
       }
       @feed42.add_activity(activity)
       target_feed = @client.feed(*recipient)
-      response = target_feed.get(:limit=>5)["results"]
+      response = target_feed.get(:limit => 5)["results"]
       response[0]['actor'].should eq 'tommaso'
     end
 
@@ -275,14 +275,14 @@ describe "Integration tests" do
       actors = ['tommaso', 'thierry']
       @feed42.add_activities(activities)
       target_feed = @client.feed(*recipient)
-      response = target_feed.get(:limit=>5)["results"]
+      response = target_feed.get(:limit => 5)["results"]
       [response[0]['actor'], response[1]['actor']].should =~ actors
     end
 
     example "read from a feed" do
       @feed42.get
-      @feed42.get(:limit=>5)
-      @feed42.get(:offset=> 4, :limit=>5)
+      @feed42.get(:limit => 5)
+      @feed42.get(:offset => 4, :limit => 5)
     end
 
     example "add incomplete activity" do
@@ -297,7 +297,7 @@ describe "Integration tests" do
       end
 
       it "should be able to send signed requests with data" do
-        @client.make_signed_request(:post, '/test/auth/digest/', {}, :var=>[1, 2, '3'])
+        @client.make_signed_request(:post, '/test/auth/digest/', {}, :var => [1, 2, '3'])
       end
 
       it "should be able to follow many feeds in one request" do
