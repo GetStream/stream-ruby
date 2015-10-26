@@ -1,4 +1,4 @@
-require "stream"
+require "spec_helper"
 
 describe Stream do
   it "connects returns a client instance" do

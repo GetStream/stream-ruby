@@ -1,5 +1,5 @@
+require "spec_helper"
 require "date"
-require "stream"
 
 describe "Integration tests" do
   before do

@@ -1,5 +1,4 @@
 require "spec_helper"
-require "stream"
 
 describe Stream::Feed do
   it "should validate feed_id" do
