@@ -125,8 +125,7 @@ Style/EmptyLinesAroundClassBody:
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/EmptyLinesAroundMethodBody:
-  Exclude:
-    - 'lib/stream/feed.rb'
+  Enabled: true
 
 # Offense count: 8
 # Cop supports --auto-correct.
