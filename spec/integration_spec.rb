@@ -291,9 +291,9 @@ describe "Integration tests" do
         end
 
         example "add incomplete activity" do
-            expect {
+            expect do
                 @feed42.add_activity(Hash.new)
-            }.to raise_error Stream::StreamApiResponseException
+            end.to raise_error Stream::StreamApiResponseException
         end
 
         if Stream::Client.respond_to?('supports_signed_requests')
