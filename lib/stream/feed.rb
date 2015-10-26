@@ -87,8 +87,8 @@ module Stream
         def follow(target_feed_slug, target_user_id)
             uri = "/feed/#{@feed_url}/follows/"
             follow_data = {
-                :target => "#{target_feed_slug}:#{target_user_id}",
-                :target_token => @client.feed(target_feed_slug, target_user_id).token
+              :target => "#{target_feed_slug}:#{target_user_id}",
+              :target_token => @client.feed(target_feed_slug, target_user_id).token
             }
             @client.make_request(:post, uri, @signature, {}, follow_data)
         end
@@ -96,8 +96,8 @@ module Stream
         def followers(offset=0, limit=25)
             uri = "/feed/#{@feed_url}/followers/"
             params = {
-                'offset' => offset,
-                'limit' => limit
+              'offset' => offset,
+              'limit' => limit
             }
             @client.make_request(:get, uri, @signature, params)
         end
@@ -105,9 +105,9 @@ module Stream
         def following(offset=0, limit=25, filter=[])
             uri = "/feed/#{@feed_url}/follows/"
             params = {
-                'offset' => offset,
-                'limit' => limit,
-                'filter' => filter.join(",")
+              'offset' => offset,
+              'limit' => limit,
+              'filter' => filter.join(",")
             }
             @client.make_request(:get, uri, @signature, params)
         end

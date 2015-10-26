@@ -30,8 +30,8 @@ module Stream
       # 
       def add_to_many(activity_data, feeds)
           data = {
-              :feeds => feeds,
-              :activity => activity_data
+            :feeds => feeds,
+            :activity => activity_data
           }
           self.make_signed_request(:post, '/feed/add_to_many/', {}, data)
       end

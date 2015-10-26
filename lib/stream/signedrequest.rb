@@ -21,10 +21,10 @@ module Stream
           headers: ["(request-target)", "Date"],
         )
         method_map = {
-            :get => Net::HTTP::Get,
-            :delete => Net::HTTP::Delete,
-            :put => Net::HTTP::Put,
-            :post => Net::HTTP::Post,
+          :get => Net::HTTP::Get,
+          :delete => Net::HTTP::Delete,
+          :put => Net::HTTP::Put,
+          :post => Net::HTTP::Post,
         }
         request_date = Time.now.rfc822
         message = method_map[method].new(
@@ -33,9 +33,9 @@ module Stream
         )
         context.signer.sign(message)
         headers = {
-            'Authorization' => message["Signature"],
-            'Date' => request_date,
-            'X-Api-Key' => self.api_key
+          'Authorization' => message["Signature"],
+          'Date' => request_date,
+          'X-Api-Key' => self.api_key
         }
         self.get_http_client.make_http_request(method, relative_url, query_params, data, headers)
     end

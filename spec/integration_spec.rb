@@ -258,7 +258,7 @@ describe "Integration tests" do
         example "posting activity using to" do
             recipient = 'flat','toruby11'
             activity = {
-                :actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient.join(':')]
+              :actor => 'tommaso', :verb => 'tweet', :object => 1, :to => [recipient.join(':')]
             }
             @feed42.add_activity(activity)
             target_feed = @client.feed(*recipient)
