@@ -116,5 +116,4 @@ module Stream
             end
         end
     end
-
 end

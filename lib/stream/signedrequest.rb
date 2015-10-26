@@ -3,9 +3,7 @@ require "net/http"
 require "time"
 
 module Stream
-
   module SignedRequest
-
     module ClassMethods
         def supports_signed_requests
         end
@@ -42,5 +40,4 @@ module Stream
         self.get_http_client.make_http_request(method, relative_url, query_params, data, headers)
     end
   end
-
 end

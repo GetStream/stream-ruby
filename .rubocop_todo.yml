@@ -131,12 +131,7 @@ Style/EmptyLinesAroundMethodBody:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/EmptyLinesAroundModuleBody:
-  Exclude:
-    - 'lib/stream/batch.rb'
-    - 'lib/stream/client.rb'
-    - 'lib/stream/exceptions.rb'
-    - 'lib/stream/feed.rb'
-    - 'lib/stream/signedrequest.rb'
+  Enabled: true
 
 # Offense count: 1
 # Cop supports --auto-correct.

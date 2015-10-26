@@ -1,5 +1,4 @@
 module Stream
-
   module Batch
       #
       # Follows many feeds in one single request
@@ -37,5 +36,4 @@ module Stream
           self.make_signed_request(:post, '/feed/add_to_many/', {}, data)
       end
     end
-
 end

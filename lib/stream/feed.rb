@@ -1,7 +1,6 @@
 require 'stream/signer'
 
 module Stream
-
     class Feed
         attr_reader :id
         attr_reader :slug
