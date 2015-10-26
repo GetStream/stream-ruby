@@ -186,8 +186,7 @@ Style/MethodName:
 # Offense count: 2
 # Cop supports --auto-correct.
 Style/NegatedIf:
-  Exclude:
-    - 'lib/stream/feed.rb'
+  Enabled: true
 
 # Offense count: 16
 # Cop supports --auto-correct.

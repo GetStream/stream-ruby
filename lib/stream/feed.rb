@@ -9,11 +9,11 @@ module Stream
     attr_reader :signature
 
     def initialize(client, feed_slug, user_id, token)
-      if !self.valid_feed_slug feed_slug
+      unless self.valid_feed_slug feed_slug
         raise StreamInputData, "feed_slug can only contain alphanumeric characters"
       end
 
-      if !self.valid_user_id user_id
+      unless self.valid_user_id user_id
         raise StreamInputData, "user_id can only contain alphanumeric characters plus underscores and dashes"
       end
 
