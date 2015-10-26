@@ -203,9 +203,7 @@ Style/RegexpLiteral:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/SignalException:
-  Exclude:
-    - 'lib/stream/client.rb'
-    - 'lib/stream/feed.rb'
+  Enabled: false
 
 # Offense count: 13
 # Cop supports --auto-correct.
