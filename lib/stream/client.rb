@@ -33,7 +33,7 @@ module Stream
     # @example initialise the client to connect to EU-West location
     #   Stream::Client.new('my_key', 'my_secret', 'my_app_id', :location => 'us-east')
     #
-    def initialize(api_key='', api_secret='', app_id=nil, opts={})
+    def initialize(api_key = '', api_secret = '', app_id = nil, opts = {})
       if ENV['STREAM_URL'] =~ Stream::STREAM_URL_RE && (api_key.nil? || api_key.empty?)
         matches = Stream::STREAM_URL_RE.match(ENV['STREAM_URL'])
         api_key = matches['key']
@@ -80,7 +80,7 @@ module Stream
       get_default_params.merge(params)
     end
 
-    def make_request(method, relative_url, signature, params={}, data={}, headers={})
+    def make_request(method, relative_url, signature, params = {}, data = {}, headers = {})
       headers['Authorization'] = signature
       get_http_client.make_http_request(method, relative_url, make_query_params(params), data, headers)
     end
@@ -90,7 +90,7 @@ module Stream
     include HTTParty
     attr_reader :base_path
 
-    def initialize(api_version='v1.0', location=nil, default_timeout=3)
+    def initialize(api_version = 'v1.0', location = nil, default_timeout = 3)
       if location.nil?
         location_name = "api"
       else
@@ -101,7 +101,7 @@ module Stream
       self.class.default_timeout default_timeout
     end
 
-    def make_http_request(method, relative_url, params=nil, data=nil, headers=nil)
+    def make_http_request(method, relative_url, params = nil, data = nil, headers = nil)
       headers['Content-Type'] = 'application/json'
       headers['X-Stream-Client'] = "stream-ruby-#{Stream::VERSION}"
       body = data.to_json if ['post', 'put'].include? method.to_s

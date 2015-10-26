@@ -68,11 +68,11 @@ module Stream
       @client.make_request(:post, uri, @signature, {}, data)
     end
 
-    def remove(activity_id, foreign_id=false)
+    def remove(activity_id, foreign_id = false)
       remove_activity(activity_id, foreign_id)
     end
 
-    def remove_activity(activity_id, foreign_id=false)
+    def remove_activity(activity_id, foreign_id = false)
       uri = "/feed/#{@feed_url}/#{activity_id}/"
       params = {}
       params = {'foreign_id' => 1} if foreign_id
@@ -93,7 +93,7 @@ module Stream
       @client.make_request(:post, uri, @signature, {}, follow_data)
     end
 
-    def followers(offset=0, limit=25)
+    def followers(offset = 0, limit = 25)
       uri = "/feed/#{@feed_url}/followers/"
       params = {
         'offset' => offset,
@@ -102,7 +102,7 @@ module Stream
       @client.make_request(:get, uri, @signature, params)
     end
 
-    def following(offset=0, limit=25, filter=[])
+    def following(offset = 0, limit = 25, filter = [])
       uri = "/feed/#{@feed_url}/follows/"
       params = {
         'offset' => offset,

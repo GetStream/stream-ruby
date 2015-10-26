@@ -13,7 +13,7 @@ module Stream
       klass.extend ClassMethods
     end
 
-    def make_signed_request(method, relative_url, params={}, data={})
+    def make_signed_request(method, relative_url, params = {}, data = {})
       query_params = make_query_params(params)
       context = HttpSignatures::Context.new(
         keys: {@api_key => @api_secret},
