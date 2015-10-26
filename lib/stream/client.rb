@@ -105,7 +105,7 @@ module Stream
       headers['Content-Type'] = 'application/json'
       headers['X-Stream-Client'] = "stream-ruby-#{Stream::VERSION}"
       body = data.to_json if ['post', 'put'].include? method.to_s
-      response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => body )
+      response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => body)
       case response.code
       when 200..203
         return response
