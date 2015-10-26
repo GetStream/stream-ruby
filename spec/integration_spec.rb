@@ -89,7 +89,7 @@ describe "Integration tests" do
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
       response = feed.get(:limit => 2)
-      ids = response["results"].collect { |a| a['id']}
+      ids = response["results"].collect { |a| a['id'] }
       response = feed.get(:limit => 5, :mark_read => ids)
       response = feed.get(:limit => 5)
       response["results"][0]["is_read"].should eq true
@@ -119,7 +119,7 @@ describe "Integration tests" do
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
       response = feed.get(:limit => 2)
-      ids = response["results"].collect { |a| a['id']}
+      ids = response["results"].collect { |a| a['id'] }
       response = feed.get(:limit => 5, :mark_seen => ids)
       response = feed.get(:limit => 5)
       response["results"][0]["is_seen"].should eq true

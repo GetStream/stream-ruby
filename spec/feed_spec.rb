@@ -11,14 +11,14 @@ describe Stream::Feed do
   end
 
   it "should refuse user_id with semicolon" do
-    expect {Stream::Feed.new(nil, 'slug', 'user:id', '')}.to raise_error Stream::StreamInputData
+    expect { Stream::Feed.new(nil, 'slug', 'user:id', '') }.to raise_error Stream::StreamInputData
   end
 
   it "should refuse feed_slug with dashes" do
-    expect {Stream::Feed.new(nil, 'feed-slug', 'user_id', '')}.to raise_error Stream::StreamInputData
+    expect { Stream::Feed.new(nil, 'feed-slug', 'user_id', '') }.to raise_error Stream::StreamInputData
   end
 
   it "should refuse feed_slug with underscores" do
-    expect {Stream::Feed.new(nil, 'feed_slug', 'user_id', '')}.to raise_error Stream::StreamInputData
+    expect { Stream::Feed.new(nil, 'feed_slug', 'user_id', '') }.to raise_error Stream::StreamInputData
   end
 end

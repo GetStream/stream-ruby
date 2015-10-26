@@ -60,7 +60,7 @@ describe Stream::Client do
 
   it "wrong heroku vars" do
     ENV['STREAM_URL'] = 'https://thierry:pass@getstream.io/?a=1'
-    expect{Stream::Client.new}.to raise_error(ArgumentError)
+    expect { Stream::Client.new }.to raise_error(ArgumentError)
   end
 
   it "but overwriting environment variables should be possible" do

@@ -228,7 +228,7 @@ Style/SpaceAroundOperators:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/SpaceBeforeBlockBraces:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 2
 # Cop supports --auto-correct.
@@ -240,7 +240,7 @@ Style/SpaceBeforeComma:
 # Cop supports --auto-correct.
 # Configuration parameters: SupportedStyles, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
 Style/SpaceInsideBlockBraces:
-  EnforcedStyle: no_space
+  Enabled: true
 
 # Offense count: 74
 # Cop supports --auto-correct.
