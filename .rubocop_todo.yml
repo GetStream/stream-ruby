@@ -136,8 +136,7 @@ Style/EmptyLinesAroundModuleBody:
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/EmptyLiteral:
-  Exclude:
-    - 'spec/integration_spec.rb'
+  Enabled: true
 
 # Offense count: 1
 # Cop supports --auto-correct.

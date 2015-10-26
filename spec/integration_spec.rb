@@ -289,7 +289,7 @@ describe "Integration tests" do
 
         example "add incomplete activity" do
             expect do
-                @feed42.add_activity(Hash.new)
+                @feed42.add_activity({})
             end.to raise_error Stream::StreamApiResponseException
         end
 
