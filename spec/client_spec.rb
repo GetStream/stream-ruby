@@ -2,7 +2,6 @@ require "spec_helper"
 require "stream"
 
 describe Stream::Client do
-  
   after do
     ENV.delete "STREAM_URL"
   end
@@ -17,7 +16,7 @@ describe Stream::Client do
     feed.slug.should eq "feed"
     feed.id.should eq "feed:42"
   end
-    
+
   it "on heroku we connect using environment variables" do
     ENV["STREAM_URL"] = "https://thierry:pass@getstream.io/?app_id=1"
     client = Stream::Client.new

@@ -278,11 +278,7 @@ Style/TrailingComma:
 # Offense count: 12
 # Cop supports --auto-correct.
 Style/TrailingWhitespace:
-  Exclude:
-    - 'lib/stream/batch.rb'
-    - 'lib/stream/client.rb'
-    - 'spec/client_spec.rb'
-    - 'spec/integration_spec.rb'
+  Enabled: true
 
 # Offense count: 3
 # Cop supports --auto-correct.

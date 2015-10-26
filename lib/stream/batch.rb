@@ -6,16 +6,16 @@ module Stream
     # @param [Array<Hash<:source, :target>>] follows the list of follows
     #
     # @return [nil]
-    # 
+    #
     # @example
-    # 
-    # 
+    #
+    #
     # follows = [
     #   {:source => 'flat:1', :target => 'user:1'},
     #   {:source => 'flat:1', :target => 'user:3'}
     # ]
     # @client.follow_many(follows)
-    # 
+    #
     def follow_many(follows)
       make_signed_request(:post, "/follow_many/", {}, follows)
     end
@@ -27,7 +27,7 @@ module Stream
     # @param [Array<string>] feeds list of feeds (eg. 'user:1', 'flat:2')
     #
     # @return [nil]
-    # 
+    #
     def add_to_many(activity_data, feeds)
       data = {
         :feeds => feeds,
