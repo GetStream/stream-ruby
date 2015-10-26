@@ -85,7 +85,7 @@ module Stream
             @client.make_request(:delete, uri, @signature, params)
         end
 
-        def delete()
+        def delete
             uri = "/feed/#{@feed_url}/"
             @client.make_request(:delete, uri, @signature)
         end

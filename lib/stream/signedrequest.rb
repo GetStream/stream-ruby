@@ -7,7 +7,7 @@ module Stream
   module SignedRequest
 
     module ClassMethods
-        def supports_signed_requests()
+        def supports_signed_requests
         end
     end
 

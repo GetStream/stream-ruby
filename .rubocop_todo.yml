@@ -91,9 +91,7 @@ Style/ColonMethodCall:
 # Offense count: 2
 # Cop supports --auto-correct.
 Style/DefWithParentheses:
-  Exclude:
-    - 'lib/stream/feed.rb'
-    - 'lib/stream/signedrequest.rb'
+  Enabled: true
 
 # Offense count: 10
 # Configuration parameters: Exclude.
