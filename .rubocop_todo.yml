@@ -284,4 +284,4 @@ Style/TrailingWhitespace:
 # Cop supports --auto-correct.
 # Configuration parameters: WordRegex.
 Style/WordArray:
-  MinSize: 2
+  Enabled: false
