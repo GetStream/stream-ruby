@@ -171,19 +171,7 @@ Style/IndentHash:
 # Cop supports --auto-correct.
 # Configuration parameters: Width.
 Style/IndentationWidth:
-  Exclude:
-    - 'lib/stream/base.rb'
-    - 'lib/stream/batch.rb'
-    - 'lib/stream/client.rb'
-    - 'lib/stream/exceptions.rb'
-    - 'lib/stream/feed.rb'
-    - 'lib/stream/signedrequest.rb'
-    - 'lib/stream/signer.rb'
-    - 'spec/client_spec.rb'
-    - 'spec/feed_spec.rb'
-    - 'spec/integration_spec.rb'
-    - 'spec/signer_spec.rb'
-    - 'spec/stream_spec.rb'
+  Enabled: true
 
 # Offense count: 8
 # Cop supports --auto-correct.
