@@ -40,10 +40,10 @@ module Stream
 
         def get(params = {})
             uri = "/feed/#{@feed_url}/"
-            if params[:mark_read] && params[:mark_read].kind_of?(Array)
+            if params[:mark_read] && params[:mark_read].is_a?(Array)
                 params[:mark_read] = params[:mark_read].join(",")
             end
-            if params[:mark_seen] && params[:mark_seen].kind_of?(Array)
+            if params[:mark_seen] && params[:mark_seen].is_a?(Array)
                 params[:mark_seen] = params[:mark_seen].join(",")
             end
             @client.make_request(:get, uri, @signature, params)
