@@ -10,14 +10,14 @@ module Stream
       @sha1 = OpenSSL::Digest.new('sha1')
     end
 
-    def urlSafeB64encode(value)
+    def urlsafe_encodeb64(value)
       value.gsub('+', '-').gsub('/', '_').gsub(/^=+/, '').gsub(/=+$/, '')
     end
 
     def sign_message(message)
       key = Digest::SHA1.digest @key.to_s
       token = Base64.strict_encode64(OpenSSL::HMAC.digest(@sha1, key, message))
-      self.urlSafeB64encode(token)
+      self.urlsafe_encodeb64(token)
     end
 
     def sign(feed_slug, user_id)
