@@ -56,7 +56,7 @@ activities = [
     [:actor => '1', :verb => 'tweet', :object => '1'],
     [:actor => '2', :verb => 'like', :object => '3']
 ]
-user_feed_1.addActivities(activities)
+user_feed_1.add_activities(activities)
 
 # Batch following many feeds (requires ruby 2.1 or later)
 follows = {[
