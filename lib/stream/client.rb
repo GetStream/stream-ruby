@@ -1,5 +1,5 @@
 require "httparty"
-require "stream/exceptions"
+require "stream/errors"
 require "stream/feed"
 require "stream/signer"
 
