@@ -99,6 +99,10 @@ user_feed_1.following(10, 10)
 # Check if user_feed_1 follows specific feeds
 user_feed_1.following(0, 2, filter=['user:42', 'user:43'])
 
+# Add one activity to many feeds in one request
+feeds = ['flat:1', 'flat:2', 'flat:3', 'flat:4']
+activity = {:actor => "User:2", :verb => "pin", :object => "Place:42", :target => "Board:1"}
+client.add_to_many(activity, feeds)
 ```
 
 Docs are available on [GetStream.io](http://getstream.io/docs/).
