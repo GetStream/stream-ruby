@@ -103,7 +103,7 @@ module Stream
 
     def make_http_request(method, relative_url, params = nil, data = nil, headers = nil)
       headers["Content-Type"] = "application/json"
-      headers["X-Stream-Client"] = "stream-ruby-#{Stream::VERSION}"
+      headers["X-Stream-Client"] = "stream-ruby-client-#{Stream::VERSION}"
       body = data.to_json if ["post", "put"].include? method.to_s
       response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => body)
       case response.code
