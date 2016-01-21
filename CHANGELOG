@@ -2,6 +2,11 @@
  Change history
 ================
 
+upcoming
+====
+
+* Better HTTP error message representation
+
 2.2.4
 ====
 :release-date: 2016-01-08 07:50 P.M EST
