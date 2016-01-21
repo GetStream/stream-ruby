@@ -101,6 +101,16 @@ module Stream
       self.class.default_timeout default_timeout
     end
 
+    def _build_error_message(response)
+      msg = "#{response['exception']} details: #{response['detail']}"
+
+      response_key['exception_fields'].map do |field, messages|
+        msg << "\n#{field}: #{messages}"
+      end if response.has_key?('exception_fields')
+
+      return msg
+    end
+
     def make_http_request(method, relative_url, params = nil, data = nil, headers = nil)
       headers["Content-Type"] = "application/json"
       headers["X-Stream-Client"] = "stream-ruby-client-#{Stream::VERSION}"
@@ -110,7 +120,7 @@ module Stream
       when 200..203
         return response
       when 204...600
-        raise StreamApiResponseException, "#{response['exception']} details: #{response['detail']}"
+        raise StreamApiResponseException, _build_error_message(response)
       end
     end
   end
