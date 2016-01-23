@@ -2,8 +2,10 @@
  Change history
 ================
 
-upcoming
+2.2.5
 ====
+:release-date: 2016-01-22 08:50 P.M CST
+:by: Tommaso Barbugli
 
 * Better HTTP error message representation
 * [bugfix] allow underscores for feed group labels
