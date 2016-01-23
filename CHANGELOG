@@ -6,6 +6,7 @@ upcoming
 ====
 
 * Better HTTP error message representation
+* [bugfix] allow underscores for feed group labels
 
 2.2.4
 ====
