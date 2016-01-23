@@ -10,7 +10,7 @@ module Stream
 
     def initialize(client, feed_slug, user_id, token)
       unless valid_feed_slug feed_slug
-        raise StreamInputData, "feed_slug can only contain alphanumeric characters"
+        raise StreamInputData, "feed_slug can only contain alphanumeric characters plus underscores"
       end
 
       unless valid_user_id user_id
@@ -27,7 +27,7 @@ module Stream
     end
 
     def valid_feed_slug(feed_slug)
-      !feed_slug[/^[^_\W]+$/].nil?
+      !feed_slug[/^[a-zA-Z0-9_]+$/].nil?
     end
 
     def valid_user_id(user_id)
