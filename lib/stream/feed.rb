@@ -32,7 +32,7 @@ module Stream
         "action" => "read",
         "feed_id" => "#{@slug}#{@user_id}"
       }
-      return JWT.encode(payload, @client.api_secret)
+      return JWT.encode(payload, @client.api_secret, 'HS256')
     end
 
     def valid_feed_slug(feed_slug)

@@ -30,7 +30,7 @@ describe Stream::Feed do
         "action" => "read",
         "feed_id" => "user4"
       }
-      token = JWT.encode(payload, "secret")
+      token = JWT.encode(payload, "secret", "HS256")
 
       expect(feed.readonly_token).to eql token
     end
