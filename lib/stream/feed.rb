@@ -26,6 +26,15 @@ module Stream
       @signature = "#{feed_slug}#{user_id} #{token}"
     end
 
+    def readonly_token
+      payload = {
+        "resource" => "*",
+        "action" => "read",
+        "feed_id" => "#{@slug}#{@user_id}"
+      }
+      return JWT.encode(payload, @client.api_secret)
+    end
+
     def valid_feed_slug(feed_slug)
       !feed_slug[/^[a-zA-Z0-9_]+$/].nil?
     end

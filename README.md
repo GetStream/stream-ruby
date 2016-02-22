@@ -79,10 +79,10 @@ user_feed_1.add_activity(data)
 user_feed_1.delete
 
 # Generating tokens for client side usage
-token = user_feed_1.token
+token = user_feed_1.readonly_token
 
 # Javascript client side feed initialization
-# user1 = client.feed('user', '1', '{{ token }}');
+user1 = client.feed('user', '1', '{{ token }}');
 
 # Retrieve first 10 followers of a feed
 user_feed_1.followers(0, 10)
