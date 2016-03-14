@@ -1,5 +1,4 @@
 require "spec_helper"
-require 'jwt'
 
 describe Stream::Feed do
   it "should validate feed_id" do

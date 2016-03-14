@@ -1,5 +1,5 @@
 require "stream/signer"
-require 'jwt'
+require "jwt"
 
 module Stream
   class Feed
