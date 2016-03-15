@@ -2,6 +2,16 @@
  Change history
 ================
 
+2.3
+====
+:release-date: 2016-03-15 08:50 P.M CST
+:by: Tommaso Barbugli
+
+* Implement JWT authentication for all API calls
+* Fix 1.9.3 support by using jwt 1.5.2
+* Implement Stream::Feed#readonly_token
+* add support for activity_copy_limit on follow_many
+
 2.2.5
 ====
 :release-date: 2016-01-22 08:50 P.M CST
