@@ -7,7 +7,6 @@ module Stream
     attr_reader :slug
     attr_reader :user_id
     attr_reader :token
-    attr_reader :signature
 
     def initialize(client, feed_slug, user_id, token)
       unless valid_feed_slug feed_slug
@@ -22,18 +21,13 @@ module Stream
       @client = client
       @user_id = user_id
       @slug = feed_slug
+      @feed_name = "#{feed_slug}#{user_id}"
       @feed_url = "#{feed_slug}/#{user_id}"
       @token = token
-      @signature = "#{feed_slug}#{user_id} #{token}"
     end
 
     def readonly_token
-      payload = {
-        "resource" => "*",
-        "action" => "read",
-        "feed_id" => "#{@slug}#{@user_id}"
-      }
-      return JWT.encode(payload, @client.api_secret, 'HS256')
+      create_jwt_token("*", "read")
     end
 
     def valid_feed_slug(feed_slug)
@@ -52,7 +46,9 @@ module Stream
       if params[:mark_seen] && params[:mark_seen].is_a?(Array)
         params[:mark_seen] = params[:mark_seen].join(",")
       end
-      @client.make_request(:get, uri, @signature, params)
+      auth_token = create_jwt_token("feed", "read")
+
+      @client.make_request(:get, uri, auth_token, params)
     end
 
     def sign_to_field(to)
@@ -66,7 +62,9 @@ module Stream
     def add_activity(activity_data)
       uri = "/feed/#{@feed_url}/"
       activity_data[:to] &&= sign_to_field(activity_data[:to])
-      @client.make_request(:post, uri, @signature, {}, activity_data)
+      auth_token = create_jwt_token("feed", "write")
+
+      @client.make_request(:post, uri, auth_token, {}, activity_data)
     end
 
     def add_activities(activities)
@@ -75,7 +73,9 @@ module Stream
         activity[:to] &&= sign_to_field(activity[:to])
       end
       data = { :activities => activities }
-      @client.make_request(:post, uri, @signature, {}, data)
+      auth_token = create_jwt_token("feed", "write")
+
+      @client.make_request(:post, uri, auth_token, {}, data)
     end
 
     def remove(activity_id, foreign_id = false)
@@ -86,12 +86,16 @@ module Stream
       uri = "/feed/#{@feed_url}/#{activity_id}/"
       params = {}
       params = { "foreign_id" => 1 } if foreign_id
-      @client.make_request(:delete, uri, @signature, params)
+      auth_token = create_jwt_token("feed", "delete")
+
+      @client.make_request(:delete, uri, auth_token, {}, params)
     end
 
     def delete
       uri = "/feed/#{@feed_url}/"
-      @client.make_request(:delete, uri, @signature)
+      auth_token = create_jwt_token("feed", "delete")
+
+      @client.make_request(:delete, uri, auth_token)
     end
 
     def follow(target_feed_slug, target_user_id)
@@ -100,7 +104,9 @@ module Stream
         :target => "#{target_feed_slug}:#{target_user_id}",
         :target_token => @client.feed(target_feed_slug, target_user_id).token
       }
-      @client.make_request(:post, uri, @signature, {}, follow_data)
+      auth_token = create_jwt_token("follower", "write")
+
+      @client.make_request(:post, uri, auth_token, {}, follow_data)
     end
 
     def followers(offset = 0, limit = 25)
@@ -109,7 +115,9 @@ module Stream
         "offset" => offset,
         "limit" => limit
       }
-      @client.make_request(:get, uri, @signature, params)
+      auth_token = create_jwt_token("follower", "read")
+
+      @client.make_request(:get, uri, auth_token, {}, params)
     end
 
     def following(offset = 0, limit = 25, filter = [])
@@ -119,12 +127,30 @@ module Stream
         "limit" => limit,
         "filter" => filter.join(",")
       }
-      @client.make_request(:get, uri, @signature, params)
+      auth_token = create_jwt_token("follower", "read")
+
+      @client.make_request(:get, uri, auth_token, {}, params)
     end
 
     def unfollow(target_feed_slug, target_user_id)
       uri = "/feed/#{@feed_url}/follows/#{target_feed_slug}:#{target_user_id}/"
-      @client.make_request(:delete, uri, @signature)
+      auth_token = create_jwt_token("follower", "delete")
+
+      @client.make_request(:delete, uri, auth_token, {auth_token: auth_token})
+    end
+
+    private
+
+    def create_jwt_token(resource, action, feed_id=nil, user_id=nil)
+      payload = {
+        "resource" => resource,
+        "action" => action,
+        "feed_id" => @feed_name
+      }
+      payload["feed_id"] = feed_id if feed_id
+      payload["user_id"] = user_id if user_id
+
+      return JWT.encode(payload, @client.api_secret, 'HS256')
     end
   end
 end
