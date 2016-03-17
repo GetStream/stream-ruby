@@ -88,7 +88,7 @@ module Stream
       params = { "foreign_id" => 1 } if foreign_id
       auth_token = create_jwt_token("feed", "delete")
 
-      @client.make_request(:delete, uri, auth_token, {}, params)
+      @client.make_request(:delete, uri, auth_token, params)
     end
 
     def delete
@@ -117,7 +117,7 @@ module Stream
       }
       auth_token = create_jwt_token("follower", "read")
 
-      @client.make_request(:get, uri, auth_token, {}, params)
+      @client.make_request(:get, uri, auth_token, params)
     end
 
     def following(offset = 0, limit = 25, filter = [])
@@ -129,7 +129,7 @@ module Stream
       }
       auth_token = create_jwt_token("follower", "read")
 
-      @client.make_request(:get, uri, auth_token, {}, params)
+      @client.make_request(:get, uri, auth_token, params)
     end
 
     def unfollow(target_feed_slug, target_user_id)
