@@ -335,11 +335,11 @@ describe "Integration tests" do
       activities = []
       [0..10].each do |i|
         activities << {
-          "actor": "user:1",
-          "verb": "do",
-          "object": "object:#{i}",
-          "foreign_id": "object:#{i}",
-          "time": DateTime.now
+          "actor" => "user:1",
+          "verb" => "do",
+          "object" => "object:#{i}",
+          "foreign_id" => "object:#{i}",
+          "time" => DateTime.now
         }
       end
       created_activities = @feed42.add_activities(activities)["activities"]
