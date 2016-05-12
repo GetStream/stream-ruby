@@ -91,6 +91,16 @@ module Stream
       @client.make_request(:delete, uri, auth_token, params)
     end
 
+    def update_activity(activity)
+      update_activities([activity])
+    end
+
+    def update_activities(activities)
+      auth_token = create_jwt_token("activities", "*", "*")
+
+      @client.make_request(:post, "/activities/", auth_token, {}, { "activities" => activities })
+    end
+
     def delete
       uri = "/feed/#{@feed_url}/"
       auth_token = create_jwt_token("feed", "delete")

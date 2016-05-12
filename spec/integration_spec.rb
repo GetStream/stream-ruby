@@ -3,8 +3,9 @@ require "date"
 
 describe "Integration tests" do
   before do
-    @client = Stream::Client.new("ahj2ndz7gsan", "gthc2t9gh7pzq52f6cky8w4r4up9dr6rju9w3fjgmkv6cdvvav2ufe5fv7e2r9qy", nil, :location => "us-east")
+    @client = Stream::Client.new("82s68q7ggw7a", "pk85fb4947cd5j3r9ms2ayhjm5zth8vwq3tgyvw77ttpmf34fdm62dn7wcvhbadk", nil, :location => "us-east")
     @feed42 = @client.feed("flat", "r42")
+
     @test_activity = { :actor => 1, :verb => "tweet", :object => 1 }
   end
 
@@ -327,6 +328,36 @@ describe "Integration tests" do
         feeds = ["flat:1", "flat:2", "flat:3", "flat:4"]
         activity_data = { :actor => "tommaso", :verb => "tweet", :object => 1 }
         @client.add_to_many(activity_data, feeds)
+      end
+    end
+
+    example "updating many feed activities" do
+      activities = []
+      [0..10].each do |i|
+        activities << {
+          "actor" => "user:1",
+          "verb" => "do",
+          "object" => "object:#{i}",
+          "foreign_id" => "object:#{i}",
+          "time" => DateTime.now
+        }
+      end
+      created_activities = @feed42.add_activities(activities)["activities"]
+      activities = Marshal.load(Marshal.dump(created_activities))
+
+      sleep 3
+
+      activities.each do |activity|
+        activity.delete("id")
+        activity["popularity"] = 100
+      end
+
+      @feed42.update_activities(activities)
+
+      updated_activities = @feed42.get(limit: activities.length)["results"].reverse
+      updated_activities.each_with_index do |activity, idx|
+        expect(created_activities[idx]["id"]).to eql activity["id"]
+        expect(activity["popularity"]).to eql 100
       end
     end
   end
