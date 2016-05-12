@@ -3,7 +3,7 @@ stream-ruby
 
 [![Build Status](https://travis-ci.org/GetStream/stream-ruby.svg?branch=master)](https://travis-ci.org/GetStream/stream-ruby) [![Gem Version](https://badge.fury.io/rb/stream-ruby.svg)](http://badge.fury.io/rb/stream-ruby)
 
-stream-ruby is the official Ruby client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams. 
+stream-ruby is the official Ruby client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
 The full documentation is available on [GetStream.io/docs](http://getstream.io/docs/). Note that there is also a [higher level Rails integration](https://github.com/getstream/stream-rails) which hooks into your ORM.
 
 ### Installation
@@ -38,6 +38,13 @@ activity_data = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'tw
 	:started_at => DateTime.now()
 }
 activity_response = user_feed_1.add_activity(activity_data)
+
+# Update an activity
+activity_data = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'tweet:1', :popularity => 100}
+user_feed_1.update_activity(activity_data)
+
+# Update activities
+user_feed_1.update_activities([activity_data])
 
 # Remove an activity by its id
 user_feed_1.remove_activity('e561de8f-00f1-11e4-b400-0cc47a024be0')
@@ -106,4 +113,3 @@ client.add_to_many(activity, feeds)
 ```
 
 Docs are available on [GetStream.io](http://getstream.io/docs/).
-
