@@ -352,7 +352,7 @@ describe "Integration tests" do
         activity["popularity"] = 100
       end
 
-      @feed42.update_activities(activities)
+      @client.update_activities(activities)
 
       updated_activities = @feed42.get(limit: activities.length)["results"].reverse
       updated_activities.each_with_index do |activity, idx|

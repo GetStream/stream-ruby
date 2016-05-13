@@ -68,6 +68,15 @@ module Stream
       Stream::Feed.new(self, feed_slug, user_id, token)
     end
 
+    def update_activity(activity)
+      update_activities([activity])
+    end
+
+    def update_activities(activities)
+      auth_token = Stream::Signer.create_jwt_token("activities", "*", @api_secret, "*")
+      self.make_request(:post, "/activities/", auth_token, {}, { "activities" => activities })
+    end
+
     def get_default_params
       { :api_key => @api_key }
     end

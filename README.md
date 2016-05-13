@@ -41,10 +41,10 @@ activity_response = user_feed_1.add_activity(activity_data)
 
 # Update an existing activity (requires both :foreign_id and :time fields)
 activity_data = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'tweet:1', :popularity => 100, :time => '2016-05-13T16:12:30'}
-user_feed_1.update_activity(activity_data)
+client.update_activity(activity_data)
 
 # Update activities
-user_feed_1.update_activities([activity_data])
+client.update_activities([activity_data])
 
 # Remove an activity by its id
 user_feed_1.remove_activity('e561de8f-00f1-11e4-b400-0cc47a024be0')

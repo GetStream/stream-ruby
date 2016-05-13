@@ -152,15 +152,11 @@ module Stream
     private
 
     def create_jwt_token(resource, action, feed_id=nil, user_id=nil)
-      payload = {
-        "resource" => resource,
-        "action" => action,
-        "feed_id" => @feed_name
-      }
-      payload["feed_id"] = feed_id if feed_id
-      payload["user_id"] = user_id if user_id
-
-      return JWT.encode(payload, @client.api_secret, 'HS256')
+      if feed_id.nil?
+        feed_id = @feed_name
+      end
+      return Stream::Signer.create_jwt_token(resource, action, @client.api_secret, feed_id, user_id)
     end
+
   end
 end
