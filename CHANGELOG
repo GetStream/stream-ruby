@@ -2,6 +2,14 @@
  Change history
 ================
 
+2.4.1
+====
+:release-date: 2016-05-13
+:by: Tommaso Barbugli
+
+* Added update activity methods to client
+
+
 2.4
 ====
 :release-date: 2016-05-13
