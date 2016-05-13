@@ -39,7 +39,7 @@ activity_data = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'tw
 }
 activity_response = user_feed_1.add_activity(activity_data)
 
-# Update an activity
+# Update an existing activity (requires both :foreign_id and :time fields)
 activity_data = {:actor => 1, :verb => 'tweet', :object => 1, :foreign_id => 'tweet:1', :popularity => 100}
 user_feed_1.update_activity(activity_data)
 
