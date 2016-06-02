@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.4.2
+=====
+:release-date: 2016-06-01
+:by: Tommaso Barbugli
+
+* Added support for activity_copy_limit on follow
+
 2.4.1
 ====
 :release-date: 2016-05-13
