@@ -145,11 +145,14 @@ module Stream
       @client.make_request(:get, uri, auth_token, params)
     end
 
-    def unfollow(target_feed_slug, target_user_id)
+    def unfollow(target_feed_slug, target_user_id, keep_history = false)
       uri = "/feed/#{@feed_url}/follows/#{target_feed_slug}:#{target_user_id}/"
       auth_token = create_jwt_token("follower", "delete")
-
-      @client.make_request(:delete, uri, auth_token, {auth_token: auth_token})
+      params = {}
+      if keep_history
+        params["keep_history"] = true
+      end
+      @client.make_request(:delete, uri, auth_token, params)
     end
 
     private

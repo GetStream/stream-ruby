@@ -273,6 +273,17 @@ describe "Integration tests" do
       @feed42.unfollow("flat", "43")
     end
 
+    example "unfollowing a feed but keep history" do
+      follower = @client.feed("flat", "keeper")
+      follower.follow("flat", "keepit")
+      keepit = @client.feed("flat", "keepit")
+      response = keepit.add_activity(@test_activity)
+      sleep 5
+      follower.unfollow("flat", "keepit", :keep_history => true)
+      sleep 5
+      follower.get["results"][0]["id"].should eq response["id"]
+    end
+
     example "posting activity using to" do
       recipient = "flat", "toruby11"
       activity = {
