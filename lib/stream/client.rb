@@ -2,6 +2,7 @@ require "httparty"
 require "stream/errors"
 require "stream/feed"
 require "stream/signer"
+require 'persistent_httparty'
 
 module Stream
   STREAM_URL_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
@@ -82,7 +83,7 @@ module Stream
     end
 
     def get_http_client
-      StreamHTTPClient.new(@api_version, @location, @default_timeout)
+      @http_client ||= StreamHTTPClient.new(@api_version, @location, @default_timeout)
     end
 
     def make_query_params(params)
@@ -99,6 +100,8 @@ module Stream
 
   class StreamHTTPClient
     include HTTParty
+    persistent_connection_adapter
+
     attr_reader :base_path
 
     def initialize(api_version = "v1.0", location = nil, default_timeout = 3)
