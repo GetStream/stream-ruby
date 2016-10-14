@@ -13,7 +13,7 @@ Metrics/AbcSize:
 
 # Configuration parameters: CountComments.
 Metrics/ClassLength:
-  Max: 101
+  Max: 150
 
 # Configuration parameters: AllowURI, URISchemes.
 Metrics/LineLength:
@@ -112,7 +112,7 @@ Style/HashSyntax:
 # Cop supports --auto-correct.
 # Configuration parameters: MaxLineLength.
 Style/IfUnlessModifier:
-  Enabled: true
+  Enabled: false
 
 # Cop supports --auto-correct.
 Style/IndentArray:
@@ -207,8 +207,8 @@ Style/TrailingBlankLines:
 
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleForMultiline, SupportedStyles.
-Style/TrailingComma:
-  Enabled: true
+#Style/TrailingComma:
+#  Enabled: true
 
 # Cop supports --auto-correct.
 Style/TrailingWhitespace:

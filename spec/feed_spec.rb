@@ -18,7 +18,7 @@ describe Stream::Feed do
   end
 
   it "should not refuse feed_slug with underscores" do
-    expect { Stream::Feed.new(nil, "feed_slug", "user_id", "") }.to_not raise_error Stream::StreamInputData
+    expect { Stream::Feed.new(nil, "feed_slug", "user_id", "") }.to_not raise_error # Stream::StreamInputData
   end
 
   describe "#readonly_token" do

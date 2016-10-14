@@ -24,15 +24,15 @@ module Stream
       sign_message("#{feed_slug}#{user_id}")
     end
 
-    def self.create_jwt_token(resource, action, api_secret, feed_id=nil, user_id=nil)
+    def self.create_jwt_token(resource, action, api_secret, feed_id = nil, user_id = nil)
       payload = {
         "resource" => resource,
         "action" => action
       }
       payload["feed_id"] = feed_id if feed_id
       payload["user_id"] = user_id if user_id
-      return JWT.encode(payload, api_secret, 'HS256')
-    end
 
+      JWT.encode(payload, api_secret, "HS256")
+    end
   end
 end

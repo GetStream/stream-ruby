@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.4.4
+=====
+:release-date: 2016-10-15
+:by: Ian Douglas
+
+* Added support in tests for Stream's new QA environment
+
 2.4.3
 =====
 :release-date: 2016-06-09

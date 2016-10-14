@@ -98,7 +98,7 @@ module Stream
     def update_activities(activities)
       auth_token = create_jwt_token("activities", "*", "*")
 
-      @client.make_request(:post, "/activities/", auth_token, {}, { "activities" => activities })
+      @client.make_request(:post, "/activities/", auth_token, {}, "activities" => activities)
     end
 
     def delete
@@ -149,20 +149,15 @@ module Stream
       uri = "/feed/#{@feed_url}/follows/#{target_feed_slug}:#{target_user_id}/"
       auth_token = create_jwt_token("follower", "delete")
       params = {}
-      if keep_history
-        params["keep_history"] = true
-      end
+      params["keep_history"] = true if keep_history
       @client.make_request(:delete, uri, auth_token, params)
     end
 
     private
 
-    def create_jwt_token(resource, action, feed_id=nil, user_id=nil)
-      if feed_id.nil?
-        feed_id = @feed_name
-      end
-      return Stream::Signer.create_jwt_token(resource, action, @client.api_secret, feed_id, user_id)
+    def create_jwt_token(resource, action, feed_id = nil, user_id = nil)
+      feed_id = @feed_name if feed_id.nil?
+      Stream::Signer.create_jwt_token(resource, action, @client.api_secret, feed_id, user_id)
     end
-
   end
 end
