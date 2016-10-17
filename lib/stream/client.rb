@@ -112,13 +112,11 @@ module Stream
       @base_path = "/api/#{api_version}"
 
       protocol = "https"
-      port = ""
       if location == "qa"
         protocol = "http"
-        port = ":82"
       end
 
-      self.class.base_uri "#{protocol}://#{location_name}.getstream.io#{port}#{@base_path}"
+      self.class.base_uri "#{protocol}://#{location_name}.getstream.io#{@base_path}"
       self.class.default_timeout default_timeout
     end
 
