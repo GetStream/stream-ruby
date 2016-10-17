@@ -16,10 +16,10 @@ module Stream
     # ]
     # @client.follow_many(follows)
     #
-    def follow_many(follows, activity_copy_limit=nil)
+    def follow_many(follows, activity_copy_limit = nil)
       query_params = {}
       unless activity_copy_limit.nil?
-        query_params['activity_copy_limit'] = activity_copy_limit
+        query_params["activity_copy_limit"] = activity_copy_limit
       end
       make_signed_request(:post, "/follow_many/", query_params, follows)
     end

@@ -4,7 +4,8 @@ stream-ruby
 [![Build Status](https://travis-ci.org/GetStream/stream-ruby.svg?branch=master)](https://travis-ci.org/GetStream/stream-ruby) [![Gem Version](https://badge.fury.io/rb/stream-ruby.svg)](http://badge.fury.io/rb/stream-ruby)
 
 stream-ruby is the official Ruby client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
-The full documentation is available on [GetStream.io/docs](http://getstream.io/docs/). Note that there is also a [higher level Rails integration](https://github.com/getstream/stream-rails) which hooks into your ORM.
+The full documentation is available on [GetStream.io/docs/?language=ruby](http://getstream.io/docs/?language=ruby).
+There is also a [higher level Rails integration](https://github.com/getstream/stream-rails) library which hooks into your ORM.
 
 ### Installation
 

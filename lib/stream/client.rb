@@ -2,6 +2,7 @@ require "httparty"
 require "stream/errors"
 require "stream/feed"
 require "stream/signer"
+require "persistent_httparty"
 
 module Stream
   STREAM_URL_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
@@ -74,7 +75,7 @@ module Stream
 
     def update_activities(activities)
       auth_token = Stream::Signer.create_jwt_token("activities", "*", @api_secret, "*")
-      self.make_request(:post, "/activities/", auth_token, {}, { "activities" => activities })
+      make_request(:post, "/activities/", auth_token, {}, "activities" => activities)
     end
 
     def get_default_params
@@ -82,7 +83,7 @@ module Stream
     end
 
     def get_http_client
-      StreamHTTPClient.new(@api_version, @location, @default_timeout)
+      @http_client ||= StreamHTTPClient.new(@api_version, @location, @default_timeout)
     end
 
     def make_query_params(params)
@@ -91,7 +92,7 @@ module Stream
 
     def make_request(method, relative_url, signature, params = {}, data = {}, headers = {})
       headers["Authorization"] = signature
-      headers["stream-auth-type"] = 'jwt'
+      headers["stream-auth-type"] = "jwt"
 
       get_http_client.make_http_request(method, relative_url, make_query_params(params), data, headers)
     end
@@ -99,27 +100,34 @@ module Stream
 
   class StreamHTTPClient
     include HTTParty
+    persistent_connection_adapter
+
     attr_reader :base_path
 
     def initialize(api_version = "v1.0", location = nil, default_timeout = 3)
-      if location.nil?
-        location_name = "api"
-      else
+      location_name = "api"
+      unless location.nil?
         location_name = "#{location}-api"
       end
       @base_path = "/api/#{api_version}"
-      self.class.base_uri "https://#{location_name}.getstream.io#{@base_path}"
+
+      protocol = "https"
+      if location == "qa"
+        protocol = "http"
+      end
+
+      self.class.base_uri "#{protocol}://#{location_name}.getstream.io#{@base_path}"
       self.class.default_timeout default_timeout
     end
 
     def _build_error_message(response)
       msg = "#{response['exception']} details: #{response['detail']}"
 
-      response['exception_fields'].map do |field, messages|
+      response["exception_fields"].map do |field, messages|
         msg << "\n#{field}: #{messages}"
-      end if response.has_key?('exception_fields')
+      end if response.key?("exception_fields")
 
-      return msg
+      msg
     end
 
     def make_http_request(method, relative_url, params = nil, data = nil, headers = nil)
