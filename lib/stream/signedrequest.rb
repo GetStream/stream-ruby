@@ -5,8 +5,7 @@ require "time"
 module Stream
   module SignedRequest
     module ClassMethods
-      def supports_signed_requests
-      end
+      def supports_signed_requests; end
     end
 
     def self.included(klass)
