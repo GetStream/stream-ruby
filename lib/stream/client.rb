@@ -121,9 +121,11 @@ module Stream
     def _build_error_message(response)
       msg = "#{response['exception']} details: #{response['detail']}"
 
-      response["exception_fields"].map do |field, messages|
-        msg << "\n#{field}: #{messages}"
-      end if response.key?("exception_fields")
+      if response.key?("exception_fields")
+        response["exception_fields"].map do |field, messages|
+          msg << "\n#{field}: #{messages}"
+        end
+      end
 
       msg
     end
