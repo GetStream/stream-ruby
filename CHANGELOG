@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.4.5
+=====
+:release-date: 2016-12-09
+:by: Ian Douglas
+
+* Removing persistance support while we evaluate other libraries to replace httparty
+
 2.4.4
 =====
 :release-date: 2016-10-15
