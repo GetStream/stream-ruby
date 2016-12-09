@@ -2,7 +2,6 @@ require "httparty"
 require "stream/errors"
 require "stream/feed"
 require "stream/signer"
-require "persistent_httparty"
 
 module Stream
   STREAM_URL_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
@@ -100,7 +99,6 @@ module Stream
 
   class StreamHTTPClient
     include HTTParty
-    persistent_connection_adapter
 
     attr_reader :base_path
 
