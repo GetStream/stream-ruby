@@ -2,7 +2,6 @@ require "httparty"
 require "stream/errors"
 require "stream/feed"
 require "stream/signer"
-require 'pry'
 
 module Stream
   STREAM_URL_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
@@ -100,11 +99,10 @@ module Stream
 
   class StreamHTTPClient
     include HTTParty
-    require 'faraday'
 
     attr_reader :base_path
 
-    def initialize(api_version = "v1.0", location = nil, default_timeout = 3, pool_size = 2, idle_timeout = 10)
+    def initialize(api_version = "v1.0", location = nil, default_timeout = 3)
       location_name = "api"
       unless location.nil?
         location_name = "#{location}-api"
@@ -115,18 +113,14 @@ module Stream
       if location == "qa"
         protocol = "http"
       end
-      @conn = Faraday.new("#{protocol}://#{location_name}.getstream.io#{@base_path}")
-      # self.class.base_uri "#{protocol}://#{location_name}.getstream.io#{@base_path}"
-      # self.class.default_timeout default_timeoutde
+
+      self.class.base_uri "#{protocol}://#{location_name}.getstream.io#{@base_path}"
+      self.class.default_timeout default_timeout
     end
 
     def _build_error_message(response)
-      #needs to fix the response['exception'] and response['details'] below
-      #this keys are not longer available in Faraday
       msg = "#{response['exception']} details: #{response['detail']}"
 
-      #hence it will impact the conditional below
-      binding.pry
       if response.key?("exception_fields")
         response["exception_fields"].map do |field, messages|
           msg << "\n#{field}: #{messages}"
@@ -137,27 +131,14 @@ module Stream
     end
 
     def make_http_request(method, relative_url, params = nil, data = nil, headers = nil)
-      #you can pass as many arguments as needed right now into make_http_request
-      # all you need to do is to setup the params below as per Faraday documentation
-
-      response = @conn.send(method) do |req|
-        req.url relative_url
-        req.headers = { "Content-Type" => "application/json", "X-Stream-Client" => "stream-ruby-client-#{Stream::VERSION}" }
-        req.params = {"query" => params}
-        #this conditional is just to check whether or not it is a
-        #POST or PUT request so it can add the body into the request
-        if ["post", "put"].include? method.to_s
-          req.body = data.to_json
-        end
-      end
-
-      # In Faraday the "response.code" is actually "response.status"
-      case response.status
+      headers["Content-Type"] = "application/json"
+      headers["X-Stream-Client"] = "stream-ruby-client-#{Stream::VERSION}"
+      body = data.to_json if ["post", "put"].include? method.to_s
+      response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => body)
+      case response.code
       when 200..203
         return response
       when 204...600
-        # The method _build_error_message needs to be check, there are comments
-        # added to the method
         raise StreamApiResponseException, _build_error_message(response)
       end
     end
