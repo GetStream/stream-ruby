@@ -101,7 +101,7 @@ module Stream
   class StreamHTTPClient
     require 'faraday'
 
-    attr_reader :base_path
+    attr_reader :base_path, :conn
 
     def initialize(api_version = "v1.0", location = nil, default_timeout = 3)
       location_name = "api"

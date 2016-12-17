@@ -24,6 +24,7 @@ describe Stream::Client do
     client.api_secret.should eq "pass"
     client.app_id.should eq "1"
     client.location.should eq nil
+    binding.pry
     client.get_http_client.class.base_uri.should eq "https://api.getstream.io/api/v1.0"
   end
 
