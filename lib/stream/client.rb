@@ -115,10 +115,16 @@ module Stream
         protocol = "http"
       end
 
-      self.class.base_uri "#{protocol}://#{location_name}.getstream.io#{@base_path}"
-      self.class.default_timeout default_timeout
+      # replaced those two lines to fit the Faraday syntax.
+      # self.class.base_uri "#{protocol}://#{location_name}.getstream.io#{@base_path}"
+      # self.class.default_timeout default_timeout
+
+      @conn = Faraday.new("#{protocol}://#{location_name}.getstream.io#{@base_path}")
+      @conn.params.merge!(:timeout => default_timeout)
     end
 
+    # _build_error_message needs to be fixed since Faraday no longer makes keys
+    # available as previously done with HTTParty
     def _build_error_message(response)
       msg = "#{response['exception']} details: #{response['detail']}"
 
@@ -127,21 +133,36 @@ module Stream
           msg << "\n#{field}: #{messages}"
         end
       end
-
       msg
     end
 
     def make_http_request(method, relative_url, params = nil, data = nil, headers = nil)
-      headers["Content-Type"] = "application/json"
-      headers["X-Stream-Client"] = "stream-ruby-client-#{Stream::VERSION}"
-      body = data.to_json if ["post", "put"].include? method.to_s
-      response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => body)
-      case response.code
-      when 200..203
-        return response
-      when 204...600
-        raise StreamApiResponseException, _build_error_message(response)
+      # headers["Content-Type"] = "application/json"
+      # headers["X-Stream-Client"] = "stream-ruby-client-#{Stream::VERSION}"
+      # body = data.to_json if ["post", "put"].include? method.to_s
+      # response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => body)
+
+      response = @conn.send(method) do |req|
+        req.url
+        req.headers = {}
+        req.params = params
+        # this conditional will check whether it is a POST or put
+        # and add the body to the request
+        if ["post", "put"].include? method.to_s
+          req.body = data.to_json
+        end
       end
+    end
+
+    # changed line of code to match Faraday syntax
+    # case response.code
+    case response.status
+    when 200..203
+      return response
+    when 204...600
+      # need to go back to this method and fix because the error is not
+      # being raised as expected.
+      raise StreamApiResponseException, _build_error_message(response)
     end
   end
 end
