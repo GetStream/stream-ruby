@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export STREAM_API_KEY=ncr5uednmnnz
+export STREAM_API_SECRET=78b7bt23ft4wz2vjkgxw82usu5qms42e8m5xwv2rzyw8e7sybwtp3e5uh89dv9wv
+export STREAM_REGION=qa
+
+rspec

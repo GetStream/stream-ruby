@@ -8,4 +8,6 @@ group :test do
   gem "rubocop", :require => false
   gem "simplecov"
   gem "yard"
+  gem "pry"
+  gem "faraday"
 end
