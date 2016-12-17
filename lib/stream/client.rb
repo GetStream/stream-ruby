@@ -2,6 +2,7 @@ require "httparty"
 require "stream/errors"
 require "stream/feed"
 require "stream/signer"
+require "pry"
 
 module Stream
   STREAM_URL_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
@@ -98,7 +99,7 @@ module Stream
   end
 
   class StreamHTTPClient
-    include HTTParty
+    require 'faraday'
 
     attr_reader :base_path
 
