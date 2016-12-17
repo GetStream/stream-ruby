@@ -152,17 +152,17 @@ module Stream
           req.body = data.to_json
         end
       end
-    end
 
-    # changed line of code to match Faraday syntax
-    # case response.code
-    case response.status
-    when 200..203
-      return response
-    when 204...600
-      # need to go back to this method and fix because the error is not
-      # being raised as expected.
-      raise StreamApiResponseException, _build_error_message(response)
+      # changed line of code to match Faraday syntax
+      # case response.code
+      case response.status
+      when 200..203
+        return response
+      when 204...600
+        # need to go back to this method and fix because the error is not
+        # being raised as expected.
+        raise StreamApiResponseException, _build_error_message(response)
+      end
     end
   end
 end
