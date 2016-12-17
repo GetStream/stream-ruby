@@ -9,3 +9,4 @@ Gemfile.lock
 .ruby-gemset
 .idea
 *.DS_Store
+run.sh
