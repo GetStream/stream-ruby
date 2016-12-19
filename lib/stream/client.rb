@@ -1,4 +1,4 @@
-require "httparty"
+require "faraday"
 require "stream/errors"
 require "stream/feed"
 require "stream/signer"
@@ -10,9 +10,7 @@ module Stream
     attr_reader :api_key
     attr_reader :api_secret
     attr_reader :app_id
-    attr_reader :api_version
-    attr_reader :location
-    attr_reader :default_timeout
+    attr_reader :client_options
 
     if RUBY_VERSION.to_f >= 2.1
       require "stream/batch"
@@ -49,13 +47,16 @@ module Stream
       @api_key = api_key
       @api_secret = api_secret
       @app_id = app_id
-      @location = opts[:location]
-      @api_version = opts.fetch(:api_version, "v1.0")
-      @default_timeout = opts.fetch(:default_timeout, 3)
       @signer = Stream::Signer.new(api_secret)
+
+      @client_options = {
+        :api_version => opts.fetch(:api_version, "v1.0"),
+        :location => opts.fetch(:location, nil),
+        :default_timeout => opts.fetch(:default_timeout, 3),
+        :api_key => @api_key
+      }
     end
 
-    #
     # Creates a feed instance
     #
     # @param [string] feed_slug the feed slug (eg. flat, aggregated...)
@@ -82,7 +83,7 @@ module Stream
     end
 
     def get_http_client
-      @http_client ||= StreamHTTPClient.new(@api_version, @location, @default_timeout)
+      @http_client ||= StreamHTTPClient.new(@client_options)
     end
 
     def make_query_params(params)
@@ -98,48 +99,92 @@ module Stream
   end
 
   class StreamHTTPClient
-    include HTTParty
+    require "faraday"
 
+    attr_reader :conn
+    attr_reader :options
     attr_reader :base_path
 
-    def initialize(api_version = "v1.0", location = nil, default_timeout = 3)
+    def initialize(client_params)
+      @options = client_params
       location_name = "api"
-      unless location.nil?
-        location_name = "#{location}-api"
+      unless client_params[:location].nil?
+        location_name = "#{client_params[:location]}-api"
       end
-      @base_path = "/api/#{api_version}"
 
       protocol = "https"
-      if location == "qa"
+      if @options[:location] == "qa"
         protocol = "http"
       end
 
-      self.class.base_uri "#{protocol}://#{location_name}.getstream.io#{@base_path}"
-      self.class.default_timeout default_timeout
-    end
+      @base_path = "/api/#{@options[:api_version]}"
+      base_url = "#{protocol}://#{location_name}.getstream.io#{@base_path}"
 
-    def _build_error_message(response)
-      msg = "#{response['exception']} details: #{response['detail']}"
-
-      if response.key?("exception_fields")
-        response["exception_fields"].map do |field, messages|
-          msg << "\n#{field}: #{messages}"
-        end
+      @conn = Faraday.new(:url => base_url) do |faraday|
+        # faraday.request :url_encoded
+        faraday.adapter Faraday.default_adapter
+        faraday.use RaiseHttpException
+        faraday.options[:open_timeout] = @options[:default_timeout]
+        faraday.options[:timeout] = @options[:default_timeout]
       end
-
-      msg
+      @conn.path_prefix = @base_path
     end
 
     def make_http_request(method, relative_url, params = nil, data = nil, headers = nil)
       headers["Content-Type"] = "application/json"
       headers["X-Stream-Client"] = "stream-ruby-client-#{Stream::VERSION}"
-      body = data.to_json if ["post", "put"].include? method.to_s
-      response = self.class.send(method, relative_url, :headers => headers, :query => params, :body => body)
-      case response.code
+
+      params["api_key"] = @options[:api_key]
+      relative_url = "#{@base_path}#{relative_url}?#{URI.encode_www_form(params)}"
+      response = @conn.run_request(method, relative_url, data.to_json, headers)
+
+      case response[:status].to_i
       when 200..203
-        return response
-      when 204...600
-        raise StreamApiResponseException, _build_error_message(response)
+        return ::JSON.parse(response[:body])
+      end
+    end
+  end
+
+  class RaiseHttpException < Faraday::Middleware
+    def call(env)
+      @app.call(env).on_complete do |response|
+        case response[:status].to_i
+        when 200..203
+          return response
+        when 401
+          raise StreamApiResponseException, error_message(response, "Bad feed")
+        when 403
+          raise StreamApiResponseException, error_message(response, "Bad auth/headers")
+        when 404
+          raise StreamApiResponseException, error_message(response, "url not found")
+        when 204...600
+          raise StreamApiResponseException, error_message(response, "something else")
+        end
+      end
+    end
+
+    def initialize(app)
+      super app
+      @parser = nil
+    end
+
+    private
+
+    def error_message(response, body = nil)
+      "#{response[:method].to_s.upcase} #{response[:url]}: #{[response[:status].to_s + ':', body].compact.join(' ')}"
+    end
+
+    def error_body(body)
+      if !body.nil? && !body.empty? && body.is_a?(String)
+        body = ::JSON.parse(body)
+      end
+
+      if body.nil?
+        nil
+      elsif body["meta"] && body["meta"]["error_message"] && !body["meta"]["error_message"].empty?
+        ": #{body['meta']['error_message']}"
+      elsif body["error_message"] && !body["error_message"].empty?
+        ": #{body['error_type']}: #{body['error_message']}"
       end
     end
   end

@@ -218,3 +218,11 @@ Style/TrailingWhitespace:
 # Configuration parameters: WordRegex.
 Style/WordArray:
   Enabled: false
+
+# don't complain about code complexity
+Metrics/AbcSize:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false

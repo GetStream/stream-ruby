@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.5.0
+=====
+:release-date: 2016-12-19
+:by: Ian Douglas
+
+* Switched from HTTParty to Faraday to allow more fine-grained control (more to come)
+
 2.4.5
 =====
 :release-date: 2016-12-09

@@ -1,3 +1,3 @@
 module Stream
-  VERSION = "2.4.5".freeze
+  VERSION = "2.5.0".freeze
 end

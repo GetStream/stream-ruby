@@ -23,8 +23,8 @@ describe Stream::Client do
     client.api_key.should eq "thierry"
     client.api_secret.should eq "pass"
     client.app_id.should eq "1"
-    client.location.should eq nil
-    client.get_http_client.class.base_uri.should eq "https://api.getstream.io/api/v1.0"
+    client.client_options[:location].should eq nil
+    client.get_http_client.conn.url_prefix.to_s.should eq "https://api.getstream.io/api/v1.0"
   end
 
   it "old heroku url" do
@@ -33,8 +33,8 @@ describe Stream::Client do
     client.api_key.should eq "thierry"
     client.api_secret.should eq "pass"
     client.app_id.should eq "1"
-    client.location.should eq nil
-    client.get_http_client.class.base_uri.should eq "https://api.getstream.io/api/v1.0"
+    client.client_options[:location].should eq nil
+    client.get_http_client.conn.url_prefix.to_s.should eq "https://api.getstream.io/api/v1.0"
   end
 
   it "heroku url with location" do
@@ -43,8 +43,8 @@ describe Stream::Client do
     client.api_key.should eq "thierry"
     client.api_secret.should eq "pass"
     client.app_id.should eq "1"
-    client.location.should eq "eu-west"
-    client.get_http_client.class.base_uri.should eq "https://eu-west-api.getstream.io/api/v1.0"
+    client.client_options[:location].should eq "eu-west"
+    client.get_http_client.conn.url_prefix.to_s.should eq "https://eu-west-api.getstream.io/api/v1.0"
   end
 
   it "heroku url with location and extra vars" do
@@ -53,8 +53,8 @@ describe Stream::Client do
     client.api_key.should eq "thierry"
     client.api_secret.should eq "pass"
     client.app_id.should eq "1"
-    client.location.should eq "eu-west"
-    client.get_http_client.class.base_uri.should eq "https://eu-west-api.getstream.io/api/v1.0"
+    client.client_options[:location].should eq "eu-west"
+    client.get_http_client.conn.url_prefix.to_s.should eq "https://eu-west-api.getstream.io/api/v1.0"
   end
 
   it "wrong heroku vars" do
@@ -71,27 +71,33 @@ describe Stream::Client do
     ENV.delete "STREAM_URL"
   end
 
+  it "should handle different api versions if specified" do
+    client = Stream::Client.new("1", "2", nil, :api_version => "v2.345")
+    http_client = client.get_http_client
+    http_client.conn.url_prefix.to_s.should eq "https://api.getstream.io/api/v2.345"
+  end
+
   it "should handle default location as api.getstream.io" do
     client = Stream::Client.new("1", "2")
     http_client = client.get_http_client
-    http_client.class.base_uri.should eq "https://api.getstream.io/api/v1.0"
+    http_client.conn.url_prefix.to_s.should eq "https://api.getstream.io/api/v1.0"
   end
 
   it "should handle us-east location as api.getstream.io" do
     client = Stream::Client.new("1", "2", nil, :location => "us-east")
     http_client = client.get_http_client
-    http_client.class.base_uri.should eq "https://us-east-api.getstream.io/api/v1.0"
+    http_client.conn.url_prefix.to_s.should eq "https://us-east-api.getstream.io/api/v1.0"
   end
 
   it "should have 3s default timeout" do
     client = Stream::Client.new("1", "2", nil)
     http_client = client.get_http_client
-    http_client.class.default_options[:timeout].should eq 3
+    http_client.conn.options[:timeout].should eq 3
   end
 
   it "should be possible to change timeout" do
     client = Stream::Client.new("1", "2", nil, :default_timeout => 5)
     http_client = client.get_http_client
-    http_client.class.default_options[:timeout].should eq 5
+    http_client.conn.options[:timeout].should eq 5
   end
 end
