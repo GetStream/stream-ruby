@@ -14,10 +14,9 @@ Gem::Specification.new do |gem|
   gem.extra_rdoc_files = ["README.md", "LICENSE"]
   gem.files = Dir["lib/**/*"]
   gem.license = "BSD-3-Clause"
-  gem.add_dependency "httparty", "~> 0"
+  gem.add_dependency "faraday", "~> 0.10.0"
   gem.add_dependency "http_signatures", "~> 0"
   gem.add_dependency "jwt", "= 1.5.2"
-  gem.add_dependency "persistent_httparty", "~> 0.1.2"
   gem.add_development_dependency "rake", "~> 0"
   gem.add_development_dependency "rspec", "~> 2.10"
   gem.add_development_dependency "simplecov", "~> 0.7"

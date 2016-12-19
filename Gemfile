@@ -3,7 +3,7 @@ source "https://rubygems.org/"
 gemspec
 
 group :test do
-  gem "httparty"
+  gem "faraday"
   gem "rack"
   gem "rubocop", :require => false
   gem "simplecov"
