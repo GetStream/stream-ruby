@@ -72,7 +72,7 @@ describe Stream::Client do
   end
 
   it "should handle different api versions if specified" do
-    client = Stream::Client.new("1", "2", nil, :api_version=>"v2.345")
+    client = Stream::Client.new("1", "2", nil, :api_version => "v2.345")
     http_client = client.get_http_client
     http_client.conn.url_prefix.to_s.should eq "https://api.getstream.io/api/v2.345"
   end

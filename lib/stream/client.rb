@@ -50,10 +50,10 @@ module Stream
       @signer = Stream::Signer.new(api_secret)
 
       @client_options = {
-          :api_version => opts.fetch(:api_version, "v1.0"),
-          :location => opts.fetch(:location, nil),
-          :default_timeout => opts.fetch(:default_timeout, 3),
-          :api_key => @api_key
+        :api_version => opts.fetch(:api_version, "v1.0"),
+        :location => opts.fetch(:location, nil),
+        :default_timeout => opts.fetch(:default_timeout, 3),
+        :api_key => @api_key
       }
     end
 
@@ -79,7 +79,7 @@ module Stream
     end
 
     def get_default_params
-      {:api_key => @api_key}
+      { :api_key => @api_key }
     end
 
     def get_http_client
@@ -134,13 +134,13 @@ module Stream
       headers["Content-Type"] = "application/json"
       headers["X-Stream-Client"] = "stream-ruby-client-#{Stream::VERSION}"
 
-      params['api_key'] = @options[:api_key]
+      params["api_key"] = @options[:api_key]
       relative_url = "#{@base_path}#{relative_url}?#{URI.encode_www_form(params)}"
       response = @conn.run_request(method, relative_url, data.to_json, headers)
 
       case response[:status].to_i
-        when 200..203
-          return ::JSON.parse(response[:body])
+      when 200..203
+        return ::JSON.parse(response[:body])
       end
     end
   end
@@ -149,16 +149,16 @@ module Stream
     def call(env)
       @app.call(env).on_complete do |response|
         case response[:status].to_i
-          when 200..203
-            return response
-          when 401
-            raise StreamApiResponseException, error_message(response, "Bad feed")
-          when 403
-            raise StreamApiResponseException, error_message(response, "Bad auth/headers")
-          when 404
-            raise StreamApiResponseException, error_message(response, "url not found")
-          when 204...600
-            raise StreamApiResponseException, error_message(response, "something else")
+        when 200..203
+          return response
+        when 401
+          raise StreamApiResponseException, error_message(response, "Bad feed")
+        when 403
+          raise StreamApiResponseException, error_message(response, "Bad auth/headers")
+        when 404
+          raise StreamApiResponseException, error_message(response, "url not found")
+        when 204...600
+          raise StreamApiResponseException, error_message(response, "something else")
         end
       end
     end
@@ -170,20 +170,20 @@ module Stream
 
     private
 
-    def error_message(response, body=nil)
-      "#{response[:method].to_s.upcase} #{response[:url].to_s}: #{[response[:status].to_s + ':', body].compact.join(' ')}"
+    def error_message(response, body = nil)
+      "#{response[:method].to_s.upcase} #{response[:url]}: #{[response[:status].to_s + ':', body].compact.join(' ')}"
     end
 
     def error_body(body)
-      if not body.nil? and not body.empty? and body.kind_of?(String)
+      if !body.nil? && !body.empty? && body.is_a?(String)
         body = ::JSON.parse(body)
       end
 
       if body.nil?
         nil
-      elsif body['meta'] and body['meta']['error_message'] and not body['meta']['error_message'].empty?
+      elsif body["meta"] && body["meta"]["error_message"] && !body["meta"]["error_message"].empty?
         ": #{body['meta']['error_message']}"
-      elsif body['error_message'] and not body['error_message'].empty?
+      elsif body["error_message"] && !body["error_message"].empty?
         ": #{body['error_type']}: #{body['error_message']}"
       end
     end
