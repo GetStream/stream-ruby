@@ -18,7 +18,7 @@ gem install "stream-ruby"
 ```ruby
 # Instantiate a new client to connect to us east API endpoint
 require 'stream'
-client = Stream::Client.new('YOUR_API_KEY', 'API_KEY_SECRET', :location => 'us-east')
+client = Stream::Client.new('YOUR_API_KEY', 'API_KEY_SECRET', 'APP_ID', :location => 'us-east')
 # Find your API keys here https://getstream.io/dashboard/
 
 # Instantiate a feed object

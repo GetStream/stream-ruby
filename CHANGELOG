@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.5.1
+=====
+:release-date: 2017-01-10
+:by: Ian Douglas
+
+* customers reported non-empty GET bodies, which mess up auth signing
+
 2.5.0
 =====
 :release-date: 2016-12-19

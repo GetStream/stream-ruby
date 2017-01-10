@@ -133,10 +133,15 @@ module Stream
     def make_http_request(method, relative_url, params = nil, data = nil, headers = nil)
       headers["Content-Type"] = "application/json"
       headers["X-Stream-Client"] = "stream-ruby-client-#{Stream::VERSION}"
-
       params["api_key"] = @options[:api_key]
       relative_url = "#{@base_path}#{relative_url}?#{URI.encode_www_form(params)}"
-      response = @conn.run_request(method, relative_url, data.to_json, headers)
+      body = data.to_json if %w(post put).include? method.to_s
+      response = @conn.run_request(
+        method,
+        relative_url,
+        body,
+        headers
+      )
 
       case response[:status].to_i
       when 200..203
