@@ -129,7 +129,7 @@ Style/IndentationWidth:
   Enabled: true
 
 # Cop supports --auto-correct.
-Style/MethodCallParentheses:
+Style/MethodCallWithoutArgsParentheses:
   Enabled: true
 
 # Configuration parameters: EnforcedStyle, SupportedStyles.
