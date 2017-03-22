@@ -2,12 +2,12 @@
  Change history
 ================
 
-2.5.3
+2.5.4
 =====
 :release-date: 2017-03-22
 :by: Ian Douglas
 
-* fixed error messages when exceptions happen on response payloads
+* fixed error messages when exceptions happen on response payloads (fixed from a bad 2.5.3 release)
 
 2.5.2
 =====
