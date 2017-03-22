@@ -168,7 +168,7 @@ module Stream
         when 404
           raise StreamApiResponseException, error_message(response, "url not found")
         when 204...600
-          raise StreamApiResponseException, error_message(response, _build_error_message(response))
+          raise StreamApiResponseException, error_message(response, _build_error_message(response.body))
         end
       end
     end
@@ -182,6 +182,7 @@ module Stream
     private
 
     def _build_error_message(response)
+      response = JSON.parse(response)
       msg = "#{response['exception']} details: #{response['detail']}"
       if response.key?("exception_fields")
         response["exception_fields"].map do |field, messages|

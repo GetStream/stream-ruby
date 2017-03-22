@@ -321,10 +321,24 @@ describe "Integration tests" do
         @client.follow_many(follows)
       end
 
+      it "should return an appropriate error if following many fails" do
+        follows = [
+          { :source => "badfeed:1", :target => "alsobad:1" },
+          { :source => "extrabadfeed:1", :target => "reallybad:3" }
+        ]
+        expect do
+          @client.follow_many(follows, 5000)
+        end.to raise_error(
+          Stream::StreamApiResponseException,
+          "POST http://qa-api.getstream.io/api/v1.0/follow_many/?activity_copy_limit=5000&api_key=ncr5uednmnnz: 400: InputException details: Errors for fields 'activity_copy_limit'\nactivity_copy_limit: [\"Ensure this value is less than or equal to 300.\"]"
+               )
+        end
+
       it "should be able to add one activity to many feeds in one request" do
         feeds = ["flat:1", "flat:2", "flat:3", "flat:4"]
         activity_data = { :actor => "tommaso", :verb => "tweet", :object => 1 }
-        @client.add_to_many(activity_data, feeds)
+        response = @client.add_to_many(activity_data, feeds)
+        puts response
       end
     end
 
