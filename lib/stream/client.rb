@@ -112,13 +112,18 @@ module Stream
         location_name = "#{client_params[:location]}-api"
       end
 
-      protocol = "https"
-      if @options[:location] == "qa"
-        protocol = "http"
+      protocol = 'https'
+      port = ':443'
+      if @options[:location] == "qa" || @options[:location] == "localhost"
+        protocol = 'http'
+        port = ':80'
+        if @options[:location] == 'localhost'
+          port = ':8000'
+        end
       end
 
       @base_path = "/api/#{@options[:api_version]}"
-      base_url = "#{protocol}://#{location_name}.getstream.io#{@base_path}"
+      base_url = "#{protocol}://#{location_name}.getstream.io#{port}#{@base_path}"
 
       @conn = Faraday.new(:url => base_url) do |faraday|
         # faraday.request :url_encoded
@@ -163,10 +168,11 @@ module Stream
         when 404
           raise StreamApiResponseException, error_message(response, "url not found")
         when 204...600
-          raise StreamApiResponseException, error_message(response, "something else")
+          raise StreamApiResponseException, error_message(response, _build_error_message(response))
         end
       end
     end
+
 
     def initialize(app)
       super app
@@ -175,22 +181,18 @@ module Stream
 
     private
 
-    def error_message(response, body = nil)
-      "#{response[:method].to_s.upcase} #{response[:url]}: #{[response[:status].to_s + ':', body].compact.join(' ')}"
+    def _build_error_message(response)
+      msg = "#{response['exception']} details: #{response['detail']}"
+      if response.key?("exception_fields")
+        response["exception_fields"].map do |field, messages|
+          msg << "\n#{field}: #{messages}"
+        end
+      end
+      msg
     end
 
-    def error_body(body)
-      if !body.nil? && !body.empty? && body.is_a?(String)
-        body = ::JSON.parse(body)
-      end
-
-      if body.nil?
-        nil
-      elsif body["meta"] && body["meta"]["error_message"] && !body["meta"]["error_message"].empty?
-        ": #{body['meta']['error_message']}"
-      elsif body["error_message"] && !body["error_message"].empty?
-        ": #{body['error_type']}: #{body['error_message']}"
-      end
+    def error_message(response, body = nil)
+      "#{response[:method].to_s.upcase} #{response[:url]}: #{[response[:status].to_s + ':', body].compact.join(' ')}"
     end
   end
 end
