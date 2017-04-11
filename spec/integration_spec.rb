@@ -305,14 +305,6 @@ describe "Integration tests" do
     end
 
     if Stream::Client.respond_to?("supports_signed_requests")
-      it "should be able to send signed requests" do
-        @client.make_signed_request(:get, "/test/auth/digest/")
-      end
-
-      it "should be able to send signed requests with data" do
-        @client.make_signed_request(:post, "/test/auth/digest/", {}, :var => [1, 2, "3"])
-      end
-
       it "should be able to follow many feeds in one request" do
         follows = [
           { :source => "flat:1", :target => "user:1" },
