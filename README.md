@@ -17,7 +17,7 @@ gem install "stream-ruby"
 
 ### Full documentation
 
-Documentaiton for this Ruby client are available at the [GetStream.io website](https://getstream.io/docs/ruby/?language=ruby).
+Documentation for this Ruby client are available at the [Stream website](https://getstream.io/docs/ruby/?language=ruby).
 
 ### Usage
 
