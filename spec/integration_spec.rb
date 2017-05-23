@@ -3,7 +3,8 @@ require "date"
 
 describe "Integration tests" do
   before do
-    @client = Stream::Client.new(ENV["STREAM_API_KEY"], ENV["STREAM_API_SECRET"], nil, :location => ENV["STREAM_REGION"])
+    @client = Stream::Client.new(ENV["STREAM_API_KEY"], ENV["STREAM_API_SECRET"], nil, :location => 'qa')
+    # @client = Stream::Client.new(ENV["STREAM_API_KEY"], ENV["STREAM_API_SECRET"], nil, :location => ENV["STREAM_REGION"])
     @feed42 = @client.feed("flat", "r42")
     @feed43 = @client.feed("flat", "r43")
 
@@ -198,16 +199,42 @@ describe "Integration tests" do
       response["results"].length.should eq 0
     end
 
-    example "following a feed" do
-      @feed42.follow("flat", "43")
-    end
-
-    example "following a feed with activity_copy_limit" do
-      @feed42.follow("flat", "activity_copy_limit", 0)
+    context 'following a feed' do
+      context 'should copy an activity' do
+        example 'when no copy limit is mentioned' do
+          feed1 = @client.feed('flat', "1")
+          feed2 = @client.feed('flat', 'activity_copy_not_given')
+          feed1.add_activity(@test_activity)
+          feed2.follow('flat', '1')
+          results = feed2.get['results']
+          feed2.unfollow('flat', '1')
+          results.length.should_not eq 0
+        end
+        example 'when a copy limit is given' do
+          feed1 = @client.feed('flat', '1')
+          feed2 = @client.feed('flat', 'activity_copy_given')
+          feed1.add_activity(@test_activity)
+          feed2.follow('flat', '1', 300)
+          results = feed2.get['results']
+          feed2.unfollow('flat', '1')
+          results.length.should_not eq 0
+        end
+      end
+      context 'should not copy an activity' do
+        example 'when limit is set to 0' do
+          feed1 = @client.feed('flat', '1')
+          feed2 = @client.feed('flat', 'activity_copy_0')
+          feed1.add_activity(@test_activity)
+          feed2.follow('flat', '1', 0)
+          results = feed2.get['results']
+          results.length.should eq 0
+          feed2.unfollow('flat', '1', false)
+        end
+      end
     end
 
     example "retrieve feed with no followers" do
-      lonely = @client.feed("flat", "rlonely")
+      lonely = @client.feed("flat", "lkjasdlkjalskdjlkjasd")
       response = lonely.followers
       response["results"].should eq []
     end
@@ -305,13 +332,13 @@ describe "Integration tests" do
     end
 
     if Stream::Client.respond_to?("supports_signed_requests")
-      it "should be able to send signed requests" do
-        @client.make_signed_request(:get, "/test/auth/digest/")
-      end
-
-      it "should be able to send signed requests with data" do
-        @client.make_signed_request(:post, "/test/auth/digest/", {}, :var => [1, 2, "3"])
-      end
+      # it "should be able to send signed requests" do
+      #   @client.make_signed_request(:get, "/test/auth/digest/")
+      # end
+      #
+      # it "should be able to send signed requests with data" do
+      #   @client.make_signed_request(:post, "/test/auth/digest/", {}, :var => [1, 2, "3"])
+      # end
 
       it "should be able to follow many feeds in one request" do
         follows = [
@@ -329,16 +356,15 @@ describe "Integration tests" do
         expect do
           @client.follow_many(follows, 5000)
         end.to raise_error(
-          Stream::StreamApiResponseException,
-          "POST http://qa-api.getstream.io/api/v1.0/follow_many/?activity_copy_limit=5000&api_key=ncr5uednmnnz: 400: InputException details: Errors for fields 'activity_copy_limit'\nactivity_copy_limit: [\"Ensure this value is less than or equal to 300.\"]"
+                   Stream::StreamApiResponseException,
+                   "POST http://qa-api.getstream.io/api/v1.0/follow_many/?activity_copy_limit=5000&api_key=ncr5uednmnnz: 400: InputException details: Errors for fields 'activity_copy_limit'\nactivity_copy_limit: [\"Ensure this value is less than or equal to 300.\"]"
                )
-        end
+      end
 
       it "should be able to add one activity to many feeds in one request" do
         feeds = ["flat:1", "flat:2", "flat:3", "flat:4"]
         activity_data = { :actor => "tommaso", :verb => "tweet", :object => 1 }
         response = @client.add_to_many(activity_data, feeds)
-        puts response
       end
     end
 
