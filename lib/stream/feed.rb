@@ -110,16 +110,17 @@ module Stream
 
     def follow(target_feed_slug, target_user_id, activity_copy_limit = 300)
       uri = "/feed/#{@feed_url}/follows/"
-      params = {
-        "activity_copy_limit" => activity_copy_limit
-      }
+      activity_copy_limit = 0 if activity_copy_limit < 0
+      activity_copy_limit = 1000 if activity_copy_limit > 1000
+
       follow_data = {
-        :target => "#{target_feed_slug}:#{target_user_id}",
-        :target_token => @client.feed(target_feed_slug, target_user_id).token
+        target: "#{target_feed_slug}:#{target_user_id}",
+        target_token: @client.feed(target_feed_slug, target_user_id).token,
+        activity_copy_limit: activity_copy_limit
       }
       auth_token = create_jwt_token("follower", "write")
 
-      @client.make_request(:post, uri, auth_token, params, follow_data)
+      @client.make_request(:post, uri, auth_token, {}, follow_data)
     end
 
     def followers(offset = 0, limit = 25)

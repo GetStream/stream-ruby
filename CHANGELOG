@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.5.5
+=====
+:release-date: 2017-05-23
+:by: Ian Douglas
+
+* fixed bug with activity_copy_limit when a single feed follows another
+
 2.5.4
 =====
 :release-date: 2017-03-22
