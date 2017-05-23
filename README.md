@@ -3,15 +3,21 @@ stream-ruby
 
 [![Build Status](https://travis-ci.org/GetStream/stream-ruby.svg?branch=master)](https://travis-ci.org/GetStream/stream-ruby) [![Gem Version](https://badge.fury.io/rb/stream-ruby.svg)](http://badge.fury.io/rb/stream-ruby)
 
-stream-ruby is the official Ruby client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
-The full documentation is available on [GetStream.io/docs/?language=ruby](http://getstream.io/docs/?language=ruby).
-There is also a [higher level Rails integration](https://github.com/getstream/stream-rails) library which hooks into your ORM.
+[stream-ruby](https://github.com/GetStream/stream-ruby) is the official Ruby client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
+
+Note there is also a higher level [Ruby on Rails - Stream integration](https://github.com/getstream/stream-rails) library which hooks into the Ruby on Rails ORM.
+
+You can sign up for a Stream account at https://getstream.io/get_started.
 
 ### Installation
 
 ```bash
 gem install "stream-ruby"
 ```
+
+### Full documentation
+
+Documentation for this Ruby client are available at the [Stream website](https://getstream.io/docs/ruby/?language=ruby).
 
 ### Usage
 
@@ -112,8 +118,6 @@ feeds = ['flat:1', 'flat:2', 'flat:3', 'flat:4']
 activity = {:actor => "User:2", :verb => "pin", :object => "Place:42", :target => "Board:1"}
 client.add_to_many(activity, feeds)
 ```
-
-Docs are available on [GetStream.io](http://getstream.io/docs/).
 
 ### Copyright and License Information
 
