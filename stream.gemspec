@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.license = "BSD-3-Clause"
   gem.add_dependency "faraday", [">= 0.10.0", "< 1.0"]
   gem.add_dependency "http_signatures", "~> 0"
-  gem.add_dependency "jwt", "= 1.5.2"
+  gem.add_dependency "jwt", "~> 1.5.2"
   gem.add_development_dependency "rake", "~> 0"
   gem.add_development_dependency "rspec", "~> 2.10"
   gem.add_development_dependency "simplecov", "~> 0.7"
