@@ -2,6 +2,20 @@
  Change history
 ================
 
+2.5.8
+=====
+:release-date: 2017-09-21
+:by: Ian Douglas
+
+* updating Ruby language version support on Travis-CI
+
+2.5.7
+=====
+:release-date: 2017-09-12
+:by: Shu Yang Quek (community member)
+
+* updates for
+
 2.5.6
 =====
 :release-date: 2017-06-09
