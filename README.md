@@ -9,6 +9,15 @@ Note there is also a higher level [Ruby on Rails - Stream integration](https://g
 
 You can sign up for a Stream account at https://getstream.io/get_started.
 
+### Ruby Language Support
+
+We will support the following versions of Ruby:
+
+- 2.2.8
+- 2.3.1
+- 2.3.5
+- 2.4.2
+
 ### Installation
 
 ```bash
