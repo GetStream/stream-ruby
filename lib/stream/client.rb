@@ -4,7 +4,8 @@ require "stream/feed"
 require "stream/signer"
 
 module Stream
-  STREAM_URL_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
+  # STREAM_URL_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
+  STREAM_URL_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))(?<domain>([\w-]*).*)\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
 
   class Client
     attr_reader :api_key
@@ -38,6 +39,7 @@ module Stream
         api_secret = matches["secret"]
         app_id = matches["app_id"]
         opts[:location] = matches["location"]
+        opts[:domain] = matches["domain"]
       end
 
       if api_key.nil? || api_key.empty?
@@ -53,7 +55,8 @@ module Stream
         :api_version => opts.fetch(:api_version, "v1.0"),
         :location => opts.fetch(:location, nil),
         :default_timeout => opts.fetch(:default_timeout, 3),
-        :api_key => @api_key
+        :api_key => @api_key,
+        :domain => opts.fetch(:domain, nil)
       }
     end
 
@@ -114,16 +117,17 @@ module Stream
 
       protocol = 'https'
       port = ':443'
-      if @options[:location] == "qa" || @options[:location] == "localhost"
-        protocol = 'http'
-        port = ':80'
-        if @options[:location] == 'localhost'
-          port = ':8000'
-        end
+      if @options[:location] == 'localhost'
+        port = ':8000'
+      end
+
+      domain = 'stream-io-api.com'
+      unless @options[:domain].nil?
+        domain = @options[:domain]
       end
 
       @base_path = "/api/#{@options[:api_version]}"
-      base_url = "#{protocol}://#{location_name}.getstream.io#{port}#{@base_path}"
+      base_url = "#{protocol}://#{location_name}.#{domain}#{port}#{@base_path}"
 
       @conn = Faraday.new(:url => base_url) do |faraday|
         # faraday.request :url_encoded

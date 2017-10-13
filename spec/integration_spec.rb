@@ -322,7 +322,7 @@ describe "Integration tests" do
           @client.follow_many(follows, 5000)
         end.to raise_error(
           Stream::StreamApiResponseException,
-          "POST http://qa-api.getstream.io/api/v1.0/follow_many/?activity_copy_limit=5000&api_key=ncr5uednmnnz: 400: InputException details: Errors for fields 'activity_copy_limit'\nactivity_copy_limit: [\"Ensure this value is less than or equal to 300.\"]"
+          "POST https://qa-api.stream-io-api.com/api/v1.0/follow_many/?activity_copy_limit=5000&api_key=ncr5uednmnnz: 400: InputException details: Errors for fields 'activity_copy_limit'\nactivity_copy_limit: [\"Ensure this value is less than or equal to 300.\"]"
                )
         end
 

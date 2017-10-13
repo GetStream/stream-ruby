@@ -17,7 +17,7 @@ describe Stream::Client do
     feed.id.should eq "feed:42"
   end
 
-  it "on heroku we connect using environment variables" do
+  it "on heroku (.io) we connect using environment variables" do
     ENV["STREAM_URL"] = "https://thierry:pass@getstream.io/?app_id=1"
     client = Stream::Client.new
     client.api_key.should eq "thierry"
@@ -27,7 +27,17 @@ describe Stream::Client do
     client.get_http_client.conn.url_prefix.to_s.should eq "https://api.getstream.io/api/v1.0"
   end
 
-  it "old heroku url" do
+  it "on heroku (.com) we connect using environment variables" do
+    ENV["STREAM_URL"] = "https://thierry:pass@stream-io-api.com/?app_id=1"
+    client = Stream::Client.new
+    client.api_key.should eq "thierry"
+    client.api_secret.should eq "pass"
+    client.app_id.should eq "1"
+    client.client_options[:location].should eq nil
+    client.get_http_client.conn.url_prefix.to_s.should eq "https://api.stream-io-api.com/api/v1.0"
+  end
+
+  it "old heroku url (.io)" do
     ENV["STREAM_URL"] = "https://thierry:pass@api.getstream.io/?app_id=1"
     client = Stream::Client.new
     client.api_key.should eq "thierry"
@@ -37,7 +47,17 @@ describe Stream::Client do
     client.get_http_client.conn.url_prefix.to_s.should eq "https://api.getstream.io/api/v1.0"
   end
 
-  it "heroku url with location" do
+  it "old heroku url (.com)" do
+    ENV["STREAM_URL"] = "https://thierry:pass@api.getstream.io/?app_id=1"
+    client = Stream::Client.new
+    client.api_key.should eq "thierry"
+    client.api_secret.should eq "pass"
+    client.app_id.should eq "1"
+    client.client_options[:location].should eq nil
+    client.get_http_client.conn.url_prefix.to_s.should eq "https://api.stream-io-api.com/api/v1.0"
+  end
+
+  it "heroku url (.io)  with location" do
     ENV["STREAM_URL"] = "https://thierry:pass@eu-west.getstream.io/?app_id=1"
     client = Stream::Client.new
     client.api_key.should eq "thierry"
@@ -47,7 +67,17 @@ describe Stream::Client do
     client.get_http_client.conn.url_prefix.to_s.should eq "https://eu-west-api.getstream.io/api/v1.0"
   end
 
-  it "heroku url with location and extra vars" do
+  it "heroku url (.com) with location" do
+    ENV["STREAM_URL"] = "https://thierry:pass@eu-west.stream-io-api.com/?app_id=1"
+    client = Stream::Client.new
+    client.api_key.should eq "thierry"
+    client.api_secret.should eq "pass"
+    client.app_id.should eq "1"
+    client.client_options[:location].should eq "eu-west"
+    client.get_http_client.conn.url_prefix.to_s.should eq "https://eu-west-api.stream-io-api.com/api/v1.0"
+  end
+
+  it "heroku url (.io) with location and extra vars" do
     ENV["STREAM_URL"] = "https://thierry:pass@eu-west.getstream.io/?something_else=2&app_id=1&something_more=3"
     client = Stream::Client.new
     client.api_key.should eq "thierry"
@@ -56,6 +86,17 @@ describe Stream::Client do
     client.client_options[:location].should eq "eu-west"
     client.get_http_client.conn.url_prefix.to_s.should eq "https://eu-west-api.getstream.io/api/v1.0"
   end
+
+  it "heroku url (.com) with location and extra vars" do
+    ENV["STREAM_URL"] = "https://thierry:pass@eu-west.stream-io-api.com/?something_else=2&app_id=1&something_more=3"
+    client = Stream::Client.new
+    client.api_key.should eq "thierry"
+    client.api_secret.should eq "pass"
+    client.app_id.should eq "1"
+    client.client_options[:location].should eq "eu-west"
+    client.get_http_client.conn.url_prefix.to_s.should eq "https://eu-west-api.stream-io-api.com/api/v1.0"
+  end
+
 
   it "wrong heroku vars" do
     ENV["STREAM_URL"] = "https://thierry:pass@getstream.io/?a=1"
@@ -74,19 +115,19 @@ describe Stream::Client do
   it "should handle different api versions if specified" do
     client = Stream::Client.new("1", "2", nil, :api_version => "v2.345")
     http_client = client.get_http_client
-    http_client.conn.url_prefix.to_s.should eq "https://api.getstream.io/api/v2.345"
+    http_client.conn.url_prefix.to_s.should eq "https://api.stream-io-api.com/api/v2.345"
   end
 
-  it "should handle default location as api.getstream.io" do
+  it "should handle default location as api.stream-io-api.com" do
     client = Stream::Client.new("1", "2")
     http_client = client.get_http_client
-    http_client.conn.url_prefix.to_s.should eq "https://api.getstream.io/api/v1.0"
+    http_client.conn.url_prefix.to_s.should eq "https://api.stream-io-api.com/api/v1.0"
   end
 
-  it "should handle us-east location as api.getstream.io" do
+  it "should handle us-east location as api.stream-io-api.com" do
     client = Stream::Client.new("1", "2", nil, :location => "us-east")
     http_client = client.get_http_client
-    http_client.conn.url_prefix.to_s.should eq "https://us-east-api.getstream.io/api/v1.0"
+    http_client.conn.url_prefix.to_s.should eq "https://us-east-api.stream-io-api.com/api/v1.0"
   end
 
   it "should have 3s default timeout" do
