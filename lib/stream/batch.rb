@@ -19,9 +19,9 @@ module Stream
     def follow_many(follows, activity_copy_limit = nil)
       query_params = {}
       unless activity_copy_limit.nil?
-        query_params["activity_copy_limit"] = activity_copy_limit
+        query_params['activity_copy_limit'] = activity_copy_limit
       end
-      make_signed_request(:post, "/follow_many/", query_params, follows)
+      make_signed_request(:post, '/follow_many/', query_params, follows)
     end
 
     #
@@ -37,7 +37,7 @@ module Stream
         :feeds => feeds,
         :activity => activity_data
       }
-      make_signed_request(:post, "/feed/add_to_many/", {}, data)
+      make_signed_request(:post, '/feed/add_to_many/', {}, data)
     end
   end
 end

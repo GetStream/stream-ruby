@@ -2,6 +2,14 @@
  Change history
 ================
 
+2.5.9
+=====
+:release-date: 2017-10-16
+:by: Ian Douglas
+
+* updating core API hostname to our new .com domain
+* added support to change the core hostname when instantiating the client (options[:api_hostame])
+
 2.5.8
 =====
 :release-date: 2017-09-21
