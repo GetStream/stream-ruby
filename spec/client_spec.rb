@@ -77,10 +77,16 @@ describe Stream::Client do
     http_client.conn.url_prefix.to_s.should eq 'https://api.stream-io-api.com/api/v2.345'
   end
 
-  it 'should handle default location as api.getstream.io' do
+  it 'should handle default location as api.stream-io-api.com' do
     client = Stream::Client.new('1', '2')
     http_client = client.get_http_client
     http_client.conn.url_prefix.to_s.should eq 'https://api.stream-io-api.com/api/v1.0'
+  end
+
+  it 'should handle overriding default hostname as api.getstream.io to test SNI' do
+    client = Stream::Client.new('1', '2', nil,api_hostname: 'getstream.io')
+    http_client = client.get_http_client
+    http_client.conn.url_prefix.to_s.should eq 'https://api.getstream.io/api/v1.0'
   end
 
   it 'should handle us-east location as api.stream-io-api.com' do

@@ -4,7 +4,8 @@ require 'stream/feed'
 require 'stream/signer'
 
 module Stream
-  STREAM_URL_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?stream-io-api\.com\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
+  STREAM_URL_COM_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?stream-io-api\.com\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
+  STREAM_URL_IO_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?stream-io-api\.com\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
 
   class Client
     attr_reader :api_key
@@ -32,8 +33,14 @@ module Stream
     #   Stream::Client.new('my_key', 'my_secret', 'my_app_id', :location => 'us-east')
     #
     def initialize(api_key = '', api_secret = '', app_id = nil, opts = {})
-      if ENV['STREAM_URL'] =~ Stream::STREAM_URL_RE && (api_key.nil? || api_key.empty?)
-        matches = Stream::STREAM_URL_RE.match(ENV['STREAM_URL'])
+      if ENV['STREAM_URL'] =~ Stream::STREAM_URL_COM_RE && (api_key.nil? || api_key.empty?)
+        matches = Stream::STREAM_URL_COM_RE.match(ENV['STREAM_URL'])
+        api_key = matches['key']
+        api_secret = matches['secret']
+        app_id = matches['app_id']
+        opts[:location] = matches['location']
+      elsif ENV['STREAM_URL'] =~ Stream::STREAM_URL_IO_RE && (api_key.nil? || api_key.empty?)
+        matches = Stream::STREAM_URL_IO_RE.match(ENV['STREAM_URL'])
         api_key = matches['key']
         api_secret = matches['secret']
         app_id = matches['app_id']
@@ -50,10 +57,11 @@ module Stream
       @signer = Stream::Signer.new(api_secret)
 
       @client_options = {
-          :api_version => opts.fetch(:api_version, 'v1.0'),
-          :location => opts.fetch(:location, nil),
-          :default_timeout => opts.fetch(:default_timeout, 3),
-          :api_key => @api_key
+          api_version: opts.fetch(:api_version, 'v1.0'),
+          location: opts.fetch(:location, nil),
+          default_timeout: opts.fetch(:default_timeout, 3),
+          api_key: @api_key,
+          api_hostname: opts.fetch(:api_hostname, 'stream-io-api.com')
       }
     end
 
