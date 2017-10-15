@@ -4,8 +4,8 @@ require 'stream/feed'
 require 'stream/signer'
 
 module Stream
-  STREAM_URL_COM_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?stream-io-api\.com\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
-  STREAM_URL_IO_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?stream-io-api\.com\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
+  STREAM_URL_COM_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>stream-io-api\.com)\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
+  STREAM_URL_IO_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>getstream\.io)\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
 
   class Client
     attr_reader :api_key
@@ -39,12 +39,14 @@ module Stream
         api_secret = matches['secret']
         app_id = matches['app_id']
         opts[:location] = matches['location']
+        opts[:api_hostname] = matches['api_hostname']
       elsif ENV['STREAM_URL'] =~ Stream::STREAM_URL_IO_RE && (api_key.nil? || api_key.empty?)
         matches = Stream::STREAM_URL_IO_RE.match(ENV['STREAM_URL'])
         api_key = matches['key']
         api_secret = matches['secret']
         app_id = matches['app_id']
         opts[:location] = matches['location']
+        opts[:api_hostname] = matches['api_hostname']
       end
 
       if api_key.nil? || api_key.empty?
