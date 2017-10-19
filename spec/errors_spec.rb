@@ -1,5 +1,5 @@
-require "spec_helper"
-require "stream"
+require 'spec_helper'
+require 'stream'
 
 describe Stream::Error do
   it { expect(Stream::Error).to be < StandardError }

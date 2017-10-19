@@ -1,10 +1,11 @@
-require "faraday"
-require "stream/errors"
-require "stream/feed"
-require "stream/signer"
+require 'faraday'
+require 'stream/errors'
+require 'stream/feed'
+require 'stream/signer'
 
 module Stream
-  STREAM_URL_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?getstream\.io\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
+  STREAM_URL_COM_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>stream-io-api\.com)\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
+  STREAM_URL_IO_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>getstream\.io)\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
 
   class Client
     attr_reader :api_key
@@ -13,8 +14,8 @@ module Stream
     attr_reader :client_options
 
     if RUBY_VERSION.to_f >= 2.1
-      require "stream/batch"
-      require "stream/signedrequest"
+      require 'stream/batch'
+      require 'stream/signedrequest'
 
       include Stream::SignedRequest
       include Stream::Batch
@@ -31,17 +32,25 @@ module Stream
     # @example initialise the client to connect to EU-West location
     #   Stream::Client.new('my_key', 'my_secret', 'my_app_id', :location => 'us-east')
     #
-    def initialize(api_key = "", api_secret = "", app_id = nil, opts = {})
-      if ENV["STREAM_URL"] =~ Stream::STREAM_URL_RE && (api_key.nil? || api_key.empty?)
-        matches = Stream::STREAM_URL_RE.match(ENV["STREAM_URL"])
-        api_key = matches["key"]
-        api_secret = matches["secret"]
-        app_id = matches["app_id"]
-        opts[:location] = matches["location"]
+    def initialize(api_key = '', api_secret = '', app_id = nil, opts = {})
+      if ENV['STREAM_URL'] =~ Stream::STREAM_URL_COM_RE && (api_key.nil? || api_key.empty?)
+        matches = Stream::STREAM_URL_COM_RE.match(ENV['STREAM_URL'])
+        api_key = matches['key']
+        api_secret = matches['secret']
+        app_id = matches['app_id']
+        opts[:location] = matches['location']
+        opts[:api_hostname] = matches['api_hostname']
+      elsif ENV['STREAM_URL'] =~ Stream::STREAM_URL_IO_RE && (api_key.nil? || api_key.empty?)
+        matches = Stream::STREAM_URL_IO_RE.match(ENV['STREAM_URL'])
+        api_key = matches['key']
+        api_secret = matches['secret']
+        app_id = matches['app_id']
+        opts[:location] = matches['location']
+        opts[:api_hostname] = matches['api_hostname']
       end
 
       if api_key.nil? || api_key.empty?
-        raise ArgumentError, "empty api_key parameter and missing or invalid STREAM_URL env variable"
+        raise ArgumentError, 'empty api_key parameter and missing or invalid STREAM_URL env variable'
       end
 
       @api_key = api_key
@@ -50,10 +59,11 @@ module Stream
       @signer = Stream::Signer.new(api_secret)
 
       @client_options = {
-        :api_version => opts.fetch(:api_version, "v1.0"),
-        :location => opts.fetch(:location, nil),
-        :default_timeout => opts.fetch(:default_timeout, 3),
-        :api_key => @api_key
+          api_version: opts.fetch(:api_version, 'v1.0'),
+          location: opts.fetch(:location, nil),
+          default_timeout: opts.fetch(:default_timeout, 3),
+          api_key: @api_key,
+          api_hostname: opts.fetch(:api_hostname, 'stream-io-api.com')
       }
     end
 
@@ -74,12 +84,12 @@ module Stream
     end
 
     def update_activities(activities)
-      auth_token = Stream::Signer.create_jwt_token("activities", "*", @api_secret, "*")
-      make_request(:post, "/activities/", auth_token, {}, "activities" => activities)
+      auth_token = Stream::Signer.create_jwt_token('activities', '*', @api_secret, '*')
+      make_request(:post, '/activities/', auth_token, {}, 'activities' => activities)
     end
 
     def get_default_params
-      { :api_key => @api_key }
+      {:api_key => @api_key}
     end
 
     def get_http_client
@@ -87,19 +97,19 @@ module Stream
     end
 
     def make_query_params(params)
-      Hash[get_default_params.merge(params).sort_by { |k, v| k.to_s }]
+      Hash[get_default_params.merge(params).sort_by {|k, v| k.to_s}]
     end
 
     def make_request(method, relative_url, signature, params = {}, data = {}, headers = {})
-      headers["Authorization"] = signature
-      headers["stream-auth-type"] = "jwt"
+      headers['Authorization'] = signature
+      headers['stream-auth-type'] = 'jwt'
 
       get_http_client.make_http_request(method, relative_url, make_query_params(params), data, headers)
     end
   end
 
   class StreamHTTPClient
-    require "faraday"
+    require 'faraday'
 
     attr_reader :conn
     attr_reader :options
@@ -107,14 +117,14 @@ module Stream
 
     def initialize(client_params)
       @options = client_params
-      location_name = "api"
+      location_name = 'api'
       unless client_params[:location].nil?
         location_name = "#{client_params[:location]}-api"
       end
 
       protocol = 'https'
       port = ':443'
-      if @options[:location] == "qa" || @options[:location] == "localhost"
+      if @options[:location] == 'qa' || @options[:location] == 'localhost'
         protocol = 'http'
         port = ':80'
         if @options[:location] == 'localhost'
@@ -122,8 +132,13 @@ module Stream
         end
       end
 
+      api_hostname = 'stream-io-api.com'
+      if @options[:api_hostname]
+        api_hostname = @options[:api_hostname]
+      end
+
       @base_path = "/api/#{@options[:api_version]}"
-      base_url = "#{protocol}://#{location_name}.getstream.io#{port}#{@base_path}"
+      base_url = "#{protocol}://#{location_name}.#{api_hostname}#{port}#{@base_path}"
 
       @conn = Faraday.new(:url => base_url) do |faraday|
         # faraday.request :url_encoded
@@ -136,21 +151,21 @@ module Stream
     end
 
     def make_http_request(method, relative_url, params = nil, data = nil, headers = nil)
-      headers["Content-Type"] = "application/json"
-      headers["X-Stream-Client"] = "stream-ruby-client-#{Stream::VERSION}"
-      params["api_key"] = @options[:api_key]
+      headers['Content-Type'] = 'application/json'
+      headers['X-Stream-Client'] = "stream-ruby-client-#{Stream::VERSION}"
+      params['api_key'] = @options[:api_key]
       relative_url = "#{@base_path}#{relative_url}?#{URI.encode_www_form(params)}"
       body = data.to_json if %w(post put).include? method.to_s
       response = @conn.run_request(
-        method,
-        relative_url,
-        body,
-        headers
+          method,
+          relative_url,
+          body,
+          headers
       )
 
       case response[:status].to_i
-      when 200..203
-        return ::JSON.parse(response[:body])
+        when 200..203
+          return ::JSON.parse(response[:body])
       end
     end
   end
@@ -159,20 +174,19 @@ module Stream
     def call(env)
       @app.call(env).on_complete do |response|
         case response[:status].to_i
-        when 200..203
-          return response
-        when 401
-          raise StreamApiResponseException, error_message(response, "Bad feed")
-        when 403
-          raise StreamApiResponseException, error_message(response, "Bad auth/headers")
-        when 404
-          raise StreamApiResponseException, error_message(response, "url not found")
-        when 204...600
-          raise StreamApiResponseException, error_message(response, _build_error_message(response.body))
+          when 200..203
+            return response
+          when 401
+            raise StreamApiResponseException, error_message(response, 'Bad feed')
+          when 403
+            raise StreamApiResponseException, error_message(response, 'Bad auth/headers')
+          when 404
+            raise StreamApiResponseException, error_message(response, 'url not found')
+          when 204...600
+            raise StreamApiResponseException, error_message(response, _build_error_message(response.body))
         end
       end
     end
-
 
     def initialize(app)
       super app
@@ -184,8 +198,8 @@ module Stream
     def _build_error_message(response)
       response = JSON.parse(response)
       msg = "#{response['exception']} details: #{response['detail']}"
-      if response.key?("exception_fields")
-        response["exception_fields"].map do |field, messages|
+      if response.key?('exception_fields')
+        response['exception_fields'].map do |field, messages|
           msg << "\n#{field}: #{messages}"
         end
       end

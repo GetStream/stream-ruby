@@ -1,1 +1,1 @@
-require "stream/base"
+require 'stream/base'

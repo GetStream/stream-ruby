@@ -9,14 +9,15 @@ Note there is also a higher level [Ruby on Rails - Stream integration](https://g
 
 You can sign up for a Stream account at https://getstream.io/get_started.
 
-### Ruby Language Support
+#### Ruby version requirements and support
 
-We will support the following versions of Ruby:
-
+This API Client project requires Ruby 2.2.8 at a minimum. We will support the following versions:
 - 2.2.8
 - 2.3.1
 - 2.3.5
 - 2.4.2
+
+See the [Travis configuration](.travis.yml) for details of how it is built and tested.
 
 ### Installation
 
