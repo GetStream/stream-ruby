@@ -83,19 +83,19 @@ activities = [
 user_feed_1.add_activities(activities)
 
 # Batch following many feeds (requires ruby 2.1 or later)
-follows = [{
-    :source => 'flat:1', :target => 'user:1',
-    :source => 'flat:1', :target => 'user:2',
-    :source => 'flat:1', :target => 'user:3'
-}]
+follows = [
+  {:source => 'flat:1', :target => 'user:1'},
+  {:source => 'flat:1', :target => 'user:2'},
+  {:source => 'flat:1', :target => 'user:3'},
+]
 client.follow_many(follows)
 
 # Add an activity and push it to other feeds too using the `to` field
 data = [
-    :actor_id => "1",
-    :verb => "like",
-    :object_id => "3",
-    :to => ["user:44", "user:45"]
+    :actor_id => '1',
+    :verb => 'like',
+    :object_id => '3',
+    :to => %w(user:44 user:45)
 ]
 user_feed_1.add_activity(data)
 
@@ -124,7 +124,7 @@ user_feed_1.following(10, 10)
 user_feed_1.following(0, 2, filter=['user:42', 'user:43'])
 
 # Add one activity to many feeds in one request
-feeds = ['flat:1', 'flat:2', 'flat:3', 'flat:4']
+feeds = %w(flat:1 flat:2 flat:3 flat:4)
 activity = {:actor => "User:2", :verb => "pin", :object => "Place:42", :target => "Board:1"}
 client.add_to_many(activity, feeds)
 ```
