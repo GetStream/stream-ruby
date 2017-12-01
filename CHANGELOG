@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.5.10
+=====
+:release-date: 2017-12-01
+:by: Ian Douglas
+
+* Minor modification for Faraday middleware warning
+
 2.5.9
 =====
 :release-date: 2017-10-16
