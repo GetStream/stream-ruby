@@ -142,10 +142,12 @@ module Stream
 
       @conn = Faraday.new(:url => base_url) do |faraday|
         # faraday.request :url_encoded
-        faraday.adapter Faraday.default_adapter
         faraday.use RaiseHttpException
         faraday.options[:open_timeout] = @options[:default_timeout]
         faraday.options[:timeout] = @options[:default_timeout]
+
+        # do this last
+        faraday.adapter Faraday.default_adapter
       end
       @conn.path_prefix = @base_path
     end
