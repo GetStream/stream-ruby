@@ -351,7 +351,7 @@ describe 'Integration tests' do
           @client.follow_many(follows, 5000)
         end.to raise_error(
                    Stream::StreamApiResponseException,
-                   "POST #{url}/follow_many/?activity_copy_limit=5000&api_key=vzqfhmgd6m69: 400: InputException details: activity_copy_limit must be a non-negative number not greater than 1000"
+                   /^POST #{url}\/follow_many\/\?activity_copy_limit=5000&api_key=[^:]+: 400: InputException details: activity_copy_limit must be a non-negative number not greater than 1000$/
                )
       end
 
