@@ -367,16 +367,16 @@ describe 'Integration tests' do
         activities << {
             actor: 'user:1',
             verb: 'do',
-            object: "object:#{i}",
-            foreign_id: "object:#{i}",
+            object: "object:#{100+i}",
+            foreign_id: "object:#{100+i}",
             time: DateTime.now
         }
-        sleep 1
+        sleep 0.1
       end
       created_activities = @feed43.add_activities(activities)['activities']
       activities = Marshal.load(Marshal.dump(created_activities))
 
-      sleep 3
+      sleep 1
 
       activities.each do |activity|
         activity.delete('id')
@@ -385,9 +385,10 @@ describe 'Integration tests' do
 
       @client.update_activities(activities)
 
-      sleep 2
+      sleep 1
 
-      updated_activities = @feed43.get(limit: activities.length)['results'].reverse
+      updated_activities = @feed43.get(limit: activities.length)['results']
+      updated_activities.sort_by!{|activity| activity['foreign_id']}
       expect(updated_activities.count).to eql created_activities.count
       updated_activities.each_with_index do |activity, idx|
         expect(created_activities[idx]['foreign_id']).to eql activity['foreign_id']
