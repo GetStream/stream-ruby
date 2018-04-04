@@ -115,7 +115,7 @@ module Stream
     attr_reader :options
     attr_reader :base_path
 
-    def initialize(client_params)
+        def initialize(client_params)
       @options = client_params
       location_name = 'api'
       unless client_params[:location].nil?
@@ -156,11 +156,12 @@ module Stream
       headers['Content-Type'] = 'application/json'
       headers['X-Stream-Client'] = "stream-ruby-client-#{Stream::VERSION}"
       params['api_key'] = @options[:api_key]
-      relative_url = "#{@base_path}#{relative_url}?#{URI.encode_www_form(params)}"
+      base_url = [base_path, relative_url].join('/').gsub(%r{/+}, '/')
+      url = "#{base_url}?#{URI.encode_www_form(params)}"
       body = data.to_json if %w(post put).include? method.to_s
       response = @conn.run_request(
           method,
-          relative_url,
+          url,
           body,
           headers
       )
