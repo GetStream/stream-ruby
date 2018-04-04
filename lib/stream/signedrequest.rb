@@ -18,7 +18,7 @@ module Stream
       context = HttpSignatures::Context.new(
           keys: {@api_key => @api_secret},
           algorithm: 'hmac-sha256',
-          headers: %w((request-target) Date)
+          headers: %w(date)
       )
       method_map = {
           :get => Net::HTTP::Get,
@@ -29,7 +29,7 @@ module Stream
       request_date = Time.now.rfc822
       message = method_map[method].new(
           "#{get_http_client.base_path}#{relative_url}?#{URI.encode_www_form(query_params)}",
-          'Date' => request_date
+          'date' => request_date
       )
       context.signer.sign(message)
       headers = {
