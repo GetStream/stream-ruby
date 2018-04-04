@@ -283,7 +283,8 @@ describe 'Integration tests' do
       follower.follow('flat', 'keepit')
       keepit = @client.feed('flat', 'keepit')
       response = keepit.add_activity(@test_activity)
-      follower.unfollow('flat', 'keepit', :keep_history => true)
+      follower.get
+      follower.unfollow('flat', 'keepit', keep_history: true)
       follower.get['results'][0]['id'].should eq response['id']
     end
 
