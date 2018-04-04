@@ -191,14 +191,6 @@ describe 'Integration tests' do
       results[0]['foreign_id'].should eq 'ruby:42'
     end
 
-    example 'delete a feed' do
-      response = @feed42.add_activity(@test_activity)
-      response.should include('id', 'actor', 'verb', 'object', 'target', 'time')
-      @feed42.delete
-      response = @feed42.get
-      response['results'].length.should eq 0
-    end
-
     context 'following a feed' do
       context 'should copy an activity' do
         example 'when no copy limit is mentioned' do
@@ -291,7 +283,8 @@ describe 'Integration tests' do
       follower.follow('flat', 'keepit')
       keepit = @client.feed('flat', 'keepit')
       response = keepit.add_activity(@test_activity)
-      follower.unfollow('flat', 'keepit', :keep_history => true)
+      follower.get
+      follower.unfollow('flat', 'keepit', keep_history: true)
       follower.get['results'][0]['id'].should eq response['id']
     end
 
@@ -353,11 +346,12 @@ describe 'Integration tests' do
             {:source => 'badfeed:1', :target => 'alsobad:1'},
             {:source => 'extrabadfeed:1', :target => 'reallybad:3'}
         ]
+        url = @client.get_http_client.conn.url_prefix.to_s.gsub(/\/+$/, '')
         expect do
           @client.follow_many(follows, 5000)
         end.to raise_error(
                    Stream::StreamApiResponseException,
-                   "POST http://qa-api.stream-io-api.com/api/v1.0/follow_many/?activity_copy_limit=5000&api_key=ncr5uednmnnz: 400: InputException details: Errors for fields 'activity_copy_limit'\nactivity_copy_limit: [\"Ensure this value is less than or equal to 300.\"]"
+                   /^POST #{url}\/follow_many\/\?activity_copy_limit=5000&api_key=[^:]+: 400: InputException details: activity_copy_limit must be a non-negative number not greater than 1000$/
                )
       end
 
@@ -374,16 +368,16 @@ describe 'Integration tests' do
         activities << {
             actor: 'user:1',
             verb: 'do',
-            object: "object:#{i}",
-            foreign_id: "object:#{i}",
+            object: "object:#{100+i}",
+            foreign_id: "object:#{100+i}",
             time: DateTime.now
         }
-        sleep 1
+        sleep 0.1
       end
       created_activities = @feed43.add_activities(activities)['activities']
       activities = Marshal.load(Marshal.dump(created_activities))
 
-      sleep 3
+      sleep 1
 
       activities.each do |activity|
         activity.delete('id')
@@ -392,9 +386,10 @@ describe 'Integration tests' do
 
       @client.update_activities(activities)
 
-      sleep 2
+      sleep 1
 
-      updated_activities = @feed43.get(limit: activities.length)['results'].reverse
+      updated_activities = @feed43.get(limit: activities.length)['results']
+      updated_activities.sort_by!{|activity| activity['foreign_id']}
       expect(updated_activities.count).to eql created_activities.count
       updated_activities.each_with_index do |activity, idx|
         expect(created_activities[idx]['foreign_id']).to eql activity['foreign_id']
