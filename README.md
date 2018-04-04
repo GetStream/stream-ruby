@@ -16,6 +16,7 @@ This API Client project requires Ruby 2.2.8 at a minimum. We will support the fo
 - 2.3.1
 - 2.3.5
 - 2.4.2
+- 2.5.1
 
 See the [Travis configuration](.travis.yml) for details of how it is built and tested.
 
