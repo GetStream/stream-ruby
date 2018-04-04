@@ -191,14 +191,6 @@ describe 'Integration tests' do
       results[0]['foreign_id'].should eq 'ruby:42'
     end
 
-    example 'delete a feed' do
-      response = @feed42.add_activity(@test_activity)
-      response.should include('id', 'actor', 'verb', 'object', 'target', 'time')
-      @feed42.delete
-      response = @feed42.get
-      response['results'].length.should eq 0
-    end
-
     context 'following a feed' do
       context 'should copy an activity' do
         example 'when no copy limit is mentioned' do
