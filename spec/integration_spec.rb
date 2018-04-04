@@ -346,11 +346,12 @@ describe 'Integration tests' do
             {:source => 'badfeed:1', :target => 'alsobad:1'},
             {:source => 'extrabadfeed:1', :target => 'reallybad:3'}
         ]
+        url = @client.get_http_client.conn.url_prefix.to_s.gsub(/\/+$/, '')
         expect do
           @client.follow_many(follows, 5000)
         end.to raise_error(
                    Stream::StreamApiResponseException,
-                   "POST #{@client.get_http_client.conn.url_prefix}follow_many/?activity_copy_limit=5000&api_key=vzqfhmgd6m69: 400: InputException details: activity_copy_limit must be a non-negative number not greater than 1000"
+                   "POST #{url}/follow_many/?activity_copy_limit=5000&api_key=vzqfhmgd6m69: 400: InputException details: activity_copy_limit must be a non-negative number not greater than 1000"
                )
       end
 
