@@ -122,7 +122,7 @@ module Stream
       location = client_params[:location] ? "#{client_params[:location]}-api" : 'api'
       api_version = client_params[:api_version] ? client_params[:api_version] : 'v1.0'
       @base_path = "/api/#{api_version}"
-      url = ENV['STREAM_API_URL'] ? ENV['STREAM_API_URL'] : "https://#{location}.stream-io-api.com/#{@base_path}"
+      url = ENV['STREAM_URL'] ? ENV['STREAM_URL'] : "https://#{location}.stream-io-api.com/#{@base_path}"
       @conn = Faraday.new(url: url) do |faraday|
         # faraday.request :url_encoded
         faraday.use RaiseHttpException
