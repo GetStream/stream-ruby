@@ -2,8 +2,13 @@ require 'spec_helper'
 require 'stream'
 
 describe Stream::Client do
+  before do
+    @env_url = ENV['STREAM_URL']
+  end
+
   after do
     ENV.delete 'STREAM_URL'
+    ENV['STREAM_URL'] = @env_url if @env_url
   end
 
   it 'feed returns a Feed instance with id' do
