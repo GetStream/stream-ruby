@@ -9,6 +9,7 @@ module Stream
     def initialize(options)
       @options = options
       location = make_location(options[:location])
+      location ||= "api"
       api_version = options[:api_version] ? options[:api_version] : 'v1.0'
       if ENV['STREAM_URL']
         uri = URI.parse(ENV['STREAM_URL'])
