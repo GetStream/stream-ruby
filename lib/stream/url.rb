@@ -10,9 +10,8 @@ module Stream
       @options = options
       location = make_location(options[:location])
       api_version = options[:api_version] ? options[:api_version] : 'v1.0'
-      @base_path = "/api/#{api_version}"
       if ENV['STREAM_URL']
-        uri = URI::parse(ENV['STREAM_URL'])
+        uri = URI.parse(ENV['STREAM_URL'])
         scheme = uri.scheme
         host = uri.host
         port = uri.port
@@ -26,7 +25,8 @@ module Stream
         host = host_parts.slice(1..-1).join('.') if host_parts.length == 3
         host = "#{location}.#{host}" if location
       end
-      @url = "#{scheme}://#{host}:#{port}/#{@base_path}"
+      @base_path = "/api/#{api_version}"
+      @url = "#{scheme}://#{host}:#{port}#{@base_path}"
     end
 
     private
@@ -42,6 +42,15 @@ module Stream
       else
         loc
       end
+    end
+  end
+
+  class PersonalizationURLGenerator < URLGenerator
+    def initialize(options)
+      @options = options
+      host = 'personalization.stream-io-api.com'
+      @base_path = '/personalization/v1.0'
+      @url = "https://#{host}#{@base_path}"
     end
   end
 end

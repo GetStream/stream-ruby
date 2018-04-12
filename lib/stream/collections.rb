@@ -1,6 +1,5 @@
 module Stream
   module Collections
-
     def upsert_collection_objects(collection, objects = [])
       data = {
         data: {
@@ -12,7 +11,7 @@ module Stream
 
     def get_collection_objects(collection, ids = [])
       params = {
-        foreign_ids: ids.map{ |id| "#{collection}:#{id}"}.join(',')
+        foreign_ids: ids.map { |id| "#{collection}:#{id}" }.join(',')
       }
       make_collection_request(:get, params, {})
     end
