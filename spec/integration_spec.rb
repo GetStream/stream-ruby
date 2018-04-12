@@ -397,5 +397,85 @@ describe 'Integration tests' do
         expect(activity['popularity']).to eql 100
       end
     end
+
+    example 'collections endpoints' do
+      # upsert
+      objects = [
+        {
+          id: 'aabbcc',
+          name: 'juniper',
+          data: {
+            hobbies: ['playing', 'sleeping', 'eating']
+          }
+        },
+        {
+          id: 'ddeeff',
+          name: 'ruby',
+          data: {
+            interests: ['sunbeams', 'surprise attacks']
+          }
+        }
+      ]
+      response = @client.upsert_collection_objects('test', objects)
+      response.should include('duration', 'data')
+      response['data'].should include 'test'
+      expected = [
+        {
+          'data' => { 'hobbies' => ['playing', 'sleeping', 'eating'] },
+          'id' => 'aabbcc',
+          'name' => 'juniper'
+        },
+        {
+          'data' => { 'interests' => ['sunbeams', 'surprise attacks'] },
+          'id' => 'ddeeff',
+          'name' => 'ruby'
+        }
+      ]
+      response['data']['test'].should =~ expected
+
+      # get
+      response = @client.get_collection_objects('test', ['aabbcc', 'ddeeff'])
+      response.should include('duration', 'response')
+      expected = [
+        {
+          'foreign_id' => 'test:aabbcc',
+          'data' => {
+            'data' => {
+              'hobbies' => ['playing', 'sleeping', 'eating']
+            },
+            'name' => 'juniper'
+          }
+        },
+        {
+          'foreign_id' => 'test:ddeeff',
+          'data' => {
+            'data' => {
+              'interests' => ['sunbeams', 'surprise attacks']
+            },
+            'name' => 'ruby'
+          }
+        }
+      ]
+      response['response']['data'].should =~ expected
+
+      # delete
+      response = @client.delete_collection_objects('test', ['aabbcc'])
+      response.should include('duration')
+
+      response = @client.get_collection_objects('test', ['aabbcc', 'ddeeff'])
+      response.should include('duration', 'response')
+      expected = [
+        {
+          'foreign_id' => 'test:ddeeff',
+          'data' => {
+            'data' => {
+              'interests' => ['sunbeams', 'surprise attacks']
+            },
+            'name' => 'ruby'
+          }
+        }
+      ]
+      response['response']['data'].should =~ expected
+    end
   end
 end

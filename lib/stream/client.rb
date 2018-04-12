@@ -16,9 +16,11 @@ module Stream
     if RUBY_VERSION.to_f >= 2.1
       require 'stream/batch'
       require 'stream/signedrequest'
+      require 'stream/collections'
 
       include Stream::SignedRequest
       include Stream::Batch
+      include Stream::Collections
     end
 
     #
@@ -115,32 +117,13 @@ module Stream
     attr_reader :options
     attr_reader :base_path
 
-        def initialize(client_params)
+    def initialize(client_params)
       @options = client_params
-      location_name = 'api'
-      unless client_params[:location].nil?
-        location_name = "#{client_params[:location]}-api"
-      end
-
-      protocol = 'https'
-      port = ':443'
-      if @options[:location] == 'qa' || @options[:location] == 'localhost'
-        protocol = 'http'
-        port = ':80'
-        if @options[:location] == 'localhost'
-          port = ':8000'
-        end
-      end
-
-      api_hostname = 'stream-io-api.com'
-      if @options[:api_hostname]
-        api_hostname = @options[:api_hostname]
-      end
-
-      @base_path = "/api/#{@options[:api_version]}"
-      base_url = "#{protocol}://#{location_name}.#{api_hostname}#{port}#{@base_path}"
-
-      @conn = Faraday.new(:url => base_url) do |faraday|
+      location = client_params[:location] ? "#{client_params[:location]}-api" : 'api'
+      api_version = client_params[:api_version] ? client_params[:api_version] : 'v1.0'
+      @base_path = "/api/#{api_version}"
+      url = ENV['STREAM_API_URL'] ? ENV['STREAM_API_URL'] : "https://#{location}.stream-io-api.com/#{@base_path}"
+      @conn = Faraday.new(url: url) do |faraday|
         # faraday.request :url_encoded
         faraday.use RaiseHttpException
         faraday.options[:open_timeout] = @options[:default_timeout]
