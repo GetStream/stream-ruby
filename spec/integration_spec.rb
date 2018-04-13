@@ -3,8 +3,7 @@ require 'date'
 
 describe 'Integration tests' do
   before do
-    @client = Stream::Client.new(ENV['STREAM_API_KEY'], ENV['STREAM_API_SECRET'], nil, :location => 'qa')
-    # @client = Stream::Client.new(ENV['STREAM_API_KEY'], ENV['STREAM_API_SECRET'], nil, :location => ENV['STREAM_REGION'])
+    @client = Stream::Client.new(ENV['STREAM_API_KEY'], ENV['STREAM_API_SECRET'], nil, location: ENV['STREAM_REGION'])
     @feed42 = @client.feed('flat', 'r42')
     @feed43 = @client.feed('flat', 'r43')
 
@@ -396,6 +395,88 @@ describe 'Integration tests' do
         expect(created_activities[idx]['id']).to eql activity['id']
         expect(activity['popularity']).to eql 100
       end
+    end
+
+    example 'collections endpoints' do
+      collections = @client.collections
+      # upsert
+      objects = [
+        {
+          id: 'aabbcc',
+          name: 'juniper',
+          data: {
+            hobbies: ['playing', 'sleeping', 'eating']
+          }
+        },
+        {
+          id: 'ddeeff',
+          name: 'ruby',
+          data: {
+            interests: ['sunbeams', 'surprise attacks']
+          }
+        }
+      ]
+      response = collections.upsert('test', objects)
+      response.should include('duration', 'data')
+      response['data'].should include 'test'
+      expected = [
+        {
+          'data' => { 'hobbies' => ['playing', 'sleeping', 'eating'] },
+          'id' => 'aabbcc',
+          'name' => 'juniper'
+        },
+        {
+          'data' => { 'interests' => ['sunbeams', 'surprise attacks'] },
+          'id' => 'ddeeff',
+          'name' => 'ruby'
+        }
+      ]
+      response['data']['test'].should =~ expected
+
+      # get
+      response = collections.get('test', ['aabbcc', 'ddeeff'])
+      response.should include('duration', 'response')
+      expected = [
+        {
+          'foreign_id' => 'test:aabbcc',
+          'data' => {
+            'data' => {
+              'hobbies' => ['playing', 'sleeping', 'eating']
+            },
+            'name' => 'juniper'
+          }
+        },
+        {
+          'foreign_id' => 'test:ddeeff',
+          'data' => {
+            'data' => {
+              'interests' => ['sunbeams', 'surprise attacks']
+            },
+            'name' => 'ruby'
+          }
+        }
+      ]
+      response['response']['data'].should =~ expected
+
+      # delete
+      response = collections.delete('test', ['aabbcc'])
+      response.should include('duration')
+
+      # check that the data is gone
+      response = collections.get('test', ['aabbcc', 'ddeeff'])
+      response.should include('duration', 'response')
+      expected = [
+        {
+          'foreign_id' => 'test:ddeeff',
+          'data' => {
+            'data' => {
+              'interests' => ['sunbeams', 'surprise attacks']
+            },
+            'name' => 'ruby'
+          }
+        }
+      ]
+      response['response']['data'].should =~ expected
     end
   end
 end

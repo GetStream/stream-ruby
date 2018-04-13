@@ -2,6 +2,7 @@ require 'faraday'
 require 'stream/errors'
 require 'stream/feed'
 require 'stream/signer'
+require 'stream/url'
 
 module Stream
   STREAM_URL_COM_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>stream-io-api\.com)\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
@@ -16,6 +17,8 @@ module Stream
     if RUBY_VERSION.to_f >= 2.1
       require 'stream/batch'
       require 'stream/signedrequest'
+      require 'stream/personalization'
+      require 'stream/collections'
 
       include Stream::SignedRequest
       include Stream::Batch
@@ -33,24 +36,21 @@ module Stream
     #   Stream::Client.new('my_key', 'my_secret', 'my_app_id', :location => 'us-east')
     #
     def initialize(api_key = '', api_secret = '', app_id = nil, opts = {})
-      if ENV['STREAM_URL'] =~ Stream::STREAM_URL_COM_RE && (api_key.nil? || api_key.empty?)
-        matches = Stream::STREAM_URL_COM_RE.match(ENV['STREAM_URL'])
-        api_key = matches['key']
-        api_secret = matches['secret']
-        app_id = matches['app_id']
-        opts[:location] = matches['location']
-        opts[:api_hostname] = matches['api_hostname']
-      elsif ENV['STREAM_URL'] =~ Stream::STREAM_URL_IO_RE && (api_key.nil? || api_key.empty?)
-        matches = Stream::STREAM_URL_IO_RE.match(ENV['STREAM_URL'])
-        api_key = matches['key']
-        api_secret = matches['secret']
-        app_id = matches['app_id']
-        opts[:location] = matches['location']
-        opts[:api_hostname] = matches['api_hostname']
-      end
-
       if api_key.nil? || api_key.empty?
-        raise ArgumentError, 'empty api_key parameter and missing or invalid STREAM_URL env variable'
+        env_url = ENV['STREAM_URL']
+        if env_url =~ Stream::STREAM_URL_COM_RE
+          re = Stream::STREAM_URL_COM_RE
+        elsif env_url =~ Stream::STREAM_URL_IO_RE
+          re = Stream::STREAM_URL_IO_RE
+        end
+        raise ArgumentError, 'empty api_key parameter and missing or invalid STREAM_URL env variable' unless re
+        
+        matches = re.match(ENV['STREAM_URL'])
+        api_key = matches['key']
+        api_secret = matches['secret']
+        app_id = matches['app_id']
+        opts[:location] = matches['location']
+        opts[:api_hostname] = matches['api_hostname']
       end
 
       @api_key = api_key
@@ -59,11 +59,11 @@ module Stream
       @signer = Stream::Signer.new(api_secret)
 
       @client_options = {
-          api_version: opts.fetch(:api_version, 'v1.0'),
-          location: opts.fetch(:location, nil),
-          default_timeout: opts.fetch(:default_timeout, 3),
-          api_key: @api_key,
-          api_hostname: opts.fetch(:api_hostname, 'stream-io-api.com')
+        api_version: opts.fetch(:api_version, 'v1.0'),
+        location: opts.fetch(:location, nil),
+        default_timeout: opts.fetch(:default_timeout, 3),
+        api_key: @api_key,
+        api_hostname: opts.fetch(:api_hostname, 'stream-io-api.com')
       }
     end
 
@@ -77,6 +77,14 @@ module Stream
     def feed(feed_slug, user_id)
       token = @signer.sign(feed_slug, user_id)
       Stream::Feed.new(self, feed_slug, user_id, token)
+    end
+
+    def personalization
+      PersonalizationClient.new(api_key, api_secret, app_id, client_options)
+    end
+
+    def collections
+      CollectionsClient.new(api_key, api_secret, app_id, client_options)
     end
 
     def update_activity(activity)
@@ -93,7 +101,7 @@ module Stream
     end
 
     def get_http_client
-      @http_client ||= StreamHTTPClient.new(@client_options)
+      @http_client ||= StreamHTTPClient.new(url_generator)
     end
 
     def make_query_params(params)
@@ -106,6 +114,12 @@ module Stream
 
       get_http_client.make_http_request(method, relative_url, make_query_params(params), data, headers)
     end
+
+    private
+
+    def url_generator
+      APIURLGenerator.new(@client_options)
+    end
   end
 
   class StreamHTTPClient
@@ -115,60 +129,34 @@ module Stream
     attr_reader :options
     attr_reader :base_path
 
-        def initialize(client_params)
-      @options = client_params
-      location_name = 'api'
-      unless client_params[:location].nil?
-        location_name = "#{client_params[:location]}-api"
-      end
-
-      protocol = 'https'
-      port = ':443'
-      if @options[:location] == 'qa' || @options[:location] == 'localhost'
-        protocol = 'http'
-        port = ':80'
-        if @options[:location] == 'localhost'
-          port = ':8000'
-        end
-      end
-
-      api_hostname = 'stream-io-api.com'
-      if @options[:api_hostname]
-        api_hostname = @options[:api_hostname]
-      end
-
-      @base_path = "/api/#{@options[:api_version]}"
-      base_url = "#{protocol}://#{location_name}.#{api_hostname}#{port}#{@base_path}"
-
-      @conn = Faraday.new(:url => base_url) do |faraday|
-        # faraday.request :url_encoded
+    def initialize(url_generator)
+      @options = url_generator.options
+      @conn = Faraday.new(url: url_generator.url) do |faraday|
         faraday.use RaiseHttpException
         faraday.options[:open_timeout] = @options[:default_timeout]
         faraday.options[:timeout] = @options[:default_timeout]
-
-        # do this last
         faraday.adapter Faraday.default_adapter
       end
-      @conn.path_prefix = @base_path
+      @base_path = url_generator.base_path
+      @conn.path_prefix = base_path
     end
 
     def make_http_request(method, relative_url, params = nil, data = nil, headers = nil)
       headers['Content-Type'] = 'application/json'
       headers['X-Stream-Client'] = "stream-ruby-client-#{Stream::VERSION}"
-      params['api_key'] = @options[:api_key]
       base_url = [base_path, relative_url].join('/').gsub(%r{/+}, '/')
       url = "#{base_url}?#{URI.encode_www_form(params)}"
-      body = data.to_json if %w(post put).include? method.to_s
+      body = data.to_json if %w[post put].include? method.to_s
       response = @conn.run_request(
-          method,
-          url,
-          body,
-          headers
+        method,
+        url,
+        body,
+        headers
       )
 
       case response[:status].to_i
-        when 200..203
-          return ::JSON.parse(response[:body])
+      when 200..203
+        return ::JSON.parse(response[:body])
       end
     end
   end
