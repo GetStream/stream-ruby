@@ -17,12 +17,11 @@ module Stream
     if RUBY_VERSION.to_f >= 2.1
       require 'stream/batch'
       require 'stream/signedrequest'
-      require 'stream/collections'
       require 'stream/personalization'
+      require 'stream/collections'
 
       include Stream::SignedRequest
       include Stream::Batch
-      include Stream::Collections
     end
 
     #
@@ -82,6 +81,10 @@ module Stream
 
     def personalization
       PersonalizationClient.new(api_key, api_secret, app_id, client_options)
+    end
+
+    def collections
+      CollectionsClient.new(api_key, api_secret, app_id, client_options)
     end
 
     def update_activity(activity)

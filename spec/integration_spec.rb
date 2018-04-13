@@ -398,6 +398,7 @@ describe 'Integration tests' do
     end
 
     example 'collections endpoints' do
+      collections = @client.collections
       # upsert
       objects = [
         {
@@ -415,7 +416,7 @@ describe 'Integration tests' do
           }
         }
       ]
-      response = @client.upsert_collection_objects('test', objects)
+      response = collections.upsert('test', objects)
       response.should include('duration', 'data')
       response['data'].should include 'test'
       expected = [
@@ -433,7 +434,7 @@ describe 'Integration tests' do
       response['data']['test'].should =~ expected
 
       # get
-      response = @client.get_collection_objects('test', ['aabbcc', 'ddeeff'])
+      response = collections.get('test', ['aabbcc', 'ddeeff'])
       response.should include('duration', 'response')
       expected = [
         {
@@ -458,10 +459,11 @@ describe 'Integration tests' do
       response['response']['data'].should =~ expected
 
       # delete
-      response = @client.delete_collection_objects('test', ['aabbcc'])
+      response = collections.delete('test', ['aabbcc'])
       response.should include('duration')
 
-      response = @client.get_collection_objects('test', ['aabbcc', 'ddeeff'])
+      # check that the data is gone
+      response = collections.get('test', ['aabbcc', 'ddeeff'])
       response.should include('duration', 'response')
       expected = [
         {
