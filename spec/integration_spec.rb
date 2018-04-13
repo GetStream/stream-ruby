@@ -3,8 +3,7 @@ require 'date'
 
 describe 'Integration tests' do
   before do
-    @client = Stream::Client.new(ENV['STREAM_API_KEY'], ENV['STREAM_API_SECRET'], nil, :location => 'qa')
-    # @client = Stream::Client.new(ENV['STREAM_API_KEY'], ENV['STREAM_API_SECRET'], nil, :location => ENV['STREAM_REGION'])
+    @client = Stream::Client.new(ENV['STREAM_API_KEY'], ENV['STREAM_API_SECRET'], nil, location: ENV['STREAM_REGION'])
     @feed42 = @client.feed('flat', 'r42')
     @feed43 = @client.feed('flat', 'r43')
 
