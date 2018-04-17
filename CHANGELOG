@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.6.0
+=====
+:release-date: 2018-04-17
+:by: Federico Ruggi
+
+* Added support for personalization and collections endpoints.
+
 2.5.10
 =====
 :release-date: 2017-12-01
