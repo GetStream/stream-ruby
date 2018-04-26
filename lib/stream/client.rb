@@ -59,11 +59,11 @@ module Stream
       @signer = Stream::Signer.new(api_secret)
 
       @client_options = {
-        api_version: opts.fetch(:api_version, 'v1.0'),
-        location: opts.fetch(:location, nil),
-        default_timeout: opts.fetch(:default_timeout, 3),
         api_key: @api_key,
-        api_hostname: opts.fetch(:api_hostname, 'stream-io-api.com')
+        api_version: opts[:api_version] || 'v1.0',
+        location: opts[:location],
+        default_timeout: opts[:default_timeout] || 3,
+        api_hostname: opts[:api_hostname] || 'stream-io-api.com'
       }
     end
 
