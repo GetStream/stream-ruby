@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.6.1
+=====
+:release-date: 2018-04-26
+:by: Federico Ruggi
+
+* Fix client options defaults when nil values are provided.
+
 2.6.0
 =====
 :release-date: 2018-04-17
