@@ -25,6 +25,26 @@ module Stream
     end
 
     #
+    # Unfollow many feeds in one single request
+    #
+    # @param [Array<Hash<:source, :target, :keep_history>>] unfollows the list of follows to remove.
+    #
+    # return [nil]
+    #
+    # @example
+    #
+    #
+    # unfollows = [
+    #   {source: 'user:1', target: 'timeline:1'},
+    #   {source: 'user:2', target: 'timeline:2', keep_history: false}
+    # ]
+    # @client.unfollow_many(unfollows)
+    #
+    def unfollow_many(unfollows)
+      make_signed_request(:post, '/unfollow_many/', {}, unfollows)
+    end
+    
+    #
     # Adds an activity to many feeds in one single request
     #
     # @param [Hash] activity_data the activity do add
