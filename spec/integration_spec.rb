@@ -354,6 +354,28 @@ describe 'Integration tests' do
                )
       end
 
+      it 'should be able to unfollow many feeds in one request' do
+        unfollows = [
+          {source: 'user:1', target: 'timeline:1'},
+          {source: 'user:2', target: 'timeline:2', keep_history: false}
+        ]
+        @client.unfollow_many(unfollows)
+      end
+
+      it 'should return an error if unfollowing many fails' do
+        unfollows = [
+          {source: 'user:1', target: 'timeline:1'},
+          {source: 'user:2', target: 42, keep_history: false}
+        ]
+        url = @client.get_http_client.conn.url_prefix.to_s.gsub(/\/+$/, '')
+        expect do
+          @client.unfollow_many(unfollows)
+        end.to raise_error(
+          Stream::StreamApiResponseException,
+          /^POST #{url}\/unfollow_many\/\?api_key=[^:]+: 400: InputException details: invalid request payload$/
+        )
+      end
+
       it 'should be able to add one activity to many feeds in one request' do
         feeds = %w(flat:1 flat:2 flat:3 flat:4)
         activity_data = {:actor => 'tommaso', :verb => 'tweet', :object => 1}
