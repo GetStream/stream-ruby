@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.7.0
+=====
+:release-date: 2018-05-03
+:by: Federico Ruggi
+
+* Add support for unfollow many endpoint.
+
 2.6.1
 =====
 :release-date: 2018-04-26
