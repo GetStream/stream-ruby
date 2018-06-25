@@ -11,7 +11,7 @@ describe Stream::PersonalizationClient do
     expected = {
       method: method,
       endpoint: endpoint,
-      auth: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZXNvdXJjZSI6InBlcnNvbmFsaXphdGlvbiIsImFjdGlvbiI6IioiLCJmZWVkX2lkIjoiKiIsInVzZXJfaWQiOiIqIn0.UXHFkGQTGqA42v8A6TFhjfZGixwCuCMw5ppTwH0QxCE',
+      auth: /^([0-9a-z\-_]+)\.([0-9a-z\-_]+)\.([0-9a-z\-_]+)$/i,
       params: params,
       data: data
     }
