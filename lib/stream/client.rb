@@ -19,9 +19,11 @@ module Stream
       require 'stream/signedrequest'
       require 'stream/personalization'
       require 'stream/collections'
+      require 'stream/activities'
 
       include Stream::SignedRequest
       include Stream::Batch
+      include Stream::Activities
     end
 
     #
