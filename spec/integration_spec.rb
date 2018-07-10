@@ -500,5 +500,40 @@ describe 'Integration tests' do
       ]
       response['response']['data'].should =~ expected
     end
+
+    example 'activities endpoints' do
+      activity = @feed42.add_activity({
+        actor: "bob",
+        verb: "does",
+        object: "something",
+        foreign_id: "bob-does-stuff-#{Time.now.to_i}",
+        time: DateTime.now.to_s,
+      })
+      activity.delete('duration')
+      
+      expect{@client.get_activities()}.to raise_error Stream::StreamApiResponseException
+
+      # get by ID
+      by_id = @client.get_activities(
+        ids: [ activity["id"] ],
+      )
+      by_id.should include('duration', 'results')
+      by_id['results'].count.should be 1
+      res = by_id['results'][0]
+      res.delete('duration')
+      res.should eq(activity)
+
+      # get by foreign_id/timestamp
+      by_foreign_id = @client.get_activities(
+        foreign_ids: [ activity["foreign_id"] ],
+        timestamps:  [ activity["time"] ],
+      )
+      by_foreign_id.should include('duration', 'results')
+      by_foreign_id['results'].count.should be 1
+      res = by_foreign_id['results'][0]
+      res.delete('duration')
+      res.should eq(activity)
+
+    end
   end
 end
