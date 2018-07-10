@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.8.0
+=====
+:release-date: 2018-07-10
+:by: Federico Ruggi
+
+* Added support for get activities endpoint.
+
 2.7.1
 =====
 :release-date: 2018-06-29
