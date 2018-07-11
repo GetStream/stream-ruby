@@ -25,5 +25,43 @@ module Stream
       make_request(:get, '/activities/', signature, params)
     end
 
+    #
+    # Partial update activity, via foreign ID or Foreign ID + timestamp
+    #
+    # @param [Hash<:id, :foreign_id, :time, :set, :unset>] data the request params (id and foreign_id+timestamp mutually exclusive)
+    #
+    # @return the updated activity.
+    #
+    # @example
+    #
+    # @client.update_activity_partial(
+    #   id: "4b39fda2-d6e2-42c9-9abf-5301ef071b12",
+    #   set: {
+    #    "product.price.eur": 12.99,
+    #    "colors": {
+    #      "blue": "#0000ff",
+    #      "green": "#00ff00",
+    #    }
+    #   },
+    #   unset: [ "popularity", "size.xl" ]
+    # )
+    #
+    # @client.update_activity_partial(
+    #   foreign_id: 'product:123',
+    #   time: '2016-11-10T13:20:00.000000',
+    #   set: {
+    #    "product.price.eur": 12.99,
+    #    "colors": {
+    #      "blue": "#0000ff",
+    #      "green": "#00ff00",
+    #    }
+    #   },
+    #   unset: [ "popularity", "size.xl" ]
+    # )
+    def update_activity_partial(data = {})
+      signature = Stream::Signer.create_jwt_token('activities', '*', @api_secret, '*')
+      make_request(:post, '/activity/', signature, {}, data)
+    end
+
   end
 end
