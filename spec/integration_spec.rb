@@ -546,6 +546,7 @@ describe 'Integration tests' do
           product: {
             name: "shoes",
             price: 9.99,
+            color: "blue",
           }
         })
         activity.delete("duration")
@@ -558,7 +559,10 @@ describe 'Integration tests' do
             "product.price": 7.99,
             "popularity": 1000,
             "foo": {"bar": {"baz": "qux"}}
-          }
+          },
+          unset: [
+            "product.color"
+          ]
         )
         updated_activity.delete("duration")
         expected = activity
@@ -582,7 +586,9 @@ describe 'Integration tests' do
             "foo.bar.baz": 42,
             "popularity": 9000
           },
-          unset: ["product.price"]
+          unset: [
+            "product.price"
+          ]
         )
         updated_activity.delete("duration")
         expected["product"] = {
