@@ -526,8 +526,9 @@ describe 'Integration tests' do
 
         # get by foreign_id/timestamp
         by_foreign_id = @client.get_activities(
-          foreign_ids: [ activity["foreign_id"] ],
-          timestamps:  [ activity["time"] ],
+          foreign_id_times: [
+            { foreign_id: activity["foreign_id"], time: activity["time"] }
+          ]
         )
         by_foreign_id.should include('duration', 'results')
         by_foreign_id['results'].count.should be 1
