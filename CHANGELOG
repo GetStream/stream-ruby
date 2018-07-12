@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.9.1
+=====
+:release-date: 2018-07-12
+:by: Federico Ruggi
+
+* Changed default params format for single activity retrieval by foreign ID.
+
 2.9.0
 =====
 :release-date: 2018-07-11
