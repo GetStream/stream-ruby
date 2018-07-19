@@ -553,7 +553,7 @@ describe 'Integration tests' do
         activity.delete("duration")
         
         # by id
-        updated_activity = @client.update_activity_partial(
+        updated_activity = @client.activity_partial_update(
           id: activity["id"],
           set: {
             "product.name": "boots",
@@ -580,7 +580,7 @@ describe 'Integration tests' do
         updated_activity.should eq(expected)
 
         # by foreign id and timestamp
-        updated_activity = @client.update_activity_partial(
+        updated_activity = @client.activity_partial_update(
           foreign_id: activity["foreign_id"],
           time: activity["time"],
           set: {
