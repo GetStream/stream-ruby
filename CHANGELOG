@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.9.2
+======
+:release-date: 2018-07-24
+:by: Federico Ruggi
+
+* Changed partial activity update endpoint method name to uniform with the other clients.
+
 2.9.1
 =====
 :release-date: 2018-07-12
