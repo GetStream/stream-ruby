@@ -51,7 +51,7 @@ module Stream
     #
     # @example
     #
-    # @client.update_activity_partial(
+    # @client.activity_partial_update(
     #   id: "4b39fda2-d6e2-42c9-9abf-5301ef071b12",
     #   set: {
     #    "product.price.eur": 12.99,
@@ -63,7 +63,7 @@ module Stream
     #   unset: [ "popularity", "size.xl" ]
     # )
     #
-    # @client.update_activity_partial(
+    # @client.activity_partial_update(
     #   foreign_id: 'product:123',
     #   time: '2016-11-10T13:20:00.000000',
     #   set: {
@@ -75,7 +75,7 @@ module Stream
     #   },
     #   unset: [ "popularity", "size.xl" ]
     # )
-    def update_activity_partial(data = {})
+    def activity_partial_update(data = {})
       signature = Stream::Signer.create_jwt_token('activities', '*', @api_secret, '*')
       make_request(:post, '/activity/', signature, {}, data)
     end
