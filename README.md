@@ -103,6 +103,32 @@ user_feed_1.add_activity(data)
 # Remove a feed and its content
 user_feed_1.delete
 
+# Updating parts of an activity
+set = {
+  'product.price': 19.99,
+  'shares': {
+    'facebook': '...',
+    'twitter': '...'
+  },
+}
+unset = [
+    'daily_likes',
+    'popularity'
+]
+# ...by ID
+client.activity_partial_update(
+  id: '54a60c1e-4ee3-494b-a1e3-50c06acb5ed4',
+  set: set,
+  unset: unset,
+)
+# ...or by combination of foreign ID and time
+client.activity_partial_update(
+  foreign_id: 'product:123',
+  time: '2016-11-10T13:20:00.000000',
+  set: set,
+  unset: unset,
+)
+
 # Generating tokens for client side usage
 token = user_feed_1.readonly_token
 
