@@ -61,10 +61,11 @@ module Stream
 
     def add_activity(activity_data)
       uri = "/feed/#{@feed_url}/"
-      activity_data[:to] &&= sign_to_field(activity_data[:to])
+      data = activity_data.clone
+      data[:to] &&= sign_to_field(data[:to])
       auth_token = create_jwt_token('feed', 'write')
 
-      @client.make_request(:post, uri, auth_token, {}, activity_data)
+      @client.make_request(:post, uri, auth_token, {}, data)
     end
 
     def add_activities(activities)
