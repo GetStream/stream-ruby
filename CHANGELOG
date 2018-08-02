@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.9.3
+=====
+:release-date: 2018-08-02
+:by: Federico Ruggi
+
+* Fixed a bug with add_activity causing alteration in the original activity.
+
 2.9.2
 ======
 :release-date: 2018-07-24
