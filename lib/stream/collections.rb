@@ -29,7 +29,7 @@ module Stream
     end
 
     def create_user_reference(id)
-      create_reference("user", id)
+      create_reference('user', id)
     end
 
     private
