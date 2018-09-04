@@ -421,6 +421,11 @@ describe 'Integration tests' do
 
     example 'collections endpoints' do
       collections = @client.collections
+      
+      # refs
+      collections.create_reference('foo', 'bar').should eql 'SO:foo:bar'
+      collections.create_user_reference('baz').should eql 'SO:user:baz'
+
       # upsert
       objects = [
         {
