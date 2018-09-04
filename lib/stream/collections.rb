@@ -24,6 +24,14 @@ module Stream
       make_collection_request(:delete, params, {})
     end
 
+    def create_reference(collection, id)
+      "SO:#{collection}:#{id}"
+    end
+
+    def create_user_reference(id)
+      create_reference("user", id)
+    end
+
     private
 
     def make_collection_request(method, params, data)
