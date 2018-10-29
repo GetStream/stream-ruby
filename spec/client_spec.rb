@@ -22,6 +22,20 @@ describe Stream::Client do
     feed.id.should eq 'feed:42'
   end
 
+  it 'check user_token' do
+    client = Stream::Client.new('key', 'secret')
+    user_token = client.create_user_session_token('user')
+    user_token.should eq 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlciJ9.vSdu-exEFUWts57olfk9X_I1CytXuXrRF7A0LpQmoaM'
+    payload = JWT.decode(user_token, 'secret', 'HS256')
+    payload[0]['user_id'].should eq 'user'
+    user_token = client.create_user_session_token('user', {'client'=> 'ruby', 'testing'=> true})
+    user_token.should eq 'eyJhbGciOiJIUzI1NiJ9.eyJjbGllbnQiOiJydWJ5IiwidGVzdGluZyI6dHJ1ZSwidXNlcl9pZCI6InVzZXIifQ.cDEffbaTeBO6HWH602wHA6RCKTo5K0gFR50vzfQdW8k'
+    payload = JWT.decode(user_token, 'secret', 'HS256')
+    payload[0]['user_id'].should eq 'user'
+    payload[0]['client'].should eq 'ruby'
+    payload[0]['testing'].should eq true
+  end
+
   it 'on heroku we connect using environment variables' do
     ENV['STREAM_URL'] = 'https://thierry:pass@stream-io-api.com/?app_id=1'
     client = Stream::Client.new
