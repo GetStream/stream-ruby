@@ -1,11 +1,16 @@
 require 'spec_helper'
 require 'date'
+require './spec/support/utils'
+
+RSpec.configure do |c|
+  c.include Utils
+end
 
 describe 'Integration tests' do
   before do
-    @client = Stream::Client.new(ENV['STREAM_API_KEY'], ENV['STREAM_API_SECRET'], nil, location: ENV['STREAM_REGION'])
-    @feed42 = @client.feed('flat', 'r42')
-    @feed43 = @client.feed('flat', 'r43')
+    @client = Stream::Client.new(ENV['STREAM_API_KEY'], ENV['STREAM_API_SECRET'], nil, location: ENV['STREAM_REGION'], default_timeout: 10)
+    @feed42 = @client.feed('flat', generate_uniq_feed_name)
+    @feed43 = @client.feed('flat', generate_uniq_feed_name)
 
     @test_activity = {:actor => 1, :verb => 'tweet', :object => 1}
   end
@@ -32,7 +37,7 @@ describe 'Integration tests' do
     end
 
     example 'mark_seen=true should not mark read' do
-      feed = @client.feed('notification', 'rb1')
+      feed = @client.feed('notification', generate_uniq_feed_name)
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
@@ -51,7 +56,7 @@ describe 'Integration tests' do
     end
 
     example 'mark_read=true should not mark seen' do
-      feed = @client.feed('notification', 'rb1')
+      feed = @client.feed('notification', generate_uniq_feed_name)
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
@@ -70,7 +75,7 @@ describe 'Integration tests' do
     end
 
     example 'set feed as read' do
-      feed = @client.feed('notification', 'b1')
+      feed = @client.feed('notification', generate_uniq_feed_name)
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
@@ -86,7 +91,7 @@ describe 'Integration tests' do
     end
 
     example 'set activities as read' do
-      feed = @client.feed('notification', 'rb2')
+      feed = @client.feed('notification', generate_uniq_feed_name)
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
@@ -100,7 +105,7 @@ describe 'Integration tests' do
     end
 
     example 'set feed as seen' do
-      feed = @client.feed('notification', 'rb3')
+      feed = @client.feed('notification', generate_uniq_feed_name)
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
@@ -116,7 +121,7 @@ describe 'Integration tests' do
     end
 
     example 'set activities as seen' do
-      feed = @client.feed('notification', 'rb4')
+      feed = @client.feed('notification', generate_uniq_feed_name)
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
       feed.add_activity(:actor => 2, :verb => 'share', :object => 1)
       feed.add_activity(:actor => 3, :verb => 'run', :object => 1)
@@ -130,14 +135,14 @@ describe 'Integration tests' do
     end
 
     example 'posting an activity with datetime object' do
-      feed = @client.feed('flat', 'time42')
+      feed = @client.feed('flat', generate_uniq_feed_name)
       activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => DateTime.now}
       response = feed.add_activity(activity)
       response.should include('id', 'actor', 'verb', 'object', 'target', 'time')
     end
 
     example 'localised datetimes should be returned in UTC correctly' do
-      feed = @client.feed('flat', 'time43')
+      feed = @client.feed('flat', generate_uniq_feed_name)
       now = DateTime.now.new_offset(5)
       activity = {:actor => 1, :verb => 'tweet', :object => 1, :time => now}
       response = feed.add_activity(activity)
@@ -171,7 +176,7 @@ describe 'Integration tests' do
     end
 
     example 'removing an activity' do
-      feed = @client.feed('flat', 'removing_an_activity')
+      feed = @client.feed('flat', generate_uniq_feed_name)
       response = feed.add_activity(@test_activity)
       results = feed.get(:limit => 1)['results']
       results[0]['id'].should eq response['id']
@@ -194,7 +199,7 @@ describe 'Integration tests' do
       context 'should copy an activity' do
         example 'when no copy limit is mentioned' do
           feed1 = @client.feed('flat', '1')
-          feed2 = @client.feed('flat', 'activity_copy_not_given')
+          feed2 = @client.feed('flat', generate_uniq_feed_name)
           feed1.add_activity(@test_activity)
           feed2.follow('flat', '1')
           results = feed2.get['results']
@@ -203,7 +208,7 @@ describe 'Integration tests' do
         end
         example 'when a copy limit is given' do
           feed1 = @client.feed('flat', '1')
-          feed2 = @client.feed('flat', 'activity_copy_given')
+          feed2 = @client.feed('flat', generate_uniq_feed_name)
           feed1.add_activity(@test_activity)
           feed2.follow('flat', '1', 300)
           results = feed2.get['results']
@@ -214,7 +219,7 @@ describe 'Integration tests' do
       context 'should not copy an activity' do
         example 'when limit is set to 0' do
           feed1 = @client.feed('flat', '1')
-          feed2 = @client.feed('flat', 'activity_copy_0')
+          feed2 = @client.feed('flat', generate_uniq_feed_name)
           feed1.add_activity(@test_activity)
           feed2.follow('flat', '1', 0)
           results = feed2.get['results']
@@ -225,7 +230,7 @@ describe 'Integration tests' do
     end
 
     example 'retrieve feed with no followers' do
-      lonely = @client.feed('flat', 'lkjasdlkjalskdjlkjasd')
+      lonely = @client.feed('flat', generate_uniq_feed_name)
       response = lonely.followers
       response['results'].should eq []
     end
