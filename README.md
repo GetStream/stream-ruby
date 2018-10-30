@@ -100,8 +100,6 @@ data = [
 ]
 user_feed_1.add_activity(data)
 
-# Remove a feed and its content
-user_feed_1.delete
 
 # Updating parts of an activity
 set = {
