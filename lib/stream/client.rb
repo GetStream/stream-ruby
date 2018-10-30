@@ -81,6 +81,10 @@ module Stream
       Stream::Feed.new(self, feed_slug, user_id, token)
     end
 
+    def create_user_session_token(user_id, extra_data = {})
+      return Stream::Signer.create_user_session_token(user_id, extra_data, api_secret)
+    end
+
     def personalization
       PersonalizationClient.new(api_key, api_secret, app_id, client_options)
     end
