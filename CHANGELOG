@@ -2,6 +2,14 @@
  Change history
 ================
 
+2.11.0
+======
+:release-date: 2018-10-30
+:by: Tommaso Barbugli
+
+* Added user session token create function
+* Fix random test failures
+
 2.10.0
 ======
 :release-date: 2018-09-06
