@@ -316,6 +316,38 @@ describe 'Integration tests' do
       [response[0]['actor'], response[1]['actor']].should =~ actors
     end
 
+    example 'update to targets' do
+      foreign_id = "user:1"
+      time = DateTime.now
+      activity = {
+        :actor => 'tommaso',
+        :verb => 'tweet',
+        :object => 1,
+        :to => ["user:1", "user:2"],
+        :foreign_id => foreign_id,
+        :time => time
+      }
+      @feed42.add_activity(activity)
+
+      response = @feed42.update_activity_to_targets(
+        foreign_id, time, new_targets: ["user:3", "user:2"]
+      )
+      response["activity"]["to"].length.should eq 2
+      response["activity"]["to"].should include("user:2")
+      response["activity"]["to"].should include("user:3")
+
+      response = @feed42.update_activity_to_targets(
+        foreign_id,
+        time,
+        added_targets: ["user:4", "user:5"],
+        removed_targets: ["user:3"],
+      )
+      response["activity"]["to"].length.should eq 3
+      response["activity"]["to"].should include("user:2")
+      response["activity"]["to"].should include("user:4")
+      response["activity"]["to"].should include("user:5")
+    end
+
     example 'read from a feed' do
       @feed42.get
       @feed42.get(:limit => 5)
@@ -426,7 +458,7 @@ describe 'Integration tests' do
 
     example 'collections endpoints' do
       collections = @client.collections
-      
+
       # refs
       collections.create_reference('foo', 'bar').should eql 'SO:foo:bar'
       collections.create_user_reference('baz').should eql 'SO:user:baz'
@@ -468,27 +500,35 @@ describe 'Integration tests' do
       # get
       response = collections.get('test', ['aabbcc', 'ddeeff'])
       response.should include('duration', 'response')
+      response['response']['data'].length.should eq 2
+      response['response']['data'][0].should include('id', 'collection', 'foreign_id', 'data', 'created_at', 'updated_at')
       expected = [
         {
+          'id' => 'aabbcc',
+          'collection' => 'test',
           'foreign_id' => 'test:aabbcc',
           'data' => {
             'data' => {
               'hobbies' => ['playing', 'sleeping', 'eating']
             },
             'name' => 'juniper'
-          }
+          },
         },
         {
+          'id' => 'ddeeff',
+          'collection' => 'test',
           'foreign_id' => 'test:ddeeff',
           'data' => {
             'data' => {
               'interests' => ['sunbeams', 'surprise attacks']
             },
             'name' => 'ruby'
-          }
+          },
         }
       ]
-      response['response']['data'].should =~ expected
+      check = response['response']['data']
+      check.each { |h| h.delete("created_at"); h.delete("updated_at") }
+      check.should =~ expected
 
       # delete
       response = collections.delete('test', ['aabbcc'])
@@ -499,13 +539,17 @@ describe 'Integration tests' do
       response.should include('duration', 'response')
       expected = [
         {
+          'id' => 'ddeeff',
+          'collection' => 'test',
           'foreign_id' => 'test:ddeeff',
           'data' => {
             'data' => {
               'interests' => ['sunbeams', 'surprise attacks']
             },
             'name' => 'ruby'
-          }
+          },
+          "created_at"=>"2018-08-07T19:10:52.29136Z",
+          "updated_at"=>"2018-08-07T19:10:52.29136Z"
         }
       ]
       response['response']['data'].should =~ expected
@@ -521,7 +565,7 @@ describe 'Integration tests' do
           time: DateTime.now.to_s,
         })
         activity.delete('duration')
-        
+
         expect{@client.get_activities()}.to raise_error Stream::StreamApiResponseException
 
         # get by ID
@@ -561,7 +605,7 @@ describe 'Integration tests' do
           }
         })
         activity.delete("duration")
-        
+
         # by id
         updated_activity = @client.activity_partial_update(
           id: activity["id"],
