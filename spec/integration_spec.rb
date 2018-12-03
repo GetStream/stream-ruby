@@ -316,6 +316,38 @@ describe 'Integration tests' do
       [response[0]['actor'], response[1]['actor']].should =~ actors
     end
 
+    example 'update to targets' do
+      foreign_id = "user:1"
+      time = DateTime.now
+      activity = {
+        :actor => 'tommaso',
+        :verb => 'tweet',
+        :object => 1,
+        :to => ["user:1", "user:2"],
+        :foreign_id => foreign_id,
+        :time => time
+      }
+      @feed42.add_activity(activity)
+
+      response = @feed42.update_activity_to_targets(
+        foreign_id, time, new_targets: ["user:3", "user:2"]
+      )
+      response["activity"]["to"].length.should eq 2
+      response["activity"]["to"].should include("user:2")
+      response["activity"]["to"].should include("user:3")
+
+      response = @feed42.update_activity_to_targets(
+        foreign_id,
+        time,
+        added_targets: ["user:4", "user:5"],
+        removed_targets: ["user:3"],
+      )
+      response["activity"]["to"].length.should eq 3
+      response["activity"]["to"].should include("user:2")
+      response["activity"]["to"].should include("user:4")
+      response["activity"]["to"].should include("user:5")
+    end
+
     example 'read from a feed' do
       @feed42.get
       @feed42.get(:limit => 5)
@@ -426,7 +458,7 @@ describe 'Integration tests' do
 
     example 'collections endpoints' do
       collections = @client.collections
-      
+
       # refs
       collections.create_reference('foo', 'bar').should eql 'SO:foo:bar'
       collections.create_user_reference('baz').should eql 'SO:user:baz'
@@ -521,7 +553,7 @@ describe 'Integration tests' do
           time: DateTime.now.to_s,
         })
         activity.delete('duration')
-        
+
         expect{@client.get_activities()}.to raise_error Stream::StreamApiResponseException
 
         # get by ID
@@ -561,7 +593,7 @@ describe 'Integration tests' do
           }
         })
         activity.delete("duration")
-        
+
         # by id
         updated_activity = @client.activity_partial_update(
           id: activity["id"],

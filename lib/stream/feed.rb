@@ -102,6 +102,27 @@ module Stream
       @client.make_request(:post, '/activities/', auth_token, {}, 'activities' => activities)
     end
 
+    def update_activity_to_targets(foreign_id, time, new_targets: nil, added_targets: nil, removed_targets: nil)
+      uri = "/feed_targets/#{@feed_url}/activity_to_targets/"
+      data = {
+        'foreign_id': foreign_id,
+        'time': time
+      }
+
+      if !new_targets.nil?
+        data['new_targets'] = new_targets
+      end
+      if !added_targets.nil?
+        data['added_targets'] = added_targets
+      end
+      if !removed_targets.nil?
+        data['removed_targets'] = removed_targets
+      end
+      auth_token = create_jwt_token('feed_targets', 'write')
+
+      @client.make_request(:post, uri, auth_token, {}, data)
+    end
+
     def follow(target_feed_slug, target_user_id, activity_copy_limit = 300)
       uri = "/feed/#{@feed_url}/follows/"
       activity_copy_limit = 0 if activity_copy_limit < 0
