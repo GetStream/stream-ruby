@@ -2,6 +2,15 @@
  Change history
 ================
 
+2.11.1
+======
+:release-date: 2018-10-30
+:by: Tommaso Barbugli
+
+* Add support for update-to-targets
+* Fix tests
+
+
 2.11.0
 ======
 :release-date: 2018-10-30
