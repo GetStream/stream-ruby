@@ -500,27 +500,35 @@ describe 'Integration tests' do
       # get
       response = collections.get('test', ['aabbcc', 'ddeeff'])
       response.should include('duration', 'response')
+      response['response']['data'].length.should eq 2
+      response['response']['data'][0].should include('id', 'collection', 'foreign_id', 'data', 'created_at', 'updated_at')
       expected = [
         {
+          'id' => 'aabbcc',
+          'collection' => 'test',
           'foreign_id' => 'test:aabbcc',
           'data' => {
             'data' => {
               'hobbies' => ['playing', 'sleeping', 'eating']
             },
             'name' => 'juniper'
-          }
+          },
         },
         {
+          'id' => 'ddeeff',
+          'collection' => 'test',
           'foreign_id' => 'test:ddeeff',
           'data' => {
             'data' => {
               'interests' => ['sunbeams', 'surprise attacks']
             },
             'name' => 'ruby'
-          }
+          },
         }
       ]
-      response['response']['data'].should =~ expected
+      check = response['response']['data']
+      check.each { |h| h.delete("created_at"); h.delete("updated_at") }
+      check.should =~ expected
 
       # delete
       response = collections.delete('test', ['aabbcc'])
@@ -531,13 +539,17 @@ describe 'Integration tests' do
       response.should include('duration', 'response')
       expected = [
         {
+          'id' => 'ddeeff',
+          'collection' => 'test',
           'foreign_id' => 'test:ddeeff',
           'data' => {
             'data' => {
               'interests' => ['sunbeams', 'surprise attacks']
             },
             'name' => 'ruby'
-          }
+          },
+          "created_at"=>"2018-08-07T19:10:52.29136Z",
+          "updated_at"=>"2018-08-07T19:10:52.29136Z"
         }
       ]
       response['response']['data'].should =~ expected
