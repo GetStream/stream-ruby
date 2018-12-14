@@ -6,9 +6,8 @@ module Stream
     attr_reader :id
     attr_reader :slug
     attr_reader :user_id
-    attr_reader :token
 
-    def initialize(client, feed_slug, user_id, token)
+    def initialize(client, feed_slug, user_id)
       unless valid_feed_slug feed_slug
         raise StreamInputData, 'feed_slug can only contain alphanumeric characters plus underscores'
       end
@@ -23,7 +22,6 @@ module Stream
       @slug = feed_slug
       @feed_name = "#{feed_slug}#{user_id}"
       @feed_url = "#{feed_slug}/#{user_id}"
-      @token = token
     end
 
     def readonly_token
@@ -51,18 +49,9 @@ module Stream
       @client.make_request(:get, uri, auth_token, params)
     end
 
-    def sign_to_field(to)
-      to.map do |feed_id|
-        feed_slug, user_id = feed_id.split(':')
-        feed = @client.feed(feed_slug, user_id)
-        "#{feed.id} #{feed.token}"
-      end
-    end
-
     def add_activity(activity_data)
       uri = "/feed/#{@feed_url}/"
       data = activity_data.clone
-      data[:to] &&= sign_to_field(data[:to])
       auth_token = create_jwt_token('feed', 'write')
 
       @client.make_request(:post, uri, auth_token, {}, data)
@@ -70,9 +59,6 @@ module Stream
 
     def add_activities(activities)
       uri = "/feed/#{@feed_url}/"
-      activities.each do |activity|
-        activity[:to] &&= sign_to_field(activity[:to])
-      end
       data = {:activities => activities}
       auth_token = create_jwt_token('feed', 'write')
 
@@ -130,7 +116,6 @@ module Stream
 
       follow_data = {
           target: "#{target_feed_slug}:#{target_user_id}",
-          target_token: @client.feed(target_feed_slug, target_user_id).token,
           activity_copy_limit: activity_copy_limit
       }
       auth_token = create_jwt_token('follower', 'write')

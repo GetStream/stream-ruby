@@ -32,10 +32,6 @@ describe 'Integration tests' do
       [response[0]['actor'], response[1]['actor']].should =~ actors
     end
 
-    example 'expose token from user feed' do
-      @feed42.token.should match('.+')
-    end
-
     example 'mark_seen=true should not mark read' do
       feed = @client.feed('notification', generate_uniq_feed_name)
       feed.add_activity(:actor => 1, :verb => 'tweet', :object => 1)
@@ -360,64 +356,54 @@ describe 'Integration tests' do
       end.to raise_error Stream::StreamApiResponseException
     end
 
-    if Stream::Client.respond_to?('supports_signed_requests')
-      # it "should be able to send signed requests" do
-      #   @client.make_signed_request(:get, "/test/auth/digest/")
-      # end
-      #
-      # it "should be able to send signed requests with data" do
-      #   @client.make_signed_request(:post, "/test/auth/digest/", {}, :var => [1, 2, "3"])
-      # end
+    it 'should be able to follow many feeds in one request' do
+      follows = [
+        {:source => 'flat:1', :target => 'user:1'},
+        {:source => 'flat:1', :target => 'user:3'}
+      ]
+      @client.follow_many(follows)
+    end
 
-      it 'should be able to follow many feeds in one request' do
-        follows = [
-            {:source => 'flat:1', :target => 'user:1'},
-            {:source => 'flat:1', :target => 'user:3'}
-        ]
-        @client.follow_many(follows)
-      end
+    it 'should return an appropriate error if following many fails' do
+      follows = [
+        {:source => 'badfeed:1', :target => 'alsobad:1'},
+        {:source => 'extrabadfeed:1', :target => 'reallybad:3'}
+      ]
+      url = @client.get_http_client.conn.url_prefix.to_s.gsub(/\/+$/, '')
+      expect do
+        @client.follow_many(follows, 5000)
+      end.to raise_error(
+        Stream::StreamApiResponseException,
+        /^POST #{url}\/follow_many\/\?activity_copy_limit=5000&api_key=[^:]+: 400: InputException details: activity_copy_limit must be a non-negative number not greater than 1000$/
+      )
+    end
 
-      it 'should return an appropriate error if following many fails' do
-        follows = [
-            {:source => 'badfeed:1', :target => 'alsobad:1'},
-            {:source => 'extrabadfeed:1', :target => 'reallybad:3'}
-        ]
-        url = @client.get_http_client.conn.url_prefix.to_s.gsub(/\/+$/, '')
-        expect do
-          @client.follow_many(follows, 5000)
-        end.to raise_error(
-                   Stream::StreamApiResponseException,
-                   /^POST #{url}\/follow_many\/\?activity_copy_limit=5000&api_key=[^:]+: 400: InputException details: activity_copy_limit must be a non-negative number not greater than 1000$/
-               )
-      end
+    it 'should be able to unfollow many feeds in one request' do
+      unfollows = [
+        {source: 'user:1', target: 'timeline:1'},
+        {source: 'user:2', target: 'timeline:2', keep_history: false}
+      ]
+      @client.unfollow_many(unfollows)
+    end
 
-      it 'should be able to unfollow many feeds in one request' do
-        unfollows = [
-          {source: 'user:1', target: 'timeline:1'},
-          {source: 'user:2', target: 'timeline:2', keep_history: false}
-        ]
+    it 'should return an error if unfollowing many fails' do
+      unfollows = [
+        {source: 'user:1', target: 'timeline:1'},
+        {source: 'user:2', target: 42, keep_history: false}
+      ]
+      url = @client.get_http_client.conn.url_prefix.to_s.gsub(/\/+$/, '')
+      expect do
         @client.unfollow_many(unfollows)
-      end
+      end.to raise_error(
+        Stream::StreamApiResponseException,
+        /^POST #{url}\/unfollow_many\/\?api_key=[^:]+: 400: InputException details: invalid request payload$/
+      )
+    end
 
-      it 'should return an error if unfollowing many fails' do
-        unfollows = [
-          {source: 'user:1', target: 'timeline:1'},
-          {source: 'user:2', target: 42, keep_history: false}
-        ]
-        url = @client.get_http_client.conn.url_prefix.to_s.gsub(/\/+$/, '')
-        expect do
-          @client.unfollow_many(unfollows)
-        end.to raise_error(
-          Stream::StreamApiResponseException,
-          /^POST #{url}\/unfollow_many\/\?api_key=[^:]+: 400: InputException details: invalid request payload$/
-        )
-      end
-
-      it 'should be able to add one activity to many feeds in one request' do
-        feeds = %w(flat:1 flat:2 flat:3 flat:4)
-        activity_data = {:actor => 'tommaso', :verb => 'tweet', :object => 1}
-        @client.add_to_many(activity_data, feeds)
-      end
+    it 'should be able to add one activity to many feeds in one request' do
+      feeds = %w(flat:1 flat:2 flat:3 flat:4)
+      activity_data = {:actor => 'tommaso', :verb => 'tweet', :object => 1}
+      @client.add_to_many(activity_data, feeds)
     end
 
     example 'updating many feed activities' do

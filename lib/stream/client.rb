@@ -16,12 +16,10 @@ module Stream
 
     if RUBY_VERSION.to_f >= 2.1
       require 'stream/batch'
-      require 'stream/signedrequest'
       require 'stream/personalization'
       require 'stream/collections'
       require 'stream/activities'
 
-      include Stream::SignedRequest
       include Stream::Batch
       include Stream::Activities
     end
@@ -38,6 +36,7 @@ module Stream
     #   Stream::Client.new('my_key', 'my_secret', 'my_app_id', :location => 'us-east')
     #
     def initialize(api_key = '', api_secret = '', app_id = nil, opts = {})
+
       if api_key.nil? || api_key.empty?
         env_url = ENV['STREAM_URL']
         if env_url =~ Stream::STREAM_URL_COM_RE
@@ -77,8 +76,7 @@ module Stream
     # @return [Stream::Feed]
     #
     def feed(feed_slug, user_id)
-      token = @signer.sign(feed_slug, user_id)
-      Stream::Feed.new(self, feed_slug, user_id, token)
+      Stream::Feed.new(self, feed_slug, user_id)
     end
 
     def create_user_session_token(user_id, extra_data = {})
