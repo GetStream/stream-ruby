@@ -677,5 +677,47 @@ describe 'Integration tests' do
         updated_activity.should eq(expected)
       end
     end
+
+    describe "user endpoints" do
+      before do
+        @user_id = SecureRandom.uuid
+      end
+      example "add user" do
+        response = @client.users.add(@user_id, :data => {animal: "bear"})
+        response.should include("id", "data", "duration", "created_at", "updated_at")
+        response["id"].should eq @user_id
+        response["data"].should include "animal"
+        response["data"]["animal"].should eq "bear"
+      end
+      example "add user twice" do
+        @client.users.add(@user_id)
+        response = @client.users.add(@user_id, :get_or_create => true)
+        response.should include("id", "data", "duration", "created_at", "updated_at")
+      end
+      example "add user twice with error" do
+        @client.users.add(@user_id)
+        expect{@client.users.add(@user_id)}.to raise_error Stream::StreamApiResponseException
+      end
+      example "get user" do
+        create_response = @client.users.add(@user_id, :data => {animal: "wolf"})
+        get_response = @client.users.get(@user_id)
+
+        create_response.delete("duration")
+        get_response.delete("duration")
+
+        get_response.should eq create_response
+      end
+      example "update user" do
+        @client.users.add(@user_id)
+        response = @client.users.update(@user_id, :data => {animal: "dog"})
+        response.should include("id", "data", "duration", "created_at", "updated_at")
+        response["data"]["animal"].should eq "dog"
+      end
+      example "delete user" do
+        @client.users.add(@user_id)
+        @client.users.delete(@user_id)
+        expect{@client.users.get(@user_id)}.to raise_error Stream::StreamApiResponseException
+      end
+    end
   end
 end
