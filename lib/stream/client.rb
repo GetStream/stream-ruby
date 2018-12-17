@@ -19,6 +19,7 @@ module Stream
       require 'stream/personalization'
       require 'stream/collections'
       require 'stream/activities'
+      require 'stream/reactions'
       require 'stream/users'
 
       include Stream::Batch
@@ -90,6 +91,10 @@ module Stream
 
     def collections
       CollectionsClient.new(api_key, api_secret, app_id, client_options)
+    end
+
+    def reactions
+      ReactionsClient.new(api_key, api_secret, app_id, client_options)
     end
 
     def users

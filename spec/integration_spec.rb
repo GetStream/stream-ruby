@@ -719,5 +719,88 @@ describe 'Integration tests' do
         expect{@client.users.get(@user_id)}.to raise_error Stream::StreamApiResponseException
       end
     end
+
+    describe "reaction endpoints" do
+      before do
+        @activity = @feed42.add_activity(:actor => "john", :verb => "tweet", :object => 1)
+      end
+      example "add reaction" do
+        response = @client.reactions.add("like", @activity["id"], "jim")
+        response.should include("id", "kind", "activity_id", "user_id",
+                                "data", "parent", "latest_children",
+                                "children_counts", "duration", "created_at", "updated_at")
+        response["activity_id"].should eq @activity["id"]
+        response["user_id"].should eq "jim"
+        response["kind"].should eq "like"
+      end
+      example "get reaction" do
+        create_response = @client.reactions.add("like", @activity["id"], "jim")
+        response = @client.reactions.get(create_response["id"])
+        response.should include("id", "kind", "activity_id", "user_id",
+                                "data", "parent", "latest_children",
+                                "children_counts", "duration", "created_at", "updated_at")
+        response["activity_id"].should eq @activity["id"]
+        response["user_id"].should eq "jim"
+        response["kind"].should eq "like"
+        response["data"].should eq({})
+        response["parent"].should eq ""
+        response["latest_children"].should eq({})
+        response["children_counts"].should eq({})
+      end
+      example "update reaction" do
+        create_response = @client.reactions.add("like", @activity["id"], "jim")
+        response = @client.reactions.update(create_response["id"], :data => {animal: "lion"})
+
+        response["data"]["animal"].should eq "lion"
+      end
+      example "add child reaction" do
+        create_response = @client.reactions.add("like", @activity["id"], "jim")
+        response = @client.reactions.add_child("dislike", create_response["id"], "john")
+
+        response["parent"].should eq create_response["id"]
+      end
+      example "filter reactions" do
+        parent = @client.reactions.add("like", @activity["id"], "jim")
+        child = @client.reactions.add_child("like", parent["id"], "juan")
+        comment = @client.reactions.add("comment", @activity["id"], "jim")
+
+        parent.delete("duration")
+        child.delete("duration")
+        comment.delete("duration")
+
+        response = @client.reactions.filter(:reaction_id => parent["id"])
+        response["results"][0].should eq child
+
+        response = @client.reactions.filter(:user_id => "jim", :id_gt => parent["id"])
+        response["results"][0].should eq comment
+
+        response = @client.reactions.filter(:kind => "like", :activity_id => @activity["id"], :id_lte => child["id"])
+        response["results"].length.should eq 2
+        response["results"][0].should eq child
+
+        response = @client.reactions.filter(:kind => "comment", :activity_id => @activity["id"])
+        response["results"][0].should eq comment
+      end
+      example "get with activity data" do
+        @activity.delete("duration")
+        @client.reactions.add("like", @activity["id"], "jim")
+        response = @client.reactions.filter(:activity_id => @activity["id"], :with_activity_data => true)
+
+        response["activity"].delete("latest_reactions")
+        response["activity"].delete("latest_reactions_extra")
+        response["activity"].delete("own_reactions")
+        response["activity"].delete("reaction_counts")
+        response["activity"].should eq @activity
+      end
+      example "with target feeds" do
+        reaction = @client.reactions.add("like", @activity["id"], "juan", :target_feeds => [@feed43.id])
+        reaction.delete('duration')
+        response = @feed43.get()
+
+        response["results"][0]["reaction"].should eq @client.reactions.create_reference(reaction)
+        response["results"][0]["verb"].should eq "like"
+      end
+    end
+    end
   end
 end
