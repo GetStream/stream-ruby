@@ -442,12 +442,45 @@ describe 'Integration tests' do
       end
     end
 
-    example 'collections endpoints' do
+    describe "collection CRUD endpoints" do
+      before do
+        @item_id = SecureRandom.uuid
+      end
+      example "add object to collection" do
+        response = @client.collections.add("animals", {type: "bear", location: "forest"})
+        response.should include("id", "duration", "collection", "foreign_id", "data", "created_at", "updated_at")
+        response["collection"].should eq "animals"
+        response["data"].should eq "type" => "bear", "location" => "forest"
+      end
+      example "add object to collection twice" do
+        @client.collections.add("animals", {type: "bear"}, :id => @item_id)
+        expect{@client.collections.add("animals", {}, :id => @item_id)}.to raise_error Stream::StreamApiResponseException
+      end
+      example "get collection item" do
+        @client.collections.add("animals", {type: "fox"}, :id => @item_id)
+        response = @client.collections.get("animals", @item_id)
+        response["id"].should eq @item_id
+        response["collection"].should eq "animals"
+        response["foreign_id"].should eq "animals:#{@item_id}"
+        response["data"].should eq "type" => "fox"
+      end
+      example "collection item update" do
+        @client.collections.add("animals", {type: "dog"}, :id => @item_id)
+        response = @client.collections.update("animals", @item_id, :data => {type: "cat"})
+        response["data"].should eq "type" => "cat"
+      end
+      example "collection item delete" do
+        @client.collections.add("animals", {type: "snake"}, :id => @item_id)
+        @client.collections.delete("animals", @item_id)
+        expect{@client.collections.get("animals", @item_id)}.to raise_error Stream::StreamApiResponseException
+      end
+    end
+
+    example 'collections batch endpoints' do
       collections = @client.collections
 
       # refs
       collections.create_reference('foo', 'bar').should eql 'SO:foo:bar'
-      collections.create_user_reference('baz').should eql 'SO:user:baz'
 
       # upsert
       objects = [
@@ -484,7 +517,7 @@ describe 'Integration tests' do
       response['data']['test'].should =~ expected
 
       # get
-      response = collections.get('test', ['aabbcc', 'ddeeff'])
+      response = collections.select('test', ['aabbcc', 'ddeeff'])
       response.should include('duration', 'response')
       response['response']['data'].length.should eq 2
       response['response']['data'][0].should include('id', 'collection', 'foreign_id', 'data', 'created_at', 'updated_at')
@@ -517,11 +550,11 @@ describe 'Integration tests' do
       check.should =~ expected
 
       # delete
-      response = collections.delete('test', ['aabbcc'])
+      response = collections.delete_many('test', ['aabbcc'])
       response.should include('duration')
 
       # check that the data is gone
-      response = collections.get('test', ['aabbcc', 'ddeeff'])
+      response = collections.select('test', ['aabbcc', 'ddeeff'])
       response.should include('duration', 'response')
       expected = [
         {
@@ -533,11 +566,11 @@ describe 'Integration tests' do
               'interests' => ['sunbeams', 'surprise attacks']
             },
             'name' => 'ruby'
-          },
-          "created_at"=>"2018-08-07T19:10:52.29136Z",
-          "updated_at"=>"2018-08-07T19:10:52.29136Z"
+          }
         }
       ]
+      check = response['response']['data']
+      check.each{ |h| h.delete("created_at"); h.delete("updated_at") }
       response['response']['data'].should =~ expected
     end
 
