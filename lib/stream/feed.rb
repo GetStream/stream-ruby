@@ -37,15 +37,31 @@ module Stream
     end
 
     def get(params = {})
-      uri = "/feed/#{@feed_url}/"
+      if params[:enrich] or params[:reactions]
+        uri = "/enrich/feed/#{@feed_url}/"
+      else
+        uri = "/feed/#{@feed_url}/"
+      end
       if params[:mark_read] && params[:mark_read].is_a?(Array)
         params[:mark_read] = params[:mark_read].join(',')
       end
       if params[:mark_seen] && params[:mark_seen].is_a?(Array)
         params[:mark_seen] = params[:mark_seen].join(',')
       end
-      auth_token = create_jwt_token('feed', 'read')
+      if params[:reactions].respond_to?(:keys)
+        if params[:reactions][:own]
+          params[:withOwnReactions] = true
+        end
+        if params[:reactions][:recent]
+          params[:withRecentReactions] = true
+        end
+        if params[:reactions][:counts]
+          params[:withReactionCounts] = true
+        end
+      end
+      [:enrich, :reactions].each { |k| params.delete(k) }
 
+      auth_token = create_jwt_token('feed', 'read')
       @client.make_request(:get, uri, auth_token, params)
     end
 

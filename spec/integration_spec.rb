@@ -801,6 +801,48 @@ describe 'Integration tests' do
         response["results"][0]["verb"].should eq "like"
       end
     end
+
+    describe "feed enrichment" do
+      example "collection item enrichment" do
+        bear = @client.collections.add("animals", {type: "bear", color: "blue"})
+        bear.delete("duration")
+
+        @feed42.add_activity({:actor => "john", :verb => "chase", :object => @client.collections.create_reference("animals", bear)})
+        response = @feed42.get(:enrich => true)
+        response["results"][0]["object"].should eq bear
+      end
+      example "user enrichment" do
+        user = @client.users.add(SecureRandom.uuid, :data => {"name": "john"})
+        user.delete("duration")
+
+        @feed42.add_activity({:actor => @client.users.create_reference(user["id"]), :verb => "chase", :object => "car:43"})
+        response = @feed42.get(:enrich => true)
+        response["results"][0]["actor"].should eq user
+      end
+      example "own reaction enrichment" do
+        activity = @feed42.add_activity({:actor => "jim", :verb => "buy", :object => "wallet"})
+        reaction = @client.reactions.add("like", activity["id"], "jim")
+        reaction.delete('duration')
+
+        response = @feed42.get(:reactions => {:own => true})
+        response["results"][0]["own_reactions"]["like"][0].should eq reaction
+      end
+      example "recent reaction enrichment" do
+        activity = @feed42.add_activity({:actor => "jim", :verb => "buy", :object => "wallet"})
+        reaction = @client.reactions.add("dislike", activity["id"], "jim")
+        reaction.delete('duration')
+
+        response = @feed42.get(:reactions => {:recent => true})
+        response["results"][0]["latest_reactions"]["dislike"][0].should eq reaction
+      end
+      example "reaction counts enrichment" do
+        activity = @feed42.add_activity({:actor => "jim", :verb => "buy", :object => "wallet"})
+        reaction = @client.reactions.add("like", activity["id"], "jim")
+        reaction.delete('duration')
+
+        response = @feed42.get(:reactions => {:counts => true})
+        response["results"][0]["reaction_counts"]["like"].should eq 1
+      end
     end
   end
 end
