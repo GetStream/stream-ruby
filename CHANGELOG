@@ -2,6 +2,12 @@
  Change history
 ================
 
+3.0.1
+:release-date: 2018-12-19
+:by: Mircea Cosbuc
+
+* Fix deleting reactions
+
 3.0.0
 :release-date: 2018-12-19
 :by: Mircea Cosbuc
