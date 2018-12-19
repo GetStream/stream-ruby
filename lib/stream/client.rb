@@ -47,7 +47,7 @@ module Stream
           re = Stream::STREAM_URL_IO_RE
         end
         raise ArgumentError, 'empty api_key parameter and missing or invalid STREAM_URL env variable' unless re
-        
+
         matches = re.match(ENV['STREAM_URL'])
         api_key = matches['key']
         api_secret = matches['secret']
@@ -81,8 +81,28 @@ module Stream
       Stream::Feed.new(self, feed_slug, user_id)
     end
 
+    # Creates a user token
+    #
+    # @deprecated Use Client#create_user_token instead
+    #
+    # @param [string] user_id the user_if of this token (e.g. User42)
+    # @param [hash] extra_data additional token data
+    #
+    # @return [string]
+    #
     def create_user_session_token(user_id, extra_data = {})
-      return Stream::Signer.create_user_session_token(user_id, extra_data, api_secret)
+      create_user_token(user_id, extra_data)
+    end
+
+    # Creates a user token
+    #
+    # @param [string] user_id the user_if of this token (e.g. User42)
+    # @param [hash] extra_data additional token data
+    #
+    # @return [string]
+    #
+    def create_user_token(user_id, extra_data = {})
+      return Stream::Signer.create_user_token(user_id, extra_data, api_secret)
     end
 
     def personalization

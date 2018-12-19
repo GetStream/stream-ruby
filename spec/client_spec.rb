@@ -28,7 +28,11 @@ describe Stream::Client do
     user_token.should eq 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlciJ9.vSdu-exEFUWts57olfk9X_I1CytXuXrRF7A0LpQmoaM'
     payload = JWT.decode(user_token, 'secret', 'HS256')
     payload[0]['user_id'].should eq 'user'
-    user_token = client.create_user_session_token('user', {'client'=> 'ruby', 'testing'=> true})
+    user_token = client.create_user_token('user')
+    user_token.should eq 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlciJ9.vSdu-exEFUWts57olfk9X_I1CytXuXrRF7A0LpQmoaM'
+    payload = JWT.decode(user_token, 'secret', 'HS256')
+    payload[0]['user_id'].should eq 'user'
+    user_token = client.create_user_token('user', {'client'=> 'ruby', 'testing'=> true})
     user_token.should eq 'eyJhbGciOiJIUzI1NiJ9.eyJjbGllbnQiOiJydWJ5IiwidGVzdGluZyI6dHJ1ZSwidXNlcl9pZCI6InVzZXIifQ.cDEffbaTeBO6HWH602wHA6RCKTo5K0gFR50vzfQdW8k'
     payload = JWT.decode(user_token, 'secret', 'HS256')
     payload[0]['user_id'].should eq 'user'
