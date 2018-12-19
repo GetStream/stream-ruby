@@ -14,17 +14,15 @@ module Stream
     attr_reader :app_id
     attr_reader :client_options
 
-    if RUBY_VERSION.to_f >= 2.1
-      require 'stream/batch'
-      require 'stream/personalization'
-      require 'stream/collections'
-      require 'stream/activities'
-      require 'stream/reactions'
-      require 'stream/users'
+    require 'stream/batch'
+    require 'stream/personalization'
+    require 'stream/collections'
+    require 'stream/activities'
+    require 'stream/reactions'
+    require 'stream/users'
 
-      include Stream::Batch
-      include Stream::Activities
-    end
+    include Stream::Batch
+    include Stream::Activities
 
     #
     # initializes a Stream API Client
