@@ -21,7 +21,8 @@ module Stream
       unless activity_copy_limit.nil?
         query_params['activity_copy_limit'] = activity_copy_limit
       end
-      make_signed_request(:post, '/follow_many/', query_params, follows)
+      signature = Stream::Signer.create_jwt_token('follower', '*', @api_secret, '*')
+      make_request(:post, '/follow_many/', signature, query_params, follows)
     end
 
     #
@@ -41,9 +42,10 @@ module Stream
     # @client.unfollow_many(unfollows)
     #
     def unfollow_many(unfollows)
-      make_signed_request(:post, '/unfollow_many/', {}, unfollows)
+      signature = Stream::Signer.create_jwt_token('follower', '*', @api_secret, '*')
+      make_request(:post, '/unfollow_many/', signature, {}, unfollows)
     end
-    
+
     #
     # Adds an activity to many feeds in one single request
     #
@@ -57,7 +59,8 @@ module Stream
         :feeds => feeds,
         :activity => activity_data
       }
-      make_signed_request(:post, '/feed/add_to_many/', {}, data)
+      signature = Stream::Signer.create_jwt_token('feed', '*', @api_secret, '*')
+      make_request(:post, '/feed/add_to_many/', signature, {}, data)
     end
   end
 end

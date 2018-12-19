@@ -14,17 +14,15 @@ module Stream
     attr_reader :app_id
     attr_reader :client_options
 
-    if RUBY_VERSION.to_f >= 2.1
-      require 'stream/batch'
-      require 'stream/signedrequest'
-      require 'stream/personalization'
-      require 'stream/collections'
-      require 'stream/activities'
+    require 'stream/batch'
+    require 'stream/personalization'
+    require 'stream/collections'
+    require 'stream/activities'
+    require 'stream/reactions'
+    require 'stream/users'
 
-      include Stream::SignedRequest
-      include Stream::Batch
-      include Stream::Activities
-    end
+    include Stream::Batch
+    include Stream::Activities
 
     #
     # initializes a Stream API Client
@@ -38,6 +36,7 @@ module Stream
     #   Stream::Client.new('my_key', 'my_secret', 'my_app_id', :location => 'us-east')
     #
     def initialize(api_key = '', api_secret = '', app_id = nil, opts = {})
+
       if api_key.nil? || api_key.empty?
         env_url = ENV['STREAM_URL']
         if env_url =~ Stream::STREAM_URL_COM_RE
@@ -46,7 +45,7 @@ module Stream
           re = Stream::STREAM_URL_IO_RE
         end
         raise ArgumentError, 'empty api_key parameter and missing or invalid STREAM_URL env variable' unless re
-        
+
         matches = re.match(ENV['STREAM_URL'])
         api_key = matches['key']
         api_secret = matches['secret']
@@ -77,12 +76,31 @@ module Stream
     # @return [Stream::Feed]
     #
     def feed(feed_slug, user_id)
-      token = @signer.sign(feed_slug, user_id)
-      Stream::Feed.new(self, feed_slug, user_id, token)
+      Stream::Feed.new(self, feed_slug, user_id)
     end
 
+    # Creates a user token
+    #
+    # @deprecated Use Client#create_user_token instead
+    #
+    # @param [string] user_id the user_if of this token (e.g. User42)
+    # @param [hash] extra_data additional token data
+    #
+    # @return [string]
+    #
     def create_user_session_token(user_id, extra_data = {})
-      return Stream::Signer.create_user_session_token(user_id, extra_data, api_secret)
+      create_user_token(user_id, extra_data)
+    end
+
+    # Creates a user token
+    #
+    # @param [string] user_id the user_if of this token (e.g. User42)
+    # @param [hash] extra_data additional token data
+    #
+    # @return [string]
+    #
+    def create_user_token(user_id, extra_data = {})
+      return Stream::Signer.create_user_token(user_id, extra_data, api_secret)
     end
 
     def personalization
@@ -91,6 +109,14 @@ module Stream
 
     def collections
       CollectionsClient.new(api_key, api_secret, app_id, client_options)
+    end
+
+    def reactions
+      ReactionsClient.new(api_key, api_secret, app_id, client_options)
+    end
+
+    def users
+      UsersClient.new(api_key, api_secret, app_id, client_options)
     end
 
     def update_activity(activity)
