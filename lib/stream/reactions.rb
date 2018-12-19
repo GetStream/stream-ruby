@@ -27,7 +27,7 @@ module Stream
 
     def delete(reaction_id)
       uri = "/reaction/#{reaction_id}/"
-      make_reaction_request(:delete, {}, data, :endpoint => uri)
+      make_reaction_request(:delete, {}, {}, :endpoint => uri)
     end
 
     def add_child(kind, parent_id, user_id, data: nil, target_feeds: nil)

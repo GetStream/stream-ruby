@@ -759,6 +759,11 @@ describe 'Integration tests' do
 
         response["parent"].should eq create_response["id"]
       end
+      example "delete reaction" do
+        reaction = @client.reactions.add("like", @activity["id"], "jim")
+        @client.reactions.delete(reaction['id'])
+        expect{@client.reactions.get(reaction['id'])}.to raise_error Stream::StreamApiResponseException
+      end
       example "filter reactions" do
         parent = @client.reactions.add("like", @activity["id"], "jim")
         child = @client.reactions.add_child("like", parent["id"], "juan")
