@@ -11,12 +11,11 @@ You can sign up for a Stream account at https://getstream.io/get_started.
 
 #### Ruby version requirements and support
 
-This API Client project requires Ruby 2.2.8 at a minimum. We will support the following versions:
-- 2.2.8
-- 2.3.1
-- 2.3.5
-- 2.4.2
-- 2.5.1
+This API Client project requires Ruby 2.2.10 at a minimum. We will support the following versions:
+- 2.2.10
+- 2.3.8
+- 2.4.5
+- 2.5.3
 
 See the [Travis configuration](.travis.yml) for details of how it is built and tested.
 
@@ -156,6 +155,6 @@ client.add_to_many(activity, feeds)
 
 ### Copyright and License Information
 
-Copyright (c) 2014-2017 Stream.io Inc, and individual contributors. All rights reserved.
+Copyright (c) 2014-2018 Stream.io Inc, and individual contributors. All rights reserved.
 
 See the file "LICENSE" for information on the history of this software, terms & conditions for usage, and a DISCLAIMER OF ALL WARRANTIES.

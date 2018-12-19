@@ -2,6 +2,16 @@
  Change history
 ================
 
+3.0.0
+:release-date: 2018-12-19
+:by: Mircea Cosbuc
+
+* Removed HTTP signatures based authentication
+* Use JWT authentication for all endpoints
+* Add support for users
+* Add support for reactions
+* Add support for enrichment of feeds
+
 2.11.1
 ======
 :release-date: 2018-10-30
