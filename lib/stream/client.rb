@@ -143,7 +143,6 @@ module Stream
     def make_request(method, relative_url, signature, params = {}, data = {}, headers = {})
       headers['Authorization'] = signature
       headers['stream-auth-type'] = 'jwt'
-
       get_http_client.make_http_request(method, relative_url, make_query_params(params), data, headers)
     end
 
