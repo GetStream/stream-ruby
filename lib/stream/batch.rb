@@ -8,13 +8,11 @@ module Stream
     # @return [nil]
     #
     # @example
-    #
-    #
-    # follows = [
-    #   {:source => 'flat:1', :target => 'user:1'},
-    #   {:source => 'flat:1', :target => 'user:3'}
-    # ]
-    # @client.follow_many(follows)
+    #   follows = [
+    #     {:source => 'flat:1', :target => 'user:1'},
+    #     {:source => 'flat:1', :target => 'user:3'}
+    #   ]
+    #   @client.follow_many(follows)
     #
     def follow_many(follows, activity_copy_limit = nil)
       query_params = {}
@@ -33,13 +31,11 @@ module Stream
     # return [nil]
     #
     # @example
-    #
-    #
-    # unfollows = [
-    #   {source: 'user:1', target: 'timeline:1'},
-    #   {source: 'user:2', target: 'timeline:2', keep_history: false}
-    # ]
-    # @client.unfollow_many(unfollows)
+    #   unfollows = [
+    #     {source: 'user:1', target: 'timeline:1'},
+    #     {source: 'user:2', target: 'timeline:2', keep_history: false}
+    #   ]
+    #   @client.unfollow_many(unfollows)
     #
     def unfollow_many(unfollows)
       signature = Stream::Signer.create_jwt_token('follower', '*', @api_secret, '*')

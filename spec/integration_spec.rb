@@ -611,7 +611,7 @@ describe 'Integration tests' do
       end
 
       example 'partial update' do
-        activity = @feed42.add_activity({
+        activityA = @feed42.add_activity({
           actor: "bob",
           verb: "does",
           object: "something",
@@ -623,11 +623,25 @@ describe 'Integration tests' do
             color: "blue",
           }
         })
-        activity.delete("duration")
+        activityA.delete("duration")
+        activityB = @feed42.add_activity({
+          actor: "bob",
+          verb: "eats",
+          object: "nothing",
+          foreign_id: "bob-eats-stuff-#{Time.now.to_i}",
+          time: DateTime.now.to_s,
+          product: {
+            name: "cheetos",
+            price: 0.99,
+            color: "orange",
+          },
+          popularity: 42,
+        })
+        activityB.delete("duration")
 
         # by id
         updated_activity = @client.activity_partial_update(
-          id: activity["id"],
+          id: activityA["id"],
           set: {
             "product.name": "boots",
             "product.price": 7.99,
@@ -639,7 +653,7 @@ describe 'Integration tests' do
           ]
         )
         updated_activity.delete("duration")
-        expected = activity
+        expected = activityA
         expected["product"] = {
           "name" => "boots",
           "price" => 7.99,
@@ -654,8 +668,8 @@ describe 'Integration tests' do
 
         # by foreign id and timestamp
         updated_activity = @client.activity_partial_update(
-          foreign_id: activity["foreign_id"],
-          time: activity["time"],
+          foreign_id: activityA["foreign_id"],
+          time: activityA["time"],
           set: {
             "foo.bar.baz": 42,
             "popularity": 9000
@@ -675,6 +689,81 @@ describe 'Integration tests' do
         }
         expected["popularity"] = 9000
         updated_activity.should eq(expected)
+
+        # in batch
+        response = @client.batch_activity_partial_update([
+          {
+            id: activityA["id"],
+            set: {
+              "product.name": "boots",
+              "product.price": 13.99,
+              "extra": "left"
+            },
+            unset: ["foo"]
+          },
+          {
+            id: activityB["id"],
+            set: {
+              "product.price": 23.99,
+              "extra": "right",
+            },
+            unset: ["popularity"]
+          }
+        ])
+        response["activities"].length.should eq 2
+        activities = @client.get_activities(ids: [activityA["id"]])
+        product = {
+          "name" => "boots",
+          "price" => 13.99
+        }
+        activities["results"][0]["product"].should eq product
+        activities["results"][0]["extra"].should eq "left"
+        expect(activities["results"][0]).not_to include("foo")
+        activities = @client.get_activities(ids: [activityB["id"]])
+        product = {
+          "name" => "cheetos",
+          "color" => "orange",
+          "price" => 23.99
+        }
+        activities["results"][0]["product"].should eq product
+        activities["results"][0]["extra"].should eq "right"
+        expect(activities["results"][0]).not_to include("popularity")
+
+        response = @client.batch_activity_partial_update([
+          {
+            foreign_id: activityA["foreign_id"],
+            time: activityA["time"],
+            set: {
+              "product.name": "trainers",
+              "product.price": 133.99,
+            },
+            unset: ["extra"]
+          },
+          {
+            foreign_id: activityB["foreign_id"],
+            time: activityB["time"],
+            set: {
+              "product.price": 3.99,
+            },
+            unset: ["extra"]
+          }
+        ])
+        response["activities"].length.should eq 2
+        activities = @client.get_activities(ids: [activityA["id"]])
+        product = {
+          "name" => "trainers",
+          "price" => 133.99
+        }
+        activities["results"][0]["product"].should eq product
+        expect(activities["results"][0]).not_to include("extra")
+        activities = @client.get_activities(ids: [activityB["id"]])
+        product = {
+          "name" => "cheetos",
+          "color" => "orange",
+          "price" => 3.99
+        }
+        activities["results"][0]["product"].should eq product
+        expect(activities["results"][0]).not_to include("extra")
       end
     end
 
