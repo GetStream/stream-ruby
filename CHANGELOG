@@ -2,6 +2,12 @@
  Change history
 ================
 
+3.1.0
+:release-date: 2019-01-22
+:by: Mircea Cosbuc
+
+* Add support for batch activity partial update
+
 3.0.1
 :release-date: 2018-12-19
 :by: Mircea Cosbuc
