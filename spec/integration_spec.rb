@@ -869,8 +869,8 @@ describe 'Integration tests' do
         response["results"][0].should eq comment
 
         response = @client.reactions.filter(:kind => "like", :activity_id => @activity["id"], :id_lte => child["id"])
-        response["results"].length.should eq 2
-        response["results"][0].should eq child
+        response["results"].length.should eq 1
+        response["results"][0]["latest_children"]["like"][0].should eq child
 
         response = @client.reactions.filter(:kind => "comment", :activity_id => @activity["id"])
         response["results"][0].should eq comment
