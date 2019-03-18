@@ -1,5 +1,4 @@
-stream-ruby
-===========
+# stream-ruby
 
 [![Build Status](https://travis-ci.org/GetStream/stream-ruby.svg?branch=master)](https://travis-ci.org/GetStream/stream-ruby) [![Gem Version](https://badge.fury.io/rb/stream-ruby.svg)](http://badge.fury.io/rb/stream-ruby)
 
@@ -12,10 +11,12 @@ You can sign up for a Stream account at https://getstream.io/get_started.
 #### Ruby version requirements and support
 
 This API Client project requires Ruby 2.2.10 at a minimum. We will support the following versions:
+
 - 2.2.10
 - 2.3.8
 - 2.4.5
-- 2.5.3
+- 2.5.5
+- 2.6.2
 
 See the [Travis configuration](.travis.yml) for details of how it is built and tested.
 
