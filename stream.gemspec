@@ -10,7 +10,6 @@ Gem::Specification.new do |gem|
   gem.email = 'support@getstream.io'
   gem.homepage = 'http://github.com/GetStream/stream-ruby'
   gem.authors = ['Tommaso Barbugli', 'Ian Douglas', 'Federico Ruggi']
-  gem.has_rdoc = true
   gem.extra_rdoc_files = %w(README.md LICENSE)
   gem.files = Dir['lib/**/*']
   gem.license = 'BSD-3-Clause'
