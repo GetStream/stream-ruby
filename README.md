@@ -10,13 +10,7 @@ You can sign up for a Stream account at https://getstream.io/get_started.
 
 #### Ruby version requirements and support
 
-This API Client project requires Ruby 2.2.10 at a minimum. We will support the following versions:
-
-- 2.2.10
-- 2.3.8
-- 2.4.5
-- 2.5.5
-- 2.6.2
+This API Client project requires Ruby 2.5.x at a minimum.
 
 See the [Travis configuration](.travis.yml) for details of how it is built and tested.
 
@@ -81,7 +75,7 @@ client.update_activities([activity_data])
 user_feed_1.remove_activity('e561de8f-00f1-11e4-b400-0cc47a024be0')
 
 # Remove activities by their foreign_id
-user_feed_1.remove_activity('tweet:1', foreign_id = true)
+user_feed_1.remove_activity('tweet:1', foreign_id: true)
 
 # Follow another feed
 user_feed_1.follow('flat', '42')
@@ -152,6 +146,9 @@ activity = {
   actor: 'User:2', verb: 'pin', object: 'Place:42', target: 'Board:1'
 }
 client.add_to_many(activity, feeds)
+
+# Retrive open graph information
+client.og('https://google.com')
 ```
 
 ### Copyright and License Information

@@ -5,8 +5,8 @@ require 'stream/signer'
 require 'stream/url'
 
 module Stream
-  STREAM_URL_COM_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>stream-io-api\.com)\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
-  STREAM_URL_IO_RE = %r{https\:\/\/(?<key>\w+)\:(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>getstream\.io)\/[\w=-\?%&]+app_id=(?<app_id>\d+)}i
+  STREAM_URL_COM_RE = %r{https://(?<key>\w+):(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>stream-io-api\.com)/[\w=-?%&]+app_id=(?<app_id>\d+)}i.freeze
+  STREAM_URL_IO_RE = %r{https://(?<key>\w+):(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>getstream\.io)/[\w=-?%&]+app_id=(?<app_id>\d+)}i.freeze
 
   class Client
     attr_reader :api_key
@@ -36,7 +36,6 @@ module Stream
     #   Stream::Client.new('my_key', 'my_secret', 'my_app_id', :location => 'us-east')
     #
     def initialize(api_key = '', api_secret = '', app_id = nil, opts = {})
-
       if api_key.nil? || api_key.empty?
         env_url = ENV['STREAM_URL']
         if env_url =~ Stream::STREAM_URL_COM_RE
@@ -100,7 +99,7 @@ module Stream
     # @return [string]
     #
     def create_user_token(user_id, extra_data = {})
-      return Stream::Signer.create_user_token(user_id, extra_data, api_secret)
+      Stream::Signer.create_user_token(user_id, extra_data, api_secret)
     end
 
     def personalization
@@ -128,16 +127,21 @@ module Stream
       make_request(:post, '/activities/', auth_token, {}, 'activities' => activities)
     end
 
+    def og(uri)
+      auth_token = Stream::Signer.create_jwt_token('*', '*', @api_secret, '*')
+      make_request(:get, '/og', auth_token, { url: uri })
+    end
+
     def get_default_params
-      {:api_key => @api_key}
+      { api_key: @api_key }
     end
 
     def get_http_client
-      @http_client ||= StreamHTTPClient.new(url_generator)
+      @get_http_client ||= StreamHTTPClient.new(url_generator)
     end
 
     def make_query_params(params)
-      Hash[get_default_params.merge(params).sort_by {|k, v| k.to_s}]
+      Hash[get_default_params.merge(params).sort_by { |k, _v| k.to_s }]
     end
 
     def make_request(method, relative_url, signature, params = {}, data = {}, headers = {})
@@ -187,7 +191,7 @@ module Stream
 
       case response[:status].to_i
       when 200..203
-        return ::JSON.parse(response[:body])
+        ::JSON.parse(response[:body])
       end
     end
   end
@@ -196,16 +200,16 @@ module Stream
     def call(env)
       @app.call(env).on_complete do |response|
         case response[:status].to_i
-          when 200..203
-            return response
-          when 401
-            raise StreamApiResponseException, error_message(response, 'Bad feed')
-          when 403
-            raise StreamApiResponseException, error_message(response, 'Bad auth/headers')
-          when 404
-            raise StreamApiResponseException, error_message(response, 'url not found')
-          when 204...600
-            raise StreamApiResponseException, error_message(response, _build_error_message(response.body))
+        when 200..203
+          return response
+        when 401
+          raise StreamApiResponseException, error_message(response, 'Bad feed')
+        when 403
+          raise StreamApiResponseException, error_message(response, 'Bad auth/headers')
+        when 404
+          raise StreamApiResponseException, error_message(response, 'url not found')
+        when 204...600
+          raise StreamApiResponseException, error_message(response, _build_error_message(response.body))
         end
       end
     end
@@ -229,7 +233,7 @@ module Stream
     end
 
     def error_message(response, body = nil)
-      "#{response[:method].to_s.upcase} #{response[:url]}: #{[response[:status].to_s + ':', body].compact.join(' ')}"
+      "#{response[:method].to_s.upcase} #{response[:url]}: #{["#{response[:status]}:", body].compact.join(' ')}"
     end
   end
 end

@@ -13,7 +13,7 @@ module Stream
 
     def get(user_id)
       uri = "/user/#{user_id}/"
-      make_user_request(:get, {}, {}, :endpoint => uri)
+      make_user_request(:get, {}, {}, endpoint: uri)
     end
 
     def update(user_id, data: nil)
@@ -21,20 +21,18 @@ module Stream
         data: data
       }
       uri = "/user/#{user_id}/"
-      make_user_request(:put, {}, data, :endpoint => uri)
+      make_user_request(:put, {}, data, endpoint: uri)
     end
 
     def delete(user_id)
       uri = "/user/#{user_id}/"
-      make_user_request(:delete, {}, {}, :endpoint => uri)
+      make_user_request(:delete, {}, {}, endpoint: uri)
     end
 
     def create_reference(id)
-      _id = id
-      if id.respond_to?(:keys) and !id["id"].nil?
-        _id = id["id"]
-      end
-      "SU:#{_id}"
+      k = id
+      k = id['id'] if id.respond_to?(:keys) && !id['id'].nil?
+      "SU:#{k}"
     end
 
     private

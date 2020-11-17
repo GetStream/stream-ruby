@@ -13,7 +13,7 @@ module Stream
 
     def get(reaction_id)
       uri = "/reaction/#{reaction_id}/"
-      make_reaction_request(:get, {}, {}, :endpoint => uri)
+      make_reaction_request(:get, {}, {}, endpoint: uri)
     end
 
     def update(reaction_id, data: nil, target_feeds: nil)
@@ -22,12 +22,12 @@ module Stream
         target_feeds: target_feeds
       }
       uri = "/reaction/#{reaction_id}/"
-      make_reaction_request(:put, {}, data, :endpoint => uri)
+      make_reaction_request(:put, {}, data, endpoint: uri)
     end
 
     def delete(reaction_id)
       uri = "/reaction/#{reaction_id}/"
-      make_reaction_request(:delete, {}, {}, :endpoint => uri)
+      make_reaction_request(:delete, {}, {}, endpoint: uri)
     end
 
     def add_child(kind, parent_id, user_id, data: nil, target_feeds: nil)
@@ -42,36 +42,32 @@ module Stream
     end
 
     def filter(params = {})
-      lookup_field = ""
-      lookup_value = ""
-      kind = params.fetch(:kind, "")
+      field = ''
+      value = ''
+      kind = params.fetch(:kind, '')
       if params[:reaction_id]
-        lookup_field = "reaction_id"
-        lookup_value = params[:reaction_id]
+        field = 'reaction_id'
+        value = params[:reaction_id]
       elsif params[:activity_id]
-        lookup_field = "activity_id"
-        lookup_value = params[:activity_id]
+        field = 'activity_id'
+        value = params[:activity_id]
       elsif params[:user_id]
-        lookup_field = "user_id"
-        lookup_value = params[:user_id]
+        field = 'user_id'
+        value = params[:user_id]
       end
-      unless lookup_field.empty?
-        params.delete(lookup_field.to_sym)
-      end
-      if kind.nil? || kind.empty?
-        uri = "/reaction/#{lookup_field}/#{lookup_value}/"
-      else
-        uri = "/reaction/#{lookup_field}/#{lookup_value}/#{kind}/"
-      end
-      make_reaction_request(:get, params, {}, :endpoint => uri)
+      params.delete(field.to_sym) unless field.empty?
+      uri = if kind.nil? || kind.empty?
+              "/reaction/#{field}/#{value}/"
+            else
+              "/reaction/#{field}/#{value}/#{kind}/"
+            end
+      make_reaction_request(:get, params, {}, endpoint: uri)
     end
 
     def create_reference(id)
-      _id = id
-      if id.respond_to?(:keys) and !id["id"].nil?
-        _id = id["id"]
-      end
-      "SR:#{_id}"
+      k = id
+      k = id['id'] if id.respond_to?(:keys) && !id['id'].nil?
+      "SR:#{k}"
     end
 
     private

@@ -32,7 +32,7 @@ describe Stream::Client do
     user_token.should eq 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlciJ9.vSdu-exEFUWts57olfk9X_I1CytXuXrRF7A0LpQmoaM'
     payload = JWT.decode(user_token, 'secret', 'HS256')
     payload[0]['user_id'].should eq 'user'
-    user_token = client.create_user_token('user', {'client'=> 'ruby', 'testing'=> true})
+    user_token = client.create_user_token('user', { 'client' => 'ruby', 'testing' => true })
     user_token.should eq 'eyJhbGciOiJIUzI1NiJ9.eyJjbGllbnQiOiJydWJ5IiwidGVzdGluZyI6dHJ1ZSwidXNlcl9pZCI6InVzZXIifQ.cDEffbaTeBO6HWH602wHA6RCKTo5K0gFR50vzfQdW8k'
     payload = JWT.decode(user_token, 'secret', 'HS256')
     payload[0]['user_id'].should eq 'user'
@@ -92,7 +92,7 @@ describe Stream::Client do
 
   it 'wrong heroku vars' do
     ENV['STREAM_URL'] = 'https://thierry:pass@stream-io-api.com/?a=1'
-    expect {Stream::Client.new}.to raise_error(ArgumentError)
+    expect { Stream::Client.new }.to raise_error(ArgumentError)
   end
 
   it 'but overwriting environment variables should be possible' do
@@ -105,7 +105,7 @@ describe Stream::Client do
   end
 
   it 'should handle different api versions if specified' do
-    client = Stream::Client.new('1', '2', nil, :api_version => 'v2.345')
+    client = Stream::Client.new('1', '2', nil, api_version: 'v2.345')
     http_client = client.get_http_client
     http_client.conn.url_prefix.to_s.should eq 'https://api.stream-io-api.com/api/v2.345'
   end
@@ -117,13 +117,13 @@ describe Stream::Client do
   end
 
   it 'should handle overriding default hostname as api.getstream.io to test SNI' do
-    client = Stream::Client.new('1', '2', nil,api_hostname: 'getstream.io')
+    client = Stream::Client.new('1', '2', nil, api_hostname: 'getstream.io')
     http_client = client.get_http_client
     http_client.conn.url_prefix.to_s.should eq 'https://api.getstream.io/api/v1.0'
   end
 
   it 'should handle us-east location as api.stream-io-api.com' do
-    client = Stream::Client.new('1', '2', nil, :location => 'us-east')
+    client = Stream::Client.new('1', '2', nil, location: 'us-east')
     http_client = client.get_http_client
     http_client.conn.url_prefix.to_s.should eq 'https://us-east-api.stream-io-api.com/api/v1.0'
   end
@@ -135,7 +135,7 @@ describe Stream::Client do
   end
 
   it 'should be possible to change timeout' do
-    client = Stream::Client.new('1', '2', nil, :default_timeout => 5)
+    client = Stream::Client.new('1', '2', nil, default_timeout: 5)
     http_client = client.get_http_client
     http_client.conn.options[:timeout].should eq 5
   end

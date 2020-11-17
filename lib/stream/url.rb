@@ -7,10 +7,11 @@ module Stream
 
   class APIURLGenerator < URLGenerator
     def initialize(options)
+      super()
       @options = options
       location = make_location(options[:location])
-      location ||= "api"
-      api_version = options[:api_version] ? options[:api_version] : 'v1.0'
+      location ||= 'api'
+      api_version = options[:api_version] || 'v1.0'
       if ENV['STREAM_URL']
         uri = URI.parse(ENV['STREAM_URL'])
         scheme = uri.scheme
@@ -48,6 +49,7 @@ module Stream
 
   class PersonalizationURLGenerator < URLGenerator
     def initialize(options)
+      super()
       @options = options
       host = 'personalization.stream-io-api.com'
       @base_path = '/personalization/v1.0'

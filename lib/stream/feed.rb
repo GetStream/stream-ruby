@@ -8,13 +8,9 @@ module Stream
     attr_reader :user_id
 
     def initialize(client, feed_slug, user_id)
-      unless valid_feed_slug feed_slug
-        raise StreamInputData, 'feed_slug can only contain alphanumeric characters plus underscores'
-      end
+      raise StreamInputData, 'feed_slug can only contain alphanumeric characters plus underscores' unless valid_feed_slug feed_slug
 
-      unless valid_user_id user_id
-        raise StreamInputData, 'user_id can only contain alphanumeric characters plus underscores and dashes'
-      end
+      raise StreamInputData, 'user_id can only contain alphanumeric characters plus underscores and dashes' unless valid_user_id user_id
 
       @id = "#{feed_slug}:#{user_id}"
       @client = client
@@ -37,29 +33,19 @@ module Stream
     end
 
     def get(params = {})
-      if params[:enrich] or params[:reactions]
-        uri = "/enrich/feed/#{@feed_url}/"
-      else
-        uri = "/feed/#{@feed_url}/"
-      end
-      if params[:mark_read] && params[:mark_read].is_a?(Array)
-        params[:mark_read] = params[:mark_read].join(',')
-      end
-      if params[:mark_seen] && params[:mark_seen].is_a?(Array)
-        params[:mark_seen] = params[:mark_seen].join(',')
-      end
+      uri = if params[:enrich] || params[:reactions]
+              "/enrich/feed/#{@feed_url}/"
+            else
+              "/feed/#{@feed_url}/"
+            end
+      params[:mark_read] = params[:mark_read].join(',') if params[:mark_read]&.is_a?(Array)
+      params[:mark_seen] = params[:mark_seen].join(',') if params[:mark_seen]&.is_a?(Array)
       if params[:reactions].respond_to?(:keys)
-        if params[:reactions][:own]
-          params[:withOwnReactions] = true
-        end
-        if params[:reactions][:recent]
-          params[:withRecentReactions] = true
-        end
-        if params[:reactions][:counts]
-          params[:withReactionCounts] = true
-        end
+        params[:withOwnReactions] = true if params[:reactions][:own]
+        params[:withRecentReactions] = true if params[:reactions][:recent]
+        params[:withReactionCounts] = true if params[:reactions][:counts]
       end
-      [:enrich, :reactions].each { |k| params.delete(k) }
+      %i[enrich reactions].each { |k| params.delete(k) }
 
       auth_token = create_jwt_token('feed', 'read')
       @client.make_request(:get, uri, auth_token, params)
@@ -75,20 +61,20 @@ module Stream
 
     def add_activities(activities)
       uri = "/feed/#{@feed_url}/"
-      data = {:activities => activities}
+      data = { activities: activities }
       auth_token = create_jwt_token('feed', 'write')
 
       @client.make_request(:post, uri, auth_token, {}, data)
     end
 
-    def remove(activity_id, foreign_id = false)
+    def remove(activity_id, foreign_id: false)
       remove_activity(activity_id, foreign_id)
     end
 
-    def remove_activity(activity_id, foreign_id = false)
+    def remove_activity(activity_id, foreign_id: false)
       uri = "/feed/#{@feed_url}/#{activity_id}/"
       params = {}
-      params = {foreign_id: 1} if foreign_id
+      params = { foreign_id: 1 } if foreign_id
       auth_token = create_jwt_token('feed', 'delete')
 
       @client.make_request(:delete, uri, auth_token, params)
@@ -111,15 +97,9 @@ module Stream
         'time': time
       }
 
-      if !new_targets.nil?
-        data['new_targets'] = new_targets
-      end
-      if !added_targets.nil?
-        data['added_targets'] = added_targets
-      end
-      if !removed_targets.nil?
-        data['removed_targets'] = removed_targets
-      end
+      data['new_targets'] = new_targets unless new_targets.nil?
+      data['added_targets'] = added_targets unless added_targets.nil?
+      data['removed_targets'] = removed_targets unless removed_targets.nil?
       auth_token = create_jwt_token('feed_targets', 'write')
 
       @client.make_request(:post, uri, auth_token, {}, data)
@@ -127,12 +107,12 @@ module Stream
 
     def follow(target_feed_slug, target_user_id, activity_copy_limit = 300)
       uri = "/feed/#{@feed_url}/follows/"
-      activity_copy_limit = 0 if activity_copy_limit < 0
+      activity_copy_limit = 0 if activity_copy_limit.negative?
       activity_copy_limit = 1000 if activity_copy_limit > 1000
 
       follow_data = {
-          target: "#{target_feed_slug}:#{target_user_id}",
-          activity_copy_limit: activity_copy_limit
+        target: "#{target_feed_slug}:#{target_user_id}",
+        activity_copy_limit: activity_copy_limit
       }
       auth_token = create_jwt_token('follower', 'write')
 
@@ -142,8 +122,8 @@ module Stream
     def followers(offset = 0, limit = 25)
       uri = "/feed/#{@feed_url}/followers/"
       params = {
-          offset: offset,
-          limit: limit
+        offset: offset,
+        limit: limit
       }
       auth_token = create_jwt_token('follower', 'read')
 
@@ -153,16 +133,16 @@ module Stream
     def following(offset = 0, limit = 25, filter = [])
       uri = "/feed/#{@feed_url}/follows/"
       params = {
-          offset: offset,
-          limit: limit,
-          filter: filter.join(',')
+        offset: offset,
+        limit: limit,
+        filter: filter.join(',')
       }
       auth_token = create_jwt_token('follower', 'read')
 
       @client.make_request(:get, uri, auth_token, params)
     end
 
-    def unfollow(target_feed_slug, target_user_id, keep_history = false)
+    def unfollow(target_feed_slug, target_user_id, keep_history: false)
       uri = "/feed/#{@feed_url}/follows/#{target_feed_slug}:#{target_user_id}/"
       auth_token = create_jwt_token('follower', 'delete')
       params = {}

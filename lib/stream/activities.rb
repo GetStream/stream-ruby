@@ -1,6 +1,5 @@
 module Stream
   module Activities
-
     #
     # Get activities directly, via ID or Foreign ID + timestamp
     #
@@ -28,13 +27,13 @@ module Stream
       if params[:foreign_id_times]
         foreign_ids = []
         timestamps = []
-        params[:foreign_id_times].each{|e|
+        params[:foreign_id_times].each do |e|
           foreign_ids << e[:foreign_id]
           timestamps << e[:time]
-        }
+        end
         params = {
           foreign_ids: foreign_ids,
-          timestamps: timestamps,
+          timestamps: timestamps
         }
       end
       signature = Stream::Signer.create_jwt_token('activities', '*', @api_secret, '*')
@@ -142,8 +141,8 @@ module Stream
     #   ])
     #
     def batch_activity_partial_update(changes = [])
-        signature = Stream::Signer.create_jwt_token('activities', '*', @api_secret, '*')
-        make_request(:post, '/activity/', signature, {}, {:changes => changes})
+      signature = Stream::Signer.create_jwt_token('activities', '*', @api_secret, '*')
+      make_request(:post, '/activity/', signature, {}, { changes: changes })
     end
   end
 end
