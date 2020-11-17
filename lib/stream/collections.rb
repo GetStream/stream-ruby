@@ -4,15 +4,15 @@ module Stream
       data = {
         id: id,
         user_id: user_id,
-        data: collection_data,
+        data: collection_data
       }
       uri = "/collections/#{collection_name}/"
-      make_collection_request(:post, {}, data, :endpoint => uri)
+      make_collection_request(:post, {}, data, endpoint: uri)
     end
 
     def get(collection_name, id)
       uri = "collections/#{collection_name}/#{id}/"
-      make_collection_request(:get, {}, {}, :endpoint => uri)
+      make_collection_request(:get, {}, {}, endpoint: uri)
     end
 
     def update(collection_name, id, data: nil)
@@ -20,12 +20,12 @@ module Stream
         data: data
       }
       uri = "collections/#{collection_name}/#{id}/"
-      make_collection_request(:put, {}, data, :endpoint => uri)
+      make_collection_request(:put, {}, data, endpoint: uri)
     end
 
     def delete(collection_name, id)
       uri = "collections/#{collection_name}/#{id}/"
-      make_collection_request(:delete, {}, {}, :endpoint => uri)
+      make_collection_request(:delete, {}, {}, endpoint: uri)
     end
 
     def upsert(collection, objects = [])
@@ -53,11 +53,9 @@ module Stream
     end
 
     def create_reference(collection, id)
-      _id = id
-      if id.respond_to?(:keys) and !id["id"].nil?
-        _id = id["id"]
-      end
-      "SO:#{collection}:#{_id}"
+      k = id
+      k = id['id'] if id.respond_to?(:keys) && !id['id'].nil?
+      "SO:#{collection}:#{k}"
     end
 
     private

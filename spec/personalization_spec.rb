@@ -16,13 +16,13 @@ describe Stream::PersonalizationClient do
       data: data
     }
     expect(@personalization).to receive(:make_request)
-        .with(
-          expected[:method],
-          expected[:endpoint],
-          expected[:auth],
-          expected[:params],
-          expected[:data]
-        )
+      .with(
+        expected[:method],
+        expected[:endpoint],
+        expected[:auth],
+        expected[:params],
+        expected[:data]
+      )
   end
 
   describe :get do

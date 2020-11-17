@@ -16,9 +16,7 @@ module Stream
     #
     def follow_many(follows, activity_copy_limit = nil)
       query_params = {}
-      unless activity_copy_limit.nil?
-        query_params['activity_copy_limit'] = activity_copy_limit
-      end
+      query_params['activity_copy_limit'] = activity_copy_limit unless activity_copy_limit.nil?
       signature = Stream::Signer.create_jwt_token('follower', '*', @api_secret, '*')
       make_request(:post, '/follow_many/', signature, query_params, follows)
     end
@@ -52,8 +50,8 @@ module Stream
     #
     def add_to_many(activity_data, feeds)
       data = {
-        :feeds => feeds,
-        :activity => activity_data
+        feeds: feeds,
+        activity: activity_data
       }
       signature = Stream::Signer.create_jwt_token('feed', '*', @api_secret, '*')
       make_request(:post, '/feed/add_to_many/', signature, {}, data)
