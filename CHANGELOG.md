@@ -1,3 +1,6 @@
+## 2020-01-05 - 4.0.1
+- Relax versions on faraday/jwt dependencies
+
 ## 2020-11-18 - 4.0.0
 - Update min Ruby version to 2.5 and add 2.7 into CI
 - Add open graph scraper
