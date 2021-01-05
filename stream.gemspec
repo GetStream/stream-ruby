@@ -14,8 +14,8 @@ Gem::Specification.new do |gem|
   gem.files = Dir['lib/**/*']
   gem.license = 'BSD-3-Clause'
   gem.required_ruby_version = '>=2.5.0'
-  gem.add_dependency 'faraday', ['>= 0.10.0', '< 1.0']
-  gem.add_dependency 'jwt', ['>= 2.1.0', '~> 2.1']
+  gem.add_dependency 'faraday'
+  gem.add_dependency 'jwt'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'simplecov'
