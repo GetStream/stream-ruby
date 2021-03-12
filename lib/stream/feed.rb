@@ -68,7 +68,7 @@ module Stream
     end
 
     def remove(activity_id, foreign_id: false)
-      remove_activity(activity_id, foreign_id)
+      remove_activity(activity_id, foreign_id: foreign_id)
     end
 
     def remove_activity(activity_id, foreign_id: false)
