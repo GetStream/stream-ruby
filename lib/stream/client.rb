@@ -141,7 +141,7 @@ module Stream
     end
 
     def make_query_params(params)
-      Hash[get_default_params.merge(params).sort_by { |k, _v| k.to_s }]
+      get_default_params.merge(params).sort_by { |k, _v| k.to_s }.to_h
     end
 
     def make_request(method, relative_url, signature, params = {}, data = {}, headers = {})

@@ -93,8 +93,8 @@ module Stream
     def update_activity_to_targets(foreign_id, time, new_targets: nil, added_targets: nil, removed_targets: nil)
       uri = "/feed_targets/#{@feed_url}/activity_to_targets/"
       data = {
-        'foreign_id': foreign_id,
-        'time': time
+        foreign_id: foreign_id,
+        time: time
       }
 
       data['new_targets'] = new_targets unless new_targets.nil?
