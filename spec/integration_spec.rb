@@ -651,8 +651,8 @@ describe 'Integration tests' do
           set: {
             "product.name": 'boots',
             "product.price": 7.99,
-            "popularity": 1000,
-            "foo": { "bar": { "baz": 'qux' } }
+            popularity: 1000,
+            foo: { bar: { baz: 'qux' } }
           },
           unset: [
             'product.color'
@@ -678,7 +678,7 @@ describe 'Integration tests' do
           time: activity_a['time'],
           set: {
             "foo.bar.baz": 42,
-            "popularity": 9000
+            popularity: 9000
           },
           unset: [
             'product.price'
@@ -703,7 +703,7 @@ describe 'Integration tests' do
                                                              set: {
                                                                "product.name": 'boots',
                                                                "product.price": 13.99,
-                                                               "extra": 'left'
+                                                               extra: 'left'
                                                              },
                                                              unset: ['foo']
                                                            },
@@ -711,7 +711,7 @@ describe 'Integration tests' do
                                                              id: activity_b['id'],
                                                              set: {
                                                                "product.price": 23.99,
-                                                               "extra": 'right'
+                                                               extra: 'right'
                                                              },
                                                              unset: ['popularity']
                                                            }
@@ -912,7 +912,7 @@ describe 'Integration tests' do
         response['results'][0]['object'].should eq bear
       end
       example 'user enrichment' do
-        user = @client.users.add(SecureRandom.uuid, data: { "name": 'john' })
+        user = @client.users.add(SecureRandom.uuid, data: { name: 'john' })
         user.delete('duration')
 
         @feed42.add_activity({ actor: @client.users.create_reference(user['id']), verb: 'chase', object: 'car:43' })
