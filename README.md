@@ -1,6 +1,6 @@
 # stream-ruby
 
-[![Build Status](https://travis-ci.org/GetStream/stream-ruby.svg?branch=master)](https://travis-ci.org/GetStream/stream-ruby) [![Gem Version](https://badge.fury.io/rb/stream-ruby.svg)](http://badge.fury.io/rb/stream-ruby)
+[![build](https://github.com/GetStream/stream-ruby/workflows/build/badge.svg)](https://github.com/GetStream/stream-ruby/actions) [![Gem Version](https://badge.fury.io/rb/stream-ruby.svg)](http://badge.fury.io/rb/stream-ruby)
 
 [stream-ruby](https://github.com/GetStream/stream-ruby) is the official Ruby client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
 
