@@ -1,3 +1,6 @@
+## 2020-03-15 - 4.1.0
+- Add Ruby 3.x support
+
 ## 2020-03-15 - 4.0.2
 - Fix delete activity call
 - Move to github actions
