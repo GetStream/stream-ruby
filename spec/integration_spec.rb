@@ -822,8 +822,8 @@ describe 'Integration tests' do
       example 'add reaction' do
         response = @client.reactions.add('like', @activity['id'], 'jim')
         expect(response).to include('id', 'kind', 'activity_id', 'user_id',
-                                'data', 'parent', 'latest_children',
-                                'children_counts', 'duration', 'created_at', 'updated_at')
+                                    'data', 'parent', 'latest_children',
+                                    'children_counts', 'duration', 'created_at', 'updated_at')
         expect(response['activity_id']).to eq @activity['id']
         expect(response['user_id']).to eq 'jim'
         expect(response['kind']).to eq 'like'
@@ -832,8 +832,8 @@ describe 'Integration tests' do
         create_response = @client.reactions.add('like', @activity['id'], 'jim')
         response = @client.reactions.get(create_response['id'])
         expect(response).to include('id', 'kind', 'activity_id', 'user_id',
-                                'data', 'parent', 'latest_children',
-                                'children_counts', 'duration', 'created_at', 'updated_at')
+                                    'data', 'parent', 'latest_children',
+                                    'children_counts', 'duration', 'created_at', 'updated_at')
         expect(response['activity_id']).to eq @activity['id']
         expect(response['user_id']).to eq 'jim'
         expect(response['kind']).to eq 'like'
