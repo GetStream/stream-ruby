@@ -18,7 +18,7 @@ describe 'Integration tests' do
   context 'test client' do
     example 'posting an activity' do
       response = @feed42.add_activity(@test_activity)
-      response.should include('id', 'actor', 'verb', 'object', 'target', 'time')
+      expect(response).to include('id', 'actor', 'verb', 'object', 'target', 'time')
     end
 
     example 'posting many activities' do
@@ -29,7 +29,7 @@ describe 'Integration tests' do
       actors = %w[tommaso thierry]
       @feed42.add_activities(activities)
       response = @feed42.get(limit: 5)['results']
-      [response[0]['actor'], response[1]['actor']].should =~ actors
+      expect([response[0]['actor'], response[1]['actor']]).to match_array(actors)
     end
 
     example 'mark_seen=true should not mark read' do
@@ -38,17 +38,17 @@ describe 'Integration tests' do
       feed.add_activity(actor: 2, verb: 'share', object: 1)
       feed.add_activity(actor: 3, verb: 'run', object: 1)
       response = feed.get(limit: 5)
-      response['results'][0]['is_seen'].should eq false
-      response['results'][1]['is_seen'].should eq false
-      response['results'][2]['is_seen'].should eq false
+      expect(response['results'][0]['is_seen']).to be false
+      expect(response['results'][1]['is_seen']).to be false
+      expect(response['results'][2]['is_seen']).to be false
       feed.get(limit: 5, mark_seen: true)
       response = feed.get(limit: 5)
-      response['results'][0]['is_seen'].should eq true #####
-      response['results'][1]['is_seen'].should eq true #
-      response['results'][2]['is_seen'].should eq true
-      response['results'][0]['is_read'].should eq false
-      response['results'][1]['is_read'].should eq false
-      response['results'][2]['is_read'].should eq false
+      expect(response['results'][0]['is_seen']).to be true #####
+      expect(response['results'][1]['is_seen']).to be true #
+      expect(response['results'][2]['is_seen']).to be true
+      expect(response['results'][0]['is_read']).to be false
+      expect(response['results'][1]['is_read']).to be false
+      expect(response['results'][2]['is_read']).to be false
     end
 
     example 'mark_read=true should not mark seen' do
@@ -57,17 +57,17 @@ describe 'Integration tests' do
       feed.add_activity(actor: 2, verb: 'share', object: 1)
       feed.add_activity(actor: 3, verb: 'run', object: 1)
       response = feed.get(limit: 5)
-      response['results'][0]['is_read'].should eq false
-      response['results'][1]['is_read'].should eq false
-      response['results'][2]['is_read'].should eq false
+      expect(response['results'][0]['is_read']).to be false
+      expect(response['results'][1]['is_read']).to be false
+      expect(response['results'][2]['is_read']).to be false
       feed.get(limit: 5, mark_read: true)
       response = feed.get(limit: 5)
-      response['results'][0]['is_read'].should eq true ##
-      response['results'][1]['is_read'].should eq true ###
-      response['results'][2]['is_read'].should eq true
-      response['results'][0]['is_seen'].should eq false
-      response['results'][1]['is_seen'].should eq false
-      response['results'][2]['is_seen'].should eq false
+      expect(response['results'][0]['is_read']).to be true ##
+      expect(response['results'][1]['is_read']).to be true ###
+      expect(response['results'][2]['is_read']).to be true
+      expect(response['results'][0]['is_seen']).to be false
+      expect(response['results'][1]['is_seen']).to be false
+      expect(response['results'][2]['is_seen']).to be false
     end
 
     example 'set feed as read' do
@@ -76,14 +76,14 @@ describe 'Integration tests' do
       feed.add_activity(actor: 2, verb: 'share', object: 1)
       feed.add_activity(actor: 3, verb: 'run', object: 1)
       response = feed.get(limit: 5)
-      response['results'][0]['is_read'].should eq false
-      response['results'][1]['is_read'].should eq false
-      response['results'][2]['is_read'].should eq false
+      expect(response['results'][0]['is_read']).to be false
+      expect(response['results'][1]['is_read']).to be false
+      expect(response['results'][2]['is_read']).to be false
       feed.get(limit: 5, mark_read: true)
       response = feed.get(limit: 5)
-      response['results'][0]['is_read'].should eq true
-      response['results'][1]['is_read'].should eq true
-      response['results'][2]['is_read'].should eq true
+      expect(response['results'][0]['is_read']).to be true
+      expect(response['results'][1]['is_read']).to be true
+      expect(response['results'][2]['is_read']).to be true
     end
 
     example 'set activities as read' do
@@ -95,9 +95,9 @@ describe 'Integration tests' do
       ids = response['results'].collect { |a| a['id'] }
       feed.get(limit: 5, mark_read: ids)
       response = feed.get(limit: 5)
-      response['results'][0]['is_read'].should eq true
-      response['results'][1]['is_read'].should eq true
-      response['results'][2]['is_read'].should eq false
+      expect(response['results'][0]['is_read']).to be true
+      expect(response['results'][1]['is_read']).to be true
+      expect(response['results'][2]['is_read']).to be false
     end
 
     example 'set feed as seen' do
@@ -106,14 +106,14 @@ describe 'Integration tests' do
       feed.add_activity(actor: 2, verb: 'share', object: 1)
       feed.add_activity(actor: 3, verb: 'run', object: 1)
       response = feed.get(limit: 5)
-      response['results'][0]['is_seen'].should eq false
-      response['results'][1]['is_seen'].should eq false
-      response['results'][2]['is_seen'].should eq false ##
+      expect(response['results'][0]['is_seen']).to be false
+      expect(response['results'][1]['is_seen']).to be false
+      expect(response['results'][2]['is_seen']).to be false ##
       feed.get(limit: 5, mark_seen: true)
       response = feed.get(limit: 5)
-      response['results'][0]['is_seen'].should eq true
-      response['results'][1]['is_seen'].should eq true
-      response['results'][2]['is_seen'].should eq true
+      expect(response['results'][0]['is_seen']).to be true
+      expect(response['results'][1]['is_seen']).to be true
+      expect(response['results'][2]['is_seen']).to be true
     end
 
     example 'set activities as seen' do
@@ -125,16 +125,16 @@ describe 'Integration tests' do
       ids = response['results'].collect { |a| a['id'] }
       feed.get(limit: 5, mark_seen: ids)
       response = feed.get(limit: 5)
-      response['results'][0]['is_seen'].should eq true
-      response['results'][1]['is_seen'].should eq true
-      response['results'][2]['is_seen'].should eq false
+      expect(response['results'][0]['is_seen']).to be true
+      expect(response['results'][1]['is_seen']).to be true
+      expect(response['results'][2]['is_seen']).to be false
     end
 
     example 'posting an activity with datetime object' do
       feed = @client.feed('flat', generate_uniq_feed_name)
       activity = { actor: 1, verb: 'tweet', object: 1, time: DateTime.now }
       response = feed.add_activity(activity)
-      response.should include('id', 'actor', 'verb', 'object', 'target', 'time')
+      expect(response).to include('id', 'actor', 'verb', 'object', 'target', 'time')
     end
 
     example 'localised datetimes should be returned in UTC correctly' do
@@ -142,43 +142,43 @@ describe 'Integration tests' do
       now = DateTime.now.new_offset(5)
       activity = { actor: 1, verb: 'tweet', object: 1, time: now }
       response = feed.add_activity(activity)
-      response.should include('id', 'actor', 'verb', 'object', 'target', 'time')
+      expect(response).to include('id', 'actor', 'verb', 'object', 'target', 'time')
       response = feed.get(limit: 5)
-      DateTime.iso8601(response['results'][0]['time']).should be_within(1).of(now.new_offset(0))
+      expect(DateTime.iso8601(response['results'][0]['time'])).to be_within(1).of(now.new_offset(0))
     end
 
     example 'posting a custom field as a hash' do
       hash_value = { 'a' => 42 }
       activity = { actor: 1, verb: 'tweet', object: 1, hash_data: hash_value }
       response = @feed42.add_activity(activity)
-      response.should include('id', 'actor', 'verb', 'object', 'target', 'hash_data')
+      expect(response).to include('id', 'actor', 'verb', 'object', 'target', 'hash_data')
       results = @feed42.get(limit: 1)['results']
-      results[0]['hash_data'].should eq hash_value
+      expect(results[0]['hash_data']).to eq hash_value
     end
 
     example 'posting a custom field as a list' do
       list_value = [1, 2, 3]
       activity = { actor: 1, verb: 'tweet', object: 1, hash_data: list_value }
       response = @feed42.add_activity(activity)
-      response.should include('id', 'actor', 'verb', 'object', 'target', 'hash_data')
+      expect(response).to include('id', 'actor', 'verb', 'object', 'target', 'hash_data')
       results = @feed42.get(limit: 1)['results']
-      results[0]['hash_data'].should eq list_value
+      expect(results[0]['hash_data']).to eq list_value
     end
 
     example 'posting and get one activity' do
       response = @feed42.add_activity(@test_activity)
       results = @feed42.get(limit: 1)['results']
-      results[0]['id'].should eq response['id']
+      expect(results[0]['id']).to eq response['id']
     end
 
     example 'removing an activity' do
       feed = @client.feed('flat', generate_uniq_feed_name)
       response = feed.add_activity(@test_activity)
       results = feed.get(limit: 1)['results']
-      results[0]['id'].should eq response['id']
+      expect(results[0]['id']).to eq response['id']
       feed.remove_activity(response['id'])
       results = feed.get(limit: 1)['results']
-      results[0]['id'].should_not eq response['id'] if results.count > 0
+      expect(results[0]['id']).not_to eq response['id'] if results.count > 0
     end
 
     example 'removing an activity by foreign_id' do
@@ -188,7 +188,7 @@ describe 'Integration tests' do
       @feed42.add_activity(activity)
       @feed42.remove_activity('ruby:43', foreign_id: true)
       results = @feed42.get(limit: 2)['results']
-      results[0]['foreign_id'].should eq 'ruby:42'
+      expect(results[0]['foreign_id']).to eq 'ruby:42'
     end
 
     context 'following a feed' do
@@ -200,7 +200,7 @@ describe 'Integration tests' do
           feed2.follow('flat', '1')
           results = feed2.get['results']
           feed2.unfollow('flat', '1')
-          results.length.should_not eq 0
+          expect(results.length).not_to eq 0
         end
         example 'when a copy limit is given' do
           feed1 = @client.feed('flat', '1')
@@ -209,7 +209,7 @@ describe 'Integration tests' do
           feed2.follow('flat', '1', 300)
           results = feed2.get['results']
           feed2.unfollow('flat', '1')
-          results.length.should_not eq 0
+          expect(results.length).not_to eq 0
         end
       end
       context 'should not copy an activity' do
@@ -219,7 +219,7 @@ describe 'Integration tests' do
           feed1.add_activity(@test_activity)
           feed2.follow('flat', '1', 0)
           results = feed2.get['results']
-          results.length.should eq 0
+          expect(results.length).to eq 0
           feed2.unfollow('flat', '1', keep_history: false)
         end
       end
@@ -228,23 +228,23 @@ describe 'Integration tests' do
     example 'retrieve feed with no followers' do
       lonely = @client.feed('flat', generate_uniq_feed_name)
       response = lonely.followers
-      response['results'].should eq []
+      expect(response['results']).to eq []
     end
 
     example 'retrieve feed followers with limit and offset' do
       @client.feed('flat', 'r43').follow('flat', 'r123')
       @client.feed('flat', 'r44').follow('flat', 'r123')
       response = @client.feed('flat', 'r123').followers
-      response['results'][0]['feed_id'].should eq 'flat:r44'
-      response['results'][0]['target_id'].should eq 'flat:r123'
-      response['results'][1]['feed_id'].should eq 'flat:r43'
-      response['results'][1]['target_id'].should eq 'flat:r123'
+      expect(response['results'][0]['feed_id']).to eq 'flat:r44'
+      expect(response['results'][0]['target_id']).to eq 'flat:r123'
+      expect(response['results'][1]['feed_id']).to eq 'flat:r43'
+      expect(response['results'][1]['target_id']).to eq 'flat:r123'
     end
 
     example 'retrieve feed with no followings' do
       asocial = @client.feed('flat', 'rasocial')
       response = asocial.following
-      response['results'].should eq []
+      expect(response['results']).to eq []
     end
 
     example 'retrieve feed followings with limit and offset' do
@@ -252,14 +252,14 @@ describe 'Integration tests' do
       social.follow('flat', 'r43')
       social.follow('flat', 'r44')
       response = social.following(1, 1)
-      response['results'][0]['feed_id'].should eq 'flat:r2social'
-      response['results'][0]['target_id'].should eq 'flat:r43'
+      expect(response['results'][0]['feed_id']).to eq 'flat:r2social'
+      expect(response['results'][0]['target_id']).to eq 'flat:r43'
     end
 
     example 'i dont follow' do
       social = @client.feed('flat', 'rsocial1')
       response = social.following(0, 10, ['flat:asocial'])
-      response['results'].should eq []
+      expect(response['results']).to eq []
     end
 
     example 'do i follow' do
@@ -267,10 +267,10 @@ describe 'Integration tests' do
       social.follow('flat', 'r43')
       social.follow('flat', 'r244')
       response = social.following(0, 10, ['flat:r244'])
-      response['results'][0]['feed_id'].should eq 'flat:rsocial2'
-      response['results'][0]['target_id'].should eq 'flat:r244'
+      expect(response['results'][0]['feed_id']).to eq 'flat:rsocial2'
+      expect(response['results'][0]['target_id']).to eq 'flat:r244'
       response = social.following(1, 10, ['flat:r244'])
-      response['results'].should eq []
+      expect(response['results']).to eq []
     end
 
     example 'unfollowing a feed' do
@@ -285,7 +285,7 @@ describe 'Integration tests' do
       response = keepit.add_activity(@test_activity)
       follower.get
       follower.unfollow('flat', 'keepit', keep_history: true)
-      follower.get['results'][0]['id'].should eq response['id']
+      expect(follower.get['results'][0]['id']).to eq response['id']
     end
 
     example 'posting activity using to' do
@@ -296,7 +296,7 @@ describe 'Integration tests' do
       @feed42.add_activity(activity)
       target_feed = @client.feed(*recipient)
       response = target_feed.get(limit: 5)['results']
-      response[0]['actor'].should eq 'tommaso'
+      expect(response[0]['actor']).to eq 'tommaso'
     end
 
     example 'posting many activities using to' do
@@ -309,7 +309,7 @@ describe 'Integration tests' do
       @feed42.add_activities(activities)
       target_feed = @client.feed(*recipient)
       response = target_feed.get(limit: 5)['results']
-      [response[0]['actor'], response[1]['actor']].should =~ actors
+      expect([response[0]['actor'], response[1]['actor']]).to match_array(actors)
     end
 
     example 'update to targets' do
@@ -328,9 +328,9 @@ describe 'Integration tests' do
       response = @feed42.update_activity_to_targets(
         foreign_id, time, new_targets: ['user:3', 'user:2']
       )
-      response['activity']['to'].length.should eq 2
-      response['activity']['to'].should include('user:2')
-      response['activity']['to'].should include('user:3')
+      expect(response['activity']['to'].length).to eq 2
+      expect(response['activity']['to']).to include('user:2')
+      expect(response['activity']['to']).to include('user:3')
 
       response = @feed42.update_activity_to_targets(
         foreign_id,
@@ -338,10 +338,10 @@ describe 'Integration tests' do
         added_targets: ['user:4', 'user:5'],
         removed_targets: ['user:3']
       )
-      response['activity']['to'].length.should eq 3
-      response['activity']['to'].should include('user:2')
-      response['activity']['to'].should include('user:4')
-      response['activity']['to'].should include('user:5')
+      expect(response['activity']['to'].length).to eq 3
+      expect(response['activity']['to']).to include('user:2')
+      expect(response['activity']['to']).to include('user:4')
+      expect(response['activity']['to']).to include('user:5')
     end
 
     example 'read from a feed' do
@@ -448,9 +448,9 @@ describe 'Integration tests' do
       end
       example 'add object to collection' do
         response = @client.collections.add('animals', { type: 'bear', location: 'forest' })
-        response.should include('id', 'duration', 'collection', 'foreign_id', 'data', 'created_at', 'updated_at')
-        response['collection'].should eq 'animals'
-        response['data'].should eq 'type' => 'bear', 'location' => 'forest'
+        expect(response).to include('id', 'duration', 'collection', 'foreign_id', 'data', 'created_at', 'updated_at')
+        expect(response['collection']).to eq 'animals'
+        expect(response['data']).to eq 'type' => 'bear', 'location' => 'forest'
       end
       example 'add object to collection twice' do
         @client.collections.add('animals', { type: 'bear' }, id: @item_id)
@@ -459,15 +459,15 @@ describe 'Integration tests' do
       example 'get collection item' do
         @client.collections.add('animals', { type: 'fox' }, id: @item_id)
         response = @client.collections.get('animals', @item_id)
-        response['id'].should eq @item_id
-        response['collection'].should eq 'animals'
-        response['foreign_id'].should eq "animals:#{@item_id}"
-        response['data'].should eq 'type' => 'fox'
+        expect(response['id']).to eq @item_id
+        expect(response['collection']).to eq 'animals'
+        expect(response['foreign_id']).to eq "animals:#{@item_id}"
+        expect(response['data']).to eq 'type' => 'fox'
       end
       example 'collection item update' do
         @client.collections.add('animals', { type: 'dog' }, id: @item_id)
         response = @client.collections.update('animals', @item_id, data: { type: 'cat' })
-        response['data'].should eq 'type' => 'cat'
+        expect(response['data']).to eq 'type' => 'cat'
       end
       example 'collection item delete' do
         @client.collections.add('animals', { type: 'snake' }, id: @item_id)
@@ -480,7 +480,7 @@ describe 'Integration tests' do
       collections = @client.collections
 
       # refs
-      collections.create_reference('foo', 'bar').should eql 'SO:foo:bar'
+      expect(collections.create_reference('foo', 'bar')).to eql 'SO:foo:bar'
 
       # upsert
       objects = [
@@ -500,8 +500,8 @@ describe 'Integration tests' do
         }
       ]
       response = collections.upsert('test', objects)
-      response.should include('duration', 'data')
-      response['data'].should include 'test'
+      expect(response).to include('duration', 'data')
+      expect(response['data']).to include 'test'
       expected = [
         {
           'data' => { 'hobbies' => %w[playing sleeping eating] },
@@ -514,13 +514,13 @@ describe 'Integration tests' do
           'name' => 'ruby'
         }
       ]
-      response['data']['test'].should =~ expected
+      expect(response['data']['test']).to eq(expected)
 
       # get
       response = collections.select('test', %w[aabbcc ddeeff])
-      response.should include('duration', 'response')
-      response['response']['data'].length.should eq 2
-      response['response']['data'][0].should include('id', 'collection', 'foreign_id', 'data', 'created_at', 'updated_at')
+      expect(response).to include('duration', 'response')
+      expect(response['response']['data'].length).to eq 2
+      expect(response['response']['data'][0]).to include('id', 'collection', 'foreign_id', 'data', 'created_at', 'updated_at')
       expected = [
         {
           'id' => 'aabbcc',
@@ -550,15 +550,15 @@ describe 'Integration tests' do
         h.delete('created_at')
         h.delete('updated_at')
       end
-      check.should =~ expected
+      expect(check).to eq(expected)
 
       # delete
       response = collections.delete_many('test', ['aabbcc'])
-      response.should include('duration')
+      expect(response).to include('duration')
 
       # check that the data is gone
       response = collections.select('test', %w[aabbcc ddeeff])
-      response.should include('duration', 'response')
+      expect(response).to include('duration', 'response')
       expected = [
         {
           'id' => 'ddeeff',
@@ -577,7 +577,7 @@ describe 'Integration tests' do
         h.delete('created_at')
         h.delete('updated_at')
       end
-      response['response']['data'].should =~ expected
+      expect(response['response']['data']).to eq(expected)
     end
 
     describe 'activities endpoints' do
@@ -597,11 +597,11 @@ describe 'Integration tests' do
         by_id = @client.get_activities(
           ids: [activity['id']]
         )
-        by_id.should include('duration', 'results')
-        by_id['results'].count.should be 1
+        expect(by_id).to include('duration', 'results')
+        expect(by_id['results'].count).to be 1
         res = by_id['results'][0]
         res.delete('duration')
-        res.should eq(activity)
+        expect(res).to eq(activity)
 
         # get by foreign_id/timestamp
         by_foreign_id = @client.get_activities(
@@ -609,11 +609,11 @@ describe 'Integration tests' do
             { foreign_id: activity['foreign_id'], time: activity['time'] }
           ]
         )
-        by_foreign_id.should include('duration', 'results')
-        by_foreign_id['results'].count.should be 1
+        expect(by_foreign_id).to include('duration', 'results')
+        expect(by_foreign_id['results'].count).to be 1
         res = by_foreign_id['results'][0]
         res.delete('duration')
-        res.should eq(activity)
+        expect(res).to eq(activity)
       end
 
       example 'partial update' do
@@ -670,7 +670,7 @@ describe 'Integration tests' do
             'baz' => 'qux'
           }
         }
-        updated_activity.should eq(expected)
+        expect(updated_activity).to eq(expected)
 
         # by foreign id and timestamp
         updated_activity = @client.activity_partial_update(
@@ -694,7 +694,7 @@ describe 'Integration tests' do
           }
         }
         expected['popularity'] = 9000
-        updated_activity.should eq(expected)
+        expect(updated_activity).to eq(expected)
 
         # in batch
         response = @client.batch_activity_partial_update([
@@ -716,14 +716,14 @@ describe 'Integration tests' do
                                                              unset: ['popularity']
                                                            }
                                                          ])
-        response['activities'].length.should eq 2
+        expect(response['activities'].length).to eq 2
         activities = @client.get_activities(ids: [activity_a['id']])
         product = {
           'name' => 'boots',
           'price' => 13.99
         }
-        activities['results'][0]['product'].should eq product
-        activities['results'][0]['extra'].should eq 'left'
+        expect(activities['results'][0]['product']).to eq product
+        expect(activities['results'][0]['extra']).to eq 'left'
         expect(activities['results'][0]).not_to include('foo')
         activities = @client.get_activities(ids: [activity_b['id']])
         product = {
@@ -731,8 +731,8 @@ describe 'Integration tests' do
           'color' => 'orange',
           'price' => 23.99
         }
-        activities['results'][0]['product'].should eq product
-        activities['results'][0]['extra'].should eq 'right'
+        expect(activities['results'][0]['product']).to eq product
+        expect(activities['results'][0]['extra']).to eq 'right'
         expect(activities['results'][0]).not_to include('popularity')
 
         response = @client.batch_activity_partial_update([
@@ -754,13 +754,13 @@ describe 'Integration tests' do
                                                              unset: ['extra']
                                                            }
                                                          ])
-        response['activities'].length.should eq 2
+        expect(response['activities'].length).to eq 2
         activities = @client.get_activities(ids: [activity_a['id']])
         product = {
           'name' => 'trainers',
           'price' => 133.99
         }
-        activities['results'][0]['product'].should eq product
+        expect(activities['results'][0]['product']).to eq product
         expect(activities['results'][0]).not_to include('extra')
         activities = @client.get_activities(ids: [activity_b['id']])
         product = {
@@ -768,7 +768,7 @@ describe 'Integration tests' do
           'color' => 'orange',
           'price' => 3.99
         }
-        activities['results'][0]['product'].should eq product
+        expect(activities['results'][0]['product']).to eq product
         expect(activities['results'][0]).not_to include('extra')
       end
     end
@@ -779,15 +779,15 @@ describe 'Integration tests' do
       end
       example 'add user' do
         response = @client.users.add(@user_id, data: { animal: 'bear' })
-        response.should include('id', 'data', 'duration', 'created_at', 'updated_at')
-        response['id'].should eq @user_id
-        response['data'].should include 'animal'
-        response['data']['animal'].should eq 'bear'
+        expect(response).to include('id', 'data', 'duration', 'created_at', 'updated_at')
+        expect(response['id']).to eq @user_id
+        expect(response['data']).to include 'animal'
+        expect(response['data']['animal']).to eq 'bear'
       end
       example 'add user twice' do
         @client.users.add(@user_id)
         response = @client.users.add(@user_id, get_or_create: true)
-        response.should include('id', 'data', 'duration', 'created_at', 'updated_at')
+        expect(response).to include('id', 'data', 'duration', 'created_at', 'updated_at')
       end
       example 'add user twice with error' do
         @client.users.add(@user_id)
@@ -800,13 +800,13 @@ describe 'Integration tests' do
         create_response.delete('duration')
         get_response.delete('duration')
 
-        get_response.should eq create_response
+        expect(get_response).to eq create_response
       end
       example 'update user' do
         @client.users.add(@user_id)
         response = @client.users.update(@user_id, data: { animal: 'dog' })
-        response.should include('id', 'data', 'duration', 'created_at', 'updated_at')
-        response['data']['animal'].should eq 'dog'
+        expect(response).to include('id', 'data', 'duration', 'created_at', 'updated_at')
+        expect(response['data']['animal']).to eq 'dog'
       end
       example 'delete user' do
         @client.users.add(@user_id)
@@ -821,38 +821,38 @@ describe 'Integration tests' do
       end
       example 'add reaction' do
         response = @client.reactions.add('like', @activity['id'], 'jim')
-        response.should include('id', 'kind', 'activity_id', 'user_id',
-                                'data', 'parent', 'latest_children',
-                                'children_counts', 'duration', 'created_at', 'updated_at')
-        response['activity_id'].should eq @activity['id']
-        response['user_id'].should eq 'jim'
-        response['kind'].should eq 'like'
+        expect(response).to include('id', 'kind', 'activity_id', 'user_id',
+                                    'data', 'parent', 'latest_children',
+                                    'children_counts', 'duration', 'created_at', 'updated_at')
+        expect(response['activity_id']).to eq @activity['id']
+        expect(response['user_id']).to eq 'jim'
+        expect(response['kind']).to eq 'like'
       end
       example 'get reaction' do
         create_response = @client.reactions.add('like', @activity['id'], 'jim')
         response = @client.reactions.get(create_response['id'])
-        response.should include('id', 'kind', 'activity_id', 'user_id',
-                                'data', 'parent', 'latest_children',
-                                'children_counts', 'duration', 'created_at', 'updated_at')
-        response['activity_id'].should eq @activity['id']
-        response['user_id'].should eq 'jim'
-        response['kind'].should eq 'like'
-        response['data'].should eq({})
-        response['parent'].should eq ''
-        response['latest_children'].should eq({})
-        response['children_counts'].should eq({})
+        expect(response).to include('id', 'kind', 'activity_id', 'user_id',
+                                    'data', 'parent', 'latest_children',
+                                    'children_counts', 'duration', 'created_at', 'updated_at')
+        expect(response['activity_id']).to eq @activity['id']
+        expect(response['user_id']).to eq 'jim'
+        expect(response['kind']).to eq 'like'
+        expect(response['data']).to eq({})
+        expect(response['parent']).to eq ''
+        expect(response['latest_children']).to eq({})
+        expect(response['children_counts']).to eq({})
       end
       example 'update reaction' do
         create_response = @client.reactions.add('like', @activity['id'], 'jim')
         response = @client.reactions.update(create_response['id'], data: { animal: 'lion' })
 
-        response['data']['animal'].should eq 'lion'
+        expect(response['data']['animal']).to eq 'lion'
       end
       example 'add child reaction' do
         create_response = @client.reactions.add('like', @activity['id'], 'jim')
         response = @client.reactions.add_child('dislike', create_response['id'], 'john')
 
-        response['parent'].should eq create_response['id']
+        expect(response['parent']).to eq create_response['id']
       end
       example 'delete reaction' do
         reaction = @client.reactions.add('like', @activity['id'], 'jim')
@@ -869,17 +869,17 @@ describe 'Integration tests' do
         comment.delete('duration')
 
         response = @client.reactions.filter(reaction_id: parent['id'])
-        response['results'][0].should eq child
+        expect(response['results'][0]).to eq child
 
         response = @client.reactions.filter(user_id: 'jim', id_gt: parent['id'])
-        response['results'][0].should eq comment
+        expect(response['results'][0]).to eq comment
 
         response = @client.reactions.filter(kind: 'like', activity_id: @activity['id'], id_lte: child['id'])
-        response['results'].length.should eq 1
-        response['results'][0]['latest_children']['like'][0].should eq child
+        expect(response['results'].length).to eq 1
+        expect(response['results'][0]['latest_children']['like'][0]).to eq child
 
         response = @client.reactions.filter(kind: 'comment', activity_id: @activity['id'])
-        response['results'][0].should eq comment
+        expect(response['results'][0]).to eq comment
       end
       example 'get with activity data' do
         @activity.delete('duration')
@@ -890,15 +890,15 @@ describe 'Integration tests' do
         response['activity'].delete('latest_reactions_extra')
         response['activity'].delete('own_reactions')
         response['activity'].delete('reaction_counts')
-        response['activity'].should eq @activity
+        expect(response['activity']).to eq @activity
       end
       example 'with target feeds' do
         reaction = @client.reactions.add('like', @activity['id'], 'juan', target_feeds: [@feed43.id])
         reaction.delete('duration')
         response = @feed43.get
 
-        response['results'][0]['reaction'].should eq @client.reactions.create_reference(reaction)
-        response['results'][0]['verb'].should eq 'like'
+        expect(response['results'][0]['reaction']).to eq @client.reactions.create_reference(reaction)
+        expect(response['results'][0]['verb']).to eq 'like'
       end
     end
 
@@ -909,7 +909,7 @@ describe 'Integration tests' do
 
         @feed42.add_activity({ actor: 'john', verb: 'chase', object: @client.collections.create_reference('animals', bear) })
         response = @feed42.get(enrich: true)
-        response['results'][0]['object'].should eq bear
+        expect(response['results'][0]['object']).to eq bear
       end
       example 'user enrichment' do
         user = @client.users.add(SecureRandom.uuid, data: { name: 'john' })
@@ -917,7 +917,7 @@ describe 'Integration tests' do
 
         @feed42.add_activity({ actor: @client.users.create_reference(user['id']), verb: 'chase', object: 'car:43' })
         response = @feed42.get(enrich: true)
-        response['results'][0]['actor'].should eq user
+        expect(response['results'][0]['actor']).to eq user
       end
       example 'own reaction enrichment' do
         activity = @feed42.add_activity({ actor: 'jim', verb: 'buy', object: 'wallet' })
@@ -925,7 +925,7 @@ describe 'Integration tests' do
         reaction.delete('duration')
 
         response = @feed42.get(reactions: { own: true })
-        response['results'][0]['own_reactions']['like'][0].should eq reaction
+        expect(response['results'][0]['own_reactions']['like'][0]).to eq reaction
       end
       example 'recent reaction enrichment' do
         activity = @feed42.add_activity({ actor: 'jim', verb: 'buy', object: 'wallet' })
@@ -933,7 +933,7 @@ describe 'Integration tests' do
         reaction.delete('duration')
 
         response = @feed42.get(reactions: { recent: true })
-        response['results'][0]['latest_reactions']['dislike'][0].should eq reaction
+        expect(response['results'][0]['latest_reactions']['dislike'][0]).to eq reaction
       end
       example 'reaction counts enrichment' do
         activity = @feed42.add_activity({ actor: 'jim', verb: 'buy', object: 'wallet' })
@@ -941,7 +941,7 @@ describe 'Integration tests' do
         reaction.delete('duration')
 
         response = @feed42.get(reactions: { counts: true })
-        response['results'][0]['reaction_counts']['like'].should eq 1
+        expect(response['results'][0]['reaction_counts']['like']).to eq 1
       end
     end
 
