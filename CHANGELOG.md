@@ -1,3 +1,9 @@
+## 2020-03-15 - 4.0.2
+- Fix delete activity call
+- Move to github actions
+- Handle rspec should deprecation
+- Add envrc into gitignore
+
 ## 2020-01-05 - 4.0.1
 - Relax versions on faraday/jwt dependencies
 
