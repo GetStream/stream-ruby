@@ -14,6 +14,15 @@
 - Update min Ruby version to 2.5 and add 2.7 into CI
 - Add open graph scraper
 - Setup rubocop for static code analysis
+- Change signature of a couple of endpoints of feeds to modernize
+
+```diff
+- def remove_activity(activity_id, foreign_id = false)
++ def remove_activity(activity_id, foreign_id: false)
+
+- def unfollow(target_feed_slug, target_user_id, keep_history = false)
++ def unfollow(target_feed_slug, target_user_id, keep_history: false)
+```
 
 ## 2019-01-22 - 3.1.0
 - Add support for batch activity partial update
