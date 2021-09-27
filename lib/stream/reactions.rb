@@ -1,12 +1,13 @@
 module Stream
   class ReactionsClient < Client
-    def add(kind, activity_id, user_id, data: nil, target_feeds: nil)
+    def add(kind, activity_id, user_id, data: nil, target_feeds: nil, target_feeds_extra_data: nil)
       data = {
         kind: kind,
         activity_id: activity_id,
         user_id: user_id,
         data: data,
-        target_feeds: target_feeds
+        target_feeds: target_feeds,
+        target_feeds_extra_data: target_feeds_extra_data
       }
       make_reaction_request(:post, {}, data)
     end
@@ -30,13 +31,14 @@ module Stream
       make_reaction_request(:delete, {}, {}, endpoint: uri)
     end
 
-    def add_child(kind, parent_id, user_id, data: nil, target_feeds: nil)
+    def add_child(kind, parent_id, user_id, data: nil, target_feeds: nil, target_feeds_extra_data: nil)
       data = {
         kind: kind,
         parent: parent_id,
         user_id: user_id,
         data: data,
-        target_feeds: target_feeds
+        target_feeds: target_feeds,
+        target_feeds_extra_data: target_feeds_extra_data
       }
       make_reaction_request(:post, {}, data)
     end
