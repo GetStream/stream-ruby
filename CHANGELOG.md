@@ -1,17 +1,21 @@
-## 2020-09-27 - 4.2.0
+## 2021-09-27 - 4.3.0
+* Add missing enrichment options to feed enrichment
+* Add support to get activities enriched
+
+## 2021-09-27 - 4.2.0
 * Add feeds extra data support for reactions
 * Repo maintenance improvements (i.e. README, CHANGELOG)
 
-## 2020-03-15 - 4.1.0
+## 2021-03-15 - 4.1.0
 - Add Ruby 3.x support
 
-## 2020-03-15 - 4.0.2
+## 2021-03-15 - 4.0.2
 - Fix delete activity call
 - Move to github actions
 - Handle rspec should deprecation
 - Add envrc into gitignore
 
-## 2020-01-05 - 4.0.1
+## 2021-01-05 - 4.0.1
 - Relax versions on faraday/jwt dependencies
 
 ## 2020-11-18 - 4.0.0
