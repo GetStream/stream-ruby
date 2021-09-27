@@ -616,6 +616,39 @@ describe 'Integration tests' do
         expect(res).to eq(activity)
       end
 
+      example 'activity own reaction enrichment' do
+        activity = @feed42.add_activity({ actor: 'jim', verb: 'buy', object: 'wallet' })
+        reaction = @client.reactions.add('like', activity['id'], 'jim')
+        reaction.delete('duration')
+
+        response = @client.get_activities(ids: [activity['id']], reactions: { own: true })
+        expect(response['results'][0]['own_reactions']['like'][0]).to eq reaction
+      end
+      example 'activity recent reaction enrichment' do
+        activity = @feed42.add_activity({ actor: 'jim', verb: 'buy', object: 'wallet' })
+        reaction = @client.reactions.add('dislike', activity['id'], 'jim')
+        reaction.delete('duration')
+
+        response = @client.get_activities(ids: [activity['id']], reactions: { recent: true })
+        expect(response['results'][0]['latest_reactions']['dislike'][0]).to eq reaction
+      end
+      example 'activity reaction counts enrichment' do
+        activity = @feed42.add_activity({ actor: 'jim', verb: 'buy', object: 'wallet' })
+        @client.reactions.add('like', activity['id'], 'jim')
+
+        response = @client.get_activities(ids: [activity['id']], reactions: { counts: true })
+        expect(response['results'][0]['reaction_counts']['like']).to eq 1
+      end
+      example 'activity reaction kinds enrichment filtering' do
+        activity = @feed42.add_activity({ actor: 'jim', verb: 'buy', object: 'wallet' })
+        @client.reactions.add('like', activity['id'], 'jim')
+        @client.reactions.add('comment', activity['id'], 'jim')
+
+        response = @client.get_activities(ids: [activity['id']], reactions: { counts: true, kinds: ['like'] })
+        expect(response['results'][0]['reaction_counts']['like']).to eq 1
+        expect(response['results'][0]['reaction_counts']['comment']).to eq nil
+      end
+
       example 'partial update' do
         activity_a = @feed42.add_activity({
                                             actor: 'bob',
