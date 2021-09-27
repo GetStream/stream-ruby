@@ -649,8 +649,8 @@ describe 'Integration tests' do
         updated_activity = @client.activity_partial_update(
           id: activity_a['id'],
           set: {
-            "product.name": 'boots',
-            "product.price": 7.99,
+            'product.name': 'boots',
+            'product.price': 7.99,
             popularity: 1000,
             foo: { bar: { baz: 'qux' } }
           },
@@ -677,7 +677,7 @@ describe 'Integration tests' do
           foreign_id: activity_a['foreign_id'],
           time: activity_a['time'],
           set: {
-            "foo.bar.baz": 42,
+            'foo.bar.baz': 42,
             popularity: 9000
           },
           unset: [
@@ -701,8 +701,8 @@ describe 'Integration tests' do
                                                            {
                                                              id: activity_a['id'],
                                                              set: {
-                                                               "product.name": 'boots',
-                                                               "product.price": 13.99,
+                                                               'product.name': 'boots',
+                                                               'product.price': 13.99,
                                                                extra: 'left'
                                                              },
                                                              unset: ['foo']
@@ -710,7 +710,7 @@ describe 'Integration tests' do
                                                            {
                                                              id: activity_b['id'],
                                                              set: {
-                                                               "product.price": 23.99,
+                                                               'product.price': 23.99,
                                                                extra: 'right'
                                                              },
                                                              unset: ['popularity']
@@ -740,8 +740,8 @@ describe 'Integration tests' do
                                                              foreign_id: activity_a['foreign_id'],
                                                              time: activity_a['time'],
                                                              set: {
-                                                               "product.name": 'trainers',
-                                                               "product.price": 133.99
+                                                               'product.name': 'trainers',
+                                                               'product.price': 133.99
                                                              },
                                                              unset: ['extra']
                                                            },
@@ -749,7 +749,7 @@ describe 'Integration tests' do
                                                              foreign_id: activity_b['foreign_id'],
                                                              time: activity_b['time'],
                                                              set: {
-                                                               "product.price": 3.99
+                                                               'product.price': 3.99
                                                              },
                                                              unset: ['extra']
                                                            }
@@ -893,7 +893,7 @@ describe 'Integration tests' do
         expect(response['activity']).to eq @activity
       end
       example 'with target feeds' do
-        reaction = @client.reactions.add('like', @activity['id'], 'juan', target_feeds: [@feed43.id], target_feeds_extra_data: {test: "test_data"})
+        reaction = @client.reactions.add('like', @activity['id'], 'juan', target_feeds: [@feed43.id], target_feeds_extra_data: { test: 'test_data' })
         reaction.delete('duration')
         response = @feed43.get
 
