@@ -1,6 +1,6 @@
 ## 2020-09-27 - 4.2.0
-- Add feeds extra data support for reactions
-- Repo maintainance imporements (i.e. README, CHANGELOG)
+* Add feeds extra data support for reactions
+* Repo maintenance improvements (i.e. README, CHANGELOG)
 
 ## 2020-03-15 - 4.1.0
 - Add Ruby 3.x support
