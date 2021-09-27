@@ -36,8 +36,24 @@ module Stream
           timestamps: timestamps
         }
       end
+
+      uri = params[:enrich] || params[:reactions] ? '/enrich/activities/' : '/activities/'
+      if params[:reactions].respond_to?(:keys)
+        params[:withOwnReactions] = true if params[:reactions][:own]
+        params[:withRecentReactions] = true if params[:reactions][:recent]
+        params[:withReactionCounts] = true if params[:reactions][:counts]
+        params[:withOwnChildren] = true if params[:reactions][:children]
+        user_id = params[:reactions][:user_id]
+        params[:user_id] = user_id if user_id
+        kinds = params[:reactions][:kinds]
+        if kinds
+          params[:reactionKindsFilter] = kinds.is_a?(Array) ? kinds.join(',') : kinds
+        end
+      end
+      %i[enrich reactions].each { |k| params.delete(k) }
+
       signature = Stream::Signer.create_jwt_token('activities', '*', @api_secret, '*')
-      make_request(:get, '/activities/', signature, params)
+      make_request(:get, uri, signature, params)
     end
 
     #
