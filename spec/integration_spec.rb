@@ -893,12 +893,13 @@ describe 'Integration tests' do
         expect(response['activity']).to eq @activity
       end
       example 'with target feeds' do
-        reaction = @client.reactions.add('like', @activity['id'], 'juan', target_feeds: [@feed43.id])
+        reaction = @client.reactions.add('like', @activity['id'], 'juan', target_feeds: [@feed43.id], target_feeds_extra_data: {test: "test_data"})
         reaction.delete('duration')
         response = @feed43.get
 
         expect(response['results'][0]['reaction']).to eq @client.reactions.create_reference(reaction)
         expect(response['results'][0]['verb']).to eq 'like'
+        expect(response['results'][0]['test']).to eq 'test_data'
       end
     end
 
