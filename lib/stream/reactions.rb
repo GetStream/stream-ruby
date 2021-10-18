@@ -57,7 +57,7 @@ module Stream
         field = 'user_id'
         value = params[:user_id]
       end
-      params.delete(field.to_sym) unless field.empty?
+      params.delete(field.to_sym) unless field.empty? && field != 'user_id'
       uri = if kind.nil? || kind.empty?
               "/reaction/#{field}/#{value}/"
             else

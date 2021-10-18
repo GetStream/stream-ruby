@@ -42,6 +42,7 @@ module Stream
       params[:mark_seen] = params[:mark_seen].join(',') if params[:mark_seen]&.is_a?(Array)
       if params[:reactions].respond_to?(:keys)
         params[:withOwnReactions] = true if params[:reactions][:own]
+        params[:withFirstReactions] = true if params[:reactions][:first]
         params[:withRecentReactions] = true if params[:reactions][:recent]
         params[:withReactionCounts] = true if params[:reactions][:counts]
         params[:withOwnChildren] = true if params[:reactions][:children]
