@@ -1,3 +1,7 @@
+## 2021-10-18 - 4.4.0
+* Add first reaction support for feed read
+* Add user id support in own reactions for reaction filtering
+
 ## 2021-09-27 - 4.3.0
 * Add missing enrichment options to feed enrichment
 * Add support to get activities enriched
