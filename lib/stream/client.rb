@@ -1,4 +1,5 @@
 require 'faraday'
+require 'faraday/net_http_persistent'
 require 'stream/errors'
 require 'stream/feed'
 require 'stream/signer'
@@ -170,7 +171,10 @@ module Stream
         faraday.use RaiseHttpException
         faraday.options[:open_timeout] = @options[:default_timeout]
         faraday.options[:timeout] = @options[:default_timeout]
-        faraday.adapter Faraday.default_adapter
+        faraday.adapter :net_http_persistent, pool_size: 5 do |http|
+          # AWS load balancer idle timeout is 60 secs, so let's make it 59
+          http.idle_timeout = 59
+        end
       end
       @base_path = url_generator.base_path
       @conn.path_prefix = base_path

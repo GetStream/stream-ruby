@@ -7,7 +7,7 @@ RSpec.configure do |c|
 end
 
 describe 'Integration tests' do
-  before do
+  before(:all) do
     @client = Stream::Client.new(ENV['STREAM_API_KEY'], ENV['STREAM_API_SECRET'], nil, location: ENV['STREAM_REGION'], default_timeout: 10)
     @feed42 = @client.feed('flat', generate_uniq_feed_name)
     @feed43 = @client.feed('flat', generate_uniq_feed_name)
@@ -530,6 +530,7 @@ describe 'Integration tests' do
             'data' => {
               'hobbies' => %w[playing sleeping eating]
             },
+            'id' => 'aabbcc',
             'name' => 'juniper'
           }
         },
@@ -541,6 +542,7 @@ describe 'Integration tests' do
             'data' => {
               'interests' => ['sunbeams', 'surprise attacks']
             },
+            'id' => 'ddeeff',
             'name' => 'ruby'
           }
         }
@@ -568,6 +570,7 @@ describe 'Integration tests' do
             'data' => {
               'interests' => ['sunbeams', 'surprise attacks']
             },
+            'id' => 'ddeeff',
             'name' => 'ruby'
           }
         }
