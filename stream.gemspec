@@ -14,8 +14,18 @@ Gem::Specification.new do |gem|
   gem.files = Dir['lib/**/*']
   gem.license = 'BSD-3-Clause'
   gem.required_ruby_version = '>=2.5.0'
+  gem.metadata = {
+    'homepage_uri' => 'https://getstream.io/activity-feeds/',
+    'bug_tracker_uri' => 'https://github.com/GetStream/stream-ruby/issues',
+    'documentation_uri' => 'https://getstream.io/activity-feeds/docs/ruby/?language=ruby',
+    'changelog_uri' => 'https://github.com/GetStream/stream-ruby/blob/main/CHANGELOG.md',
+    'source_code_uri' => 'https://github.com/GetStream/stream-ruby'
+  }
+
   gem.add_dependency 'faraday'
+  gem.add_dependency 'faraday-net_http_persistent'
   gem.add_dependency 'jwt'
+  gem.add_dependency 'net-http-persistent'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'simplecov'
