@@ -1,3 +1,6 @@
+## 2022-01-26 - 4.5.0
+* Add connection pooling into http client
+
 ## 2021-10-18 - 4.4.0
 * Add first reaction support for feed read
 * Add user id support in own reactions for reaction filtering
