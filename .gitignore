@@ -9,5 +9,6 @@ Gemfile.lock
 .ruby-version
 .ruby-gemset
 .idea
+.vscode
 *.DS_Store
 .envrc
