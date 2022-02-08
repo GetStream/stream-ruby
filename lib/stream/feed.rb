@@ -158,6 +158,19 @@ module Stream
       @client.make_request(:delete, uri, auth_token, params)
     end
 
+    def follow_stats(followers_slugs = nil, following_slugs = nil)
+      uri = '/stats/follow'
+      params = {
+        followers: @id,
+        following: @id
+      }
+      params[:followers_slugs] = followers_slugs.join(',') if followers_slugs
+      params[:following_slugs] = following_slugs.join(',') if following_slugs
+      auth_token = create_jwt_token('*', 'read', '*')
+
+      @client.make_request(:get, uri, auth_token, params)
+    end
+
     private
 
     def create_jwt_token(resource, action, feed_id = nil, user_id = nil)

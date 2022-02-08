@@ -288,6 +288,16 @@ describe 'Integration tests' do
       expect(follower.get['results'][0]['id']).to eq response['id']
     end
 
+    example 'get followers statistics' do
+      f = @client.feed('flat', generate_uniq_feed_name)
+      f.follow('flat', generate_uniq_feed_name)
+      f.follow('flat', generate_uniq_feed_name)
+      f.follow('flat', generate_uniq_feed_name)
+      stats = f.follow_stats
+      expect(stats['results']['following']['count']).to eq 3
+      expect(stats['results']['followers']['count']).to eq 0
+    end
+
     example 'posting activity using to' do
       recipient = 'flat', 'toruby11'
       activity = {
