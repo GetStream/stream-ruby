@@ -1,8 +1,0 @@
-2.5.0
-
-* error message format may not be consistent with previous versions
-
-2.0.1 Changed signature to initialise Feeds and for follow / unfollow feeds.
-
-* Stream::Feed and Stream::Client#feed signatures changed; the feed_id argument (eg. 'user:1') is not split in the feed_slug and user_id arguments ('user', '1')
-* Stream::Feed#follow and Stream::Feed#unfollow signature changed (see line above)
