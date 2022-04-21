@@ -15,6 +15,7 @@ Gem::Specification.new do |gem|
   gem.license = 'BSD-3-Clause'
   gem.required_ruby_version = '>=2.5.0'
   gem.metadata = {
+    'rubygems_mfa_required' => 'false',
     'homepage_uri' => 'https://getstream.io/activity-feeds/',
     'bug_tracker_uri' => 'https://github.com/GetStream/stream-ruby/issues',
     'documentation_uri' => 'https://getstream.io/activity-feeds/docs/ruby/?language=ruby',
