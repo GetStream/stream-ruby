@@ -8,7 +8,7 @@ end
 
 describe 'Integration tests' do
   before(:all) do
-    @client = Stream::Client.new(ENV['STREAM_API_KEY'], ENV['STREAM_API_SECRET'], nil, location: ENV['STREAM_REGION'], default_timeout: 10)
+    @client = Stream::Client.new(ENV.fetch('STREAM_API_KEY'), ENV.fetch('STREAM_API_SECRET'), nil, location: ENV.fetch('STREAM_REGION', nil), default_timeout: 10)
     @feed42 = @client.feed('flat', generate_uniq_feed_name)
     @feed43 = @client.feed('flat', generate_uniq_feed_name)
 

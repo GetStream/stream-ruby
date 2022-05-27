@@ -38,7 +38,7 @@ module Stream
     #
     def initialize(api_key = '', api_secret = '', app_id = nil, opts = {})
       if api_key.nil? || api_key.empty?
-        env_url = ENV['STREAM_URL']
+        env_url = ENV.fetch('STREAM_URL', nil)
         if env_url =~ Stream::STREAM_URL_COM_RE
           re = Stream::STREAM_URL_COM_RE
         elsif env_url =~ Stream::STREAM_URL_IO_RE
@@ -46,7 +46,7 @@ module Stream
         end
         raise ArgumentError, 'empty api_key parameter and missing or invalid STREAM_URL env variable' unless re
 
-        matches = re.match(ENV['STREAM_URL'])
+        matches = re.match(ENV.fetch('STREAM_URL', nil))
         api_key = matches['key']
         api_secret = matches['secret']
         app_id = matches['app_id']

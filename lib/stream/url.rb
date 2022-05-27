@@ -12,8 +12,8 @@ module Stream
       location = make_location(options[:location])
       location ||= 'api'
       api_version = options[:api_version] || 'v1.0'
-      if ENV['STREAM_URL']
-        uri = URI.parse(ENV['STREAM_URL'])
+      if ENV.fetch('STREAM_URL', nil)
+        uri = URI.parse(ENV.fetch('STREAM_URL'))
         scheme = uri.scheme
         host = uri.host
         port = uri.port
@@ -22,7 +22,7 @@ module Stream
         host = options[:api_hostname]
         port = 443
       end
-      unless ENV['STREAM_URL'] =~ /localhost/
+      unless ENV.fetch('STREAM_URL', nil) =~ /localhost/
         host_parts = host.split('.')
         host = host_parts.slice(1..-1).join('.') if host_parts.length == 3
         host = "#{location}.#{host}" if location

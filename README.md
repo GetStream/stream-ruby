@@ -20,6 +20,8 @@
 
 ## 📝 About Stream
 
+> 💡 This is a library for the **Feeds** product. The Chat SDKs can be found [here](https://getstream.io/chat/docs/).
+
 You can sign up for a Stream account at our [Get Started](https://getstream.io/get_started/) page.
 
 You can use this library to access Feeds API endpoints server-side.
