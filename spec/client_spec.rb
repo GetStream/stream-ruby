@@ -3,7 +3,7 @@ require 'stream'
 
 describe Stream::Client do
   before do
-    @env_url = ENV['STREAM_URL']
+    @env_url = ENV.fetch('STREAM_URL', nil)
   end
 
   after do
