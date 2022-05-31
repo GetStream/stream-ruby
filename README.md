@@ -26,9 +26,9 @@ You can sign up for a Stream account at our [Get Started](https://getstream.io/g
 
 You can use this library to access Feeds API endpoints server-side.
 
-For the client-side integrations (web and mobile) have a look at the JavaScript, iOS and Android SDK libraries ([docs](https://getstream.io/activity-feeds/)).
+For the client-side integrations (web and mobile) have a look at the JavaScript, iOS and Android SDK libraries ([docs](https://getstream.io/activity-feeds/)). This API Client project requires Ruby 2.5.x at a minimum.
 
-> 💡 This API Client project requires Ruby 2.5.x at a minimum.
+> 💡 We have a Rails integration available [here](https://github.com/GetStream/stream-rails).
 
 ## ⚙️ Installation
 
