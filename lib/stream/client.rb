@@ -203,17 +203,12 @@ module Stream
   class RaiseHttpException < Faraday::Middleware
     def call(env)
       @app.call(env).on_complete do |response|
-        case response[:status].to_i
+        status_code = response[:status].to_i
+        case status_code
         when 200..203
           return response
-        when 401
-          raise StreamApiResponseException, error_message(response, 'Bad feed')
-        when 403
-          raise StreamApiResponseException, error_message(response, 'Bad auth/headers')
-        when 404
-          raise StreamApiResponseException, error_message(response, 'url not found')
-        when 204...600
-          raise StreamApiResponseException, error_message(response, _build_error_message(response.body))
+        else
+          parse_error(response, status_code: status_code)
         end
       end
     end
@@ -225,11 +220,48 @@ module Stream
 
     private
 
-    def _build_error_message(response)
-      response = JSON.parse(response)
-      msg = "#{response['exception']} details: #{response['detail']}"
-      if response.key?('exception_fields')
-        response['exception_fields'].map do |field, messages|
+    EXCEPTION_CLASS_MAPPING = {
+      2 => StreamApiResponseApiKeyException,
+      3 => StreamApiResponseSignatureException,
+      4 => StreamApiResponseInputException,
+      5 => StreamApiResponseCustomFieldException,
+      6 => StreamApiResponseFeedConfigException,
+      7 => StreamApiResponseSiteSuspendedException,
+      8 => StreamApiResponseInvalidPaginationException,
+      9 => StreamApiResponseRateLimitReached,
+      10 => StreamApiResponseMissingUserException,
+      11 => StreamApiResponseRankingException,
+      12 => StreamApiResponseMissingRankingException,
+      13 => StreamApiResponseOldStorageBackendException,
+      14 => StreamApiResponseJinjaRuntimeException,
+      15 => StreamApiResponseBestPracticeException,
+      16 => StreamApiResponseDoesNotExistException,
+      17 => StreamApiResponseNotAllowedException,
+      22 => StreamApiResponseConflictException
+    }.freeze
+    private_constant :EXCEPTION_CLASS_MAPPING
+
+    def parse_error(response, status_code:)
+      body = JSON.parse(response.body)
+      code = body['code']
+
+      exception_class = EXCEPTION_CLASS_MAPPING[code] || StreamApiResponseException
+      case status_code
+      when 401
+        raise exception_class, error_message(response, 'Bad feed')
+      when 403
+        raise exception_class, error_message(response, 'Bad auth/headers')
+      when 404
+        raise exception_class, error_message(response, 'url not found')
+      when 204...600
+        raise exception_class, error_message(response, _build_error_message(body))
+      end
+    end
+
+    def _build_error_message(body)
+      msg = "#{body['exception']} details: #{body['detail']}"
+      if body.key?('exception_fields')
+        body['exception_fields'].map do |field, messages|
           msg << "\n#{field}: #{messages}"
         end
       end
