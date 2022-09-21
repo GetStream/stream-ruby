@@ -1,3 +1,20 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [4.6.0](https://github.com/GetStream/stream-ruby/compare/v4.5.0...v4.6.0) (2022-09-21)
+
+
+### Features
+
+* add follow stats endpoint ([#138](https://github.com/GetStream/stream-ruby/issues/138)) ([921981f](https://github.com/GetStream/stream-ruby/commit/921981fcb9cb4866a572a0281190bcd77a928319))
+* specific exception classes for errors ([#142](https://github.com/GetStream/stream-ruby/issues/142)) ([ccf0b94](https://github.com/GetStream/stream-ruby/commit/ccf0b943eda21ad57c6d128402eba3aea4864731))
+
+
+### Bug Fixes
+
+* **rubocop:** ENV.fetch('xy') instead of ENV['xy'] per rubocop ([#140](https://github.com/GetStream/stream-ruby/issues/140)) ([6b25736](https://github.com/GetStream/stream-ruby/commit/6b25736b485daf63c9424abccfcfd20d7a993c50))
+
 ## 2022-01-26 - 4.5.0
 * Add connection pooling into http client
 
@@ -179,4 +196,3 @@
 
 ## 2014-09-08 - 1.0.0
 - Add support for mark read (notifications feeds)
-
