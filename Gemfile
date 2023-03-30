@@ -10,4 +10,7 @@ group :test do
   gem 'faraday'
   gem 'rack'
   gem 'yard'
+  gem 'rake'
+  gem 'rspec'
+  gem 'simplecov'
 end
