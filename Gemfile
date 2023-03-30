@@ -9,8 +9,8 @@ end
 group :test do
   gem 'faraday'
   gem 'rack'
-  gem 'yard'
   gem 'rake'
   gem 'rspec'
   gem 'simplecov'
+  gem 'yard'
 end
