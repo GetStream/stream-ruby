@@ -20,7 +20,7 @@ jobs:
             fetch-depth: 0 # gives the commit linter access to previous commits
 
       - name: Commit message linter
-        if: ${{ matrix.ruby == '2.5' }}
+        if: ${{ matrix.ruby == '3.0' }}
         uses: wagoid/commitlint-github-action@v4
 
       - uses: ruby/setup-ruby@v1
