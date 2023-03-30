@@ -6,8 +6,8 @@ require 'stream/signer'
 require 'stream/url'
 
 module Stream
-  STREAM_URL_COM_RE = %r{https://(?<key>\w+):(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>stream-io-api\.com)/[\w=-?%&]+app_id=(?<app_id>\d+)}i.freeze
-  STREAM_URL_IO_RE = %r{https://(?<key>\w+):(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>getstream\.io)/[\w=-?%&]+app_id=(?<app_id>\d+)}i.freeze
+  STREAM_URL_COM_RE = %r{https://(?<key>\w+):(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>stream-io-api\.com)/[\w=-?%&]+app_id=(?<app_id>\d+)}i
+  STREAM_URL_IO_RE = %r{https://(?<key>\w+):(?<secret>\w+)@((api\.)|((?<location>[-\w]+)\.))?(?<api_hostname>getstream\.io)/[\w=-?%&]+app_id=(?<app_id>\d+)}i
 
   class Client
     attr_reader :api_key
