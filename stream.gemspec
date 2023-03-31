@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.extra_rdoc_files = %w[README.md LICENSE]
   gem.files = Dir['lib/**/*']
   gem.license = 'BSD-3-Clause'
-  gem.required_ruby_version = '>=2.5.0'
+  gem.required_ruby_version = '>=3.0.0'
   gem.metadata = {
     'rubygems_mfa_required' => 'false',
     'homepage_uri' => 'https://getstream.io/activity-feeds/',
@@ -27,7 +27,4 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'faraday-net_http_persistent'
   gem.add_dependency 'jwt'
   gem.add_dependency 'net-http-persistent'
-  gem.add_development_dependency 'rake'
-  gem.add_development_dependency 'rspec'
-  gem.add_development_dependency 'simplecov'
 end
