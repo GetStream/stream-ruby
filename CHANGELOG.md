@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/GetStream/stream-ruby/compare/v4.6.0...v5.0.0) (2023-03-31)
+
+
+### Bug Fixes
+
+* order of dependencies ([5d2b86b](https://github.com/GetStream/stream-ruby/commit/5d2b86bc6db2a5d6ff98858c628224bab17adb4f))
+* remove redundant 'freeze' calls from regular expressions ([7b1c08a](https://github.com/GetStream/stream-ruby/commit/7b1c08a547d58d4927476507543f725e1497caa1))
+* remove redundant development dependency declarations ([7f6239e](https://github.com/GetStream/stream-ruby/commit/7f6239e9ab76d9e8292ff3489d0e445c5a1bccf5))
+
 ## [4.6.0](https://github.com/GetStream/stream-ruby/compare/v4.5.0...v4.6.0) (2022-09-21)
 
 
