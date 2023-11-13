@@ -951,6 +951,18 @@ describe 'Integration tests' do
         @client.reactions.delete(reaction['id'])
         expect { @client.reactions.get(reaction['id']) }.to raise_error Stream::StreamApiResponseDoesNotExistException
       end
+      example 'soft delete and restore reaction' do
+        reaction = @client.reactions.add('like', @activity['id'], 'vlad')
+        @client.reactions.delete(reaction['id'], soft: true)
+        activity_reactions = @client.reactions.filter({ activity_id: @activity['id'] })
+        expect(activity_reactions.select { |react| react['id'] =~ reaction['id'] }.length).to eq 0
+        @client.reactions.restore(reaction['id'])
+        response = @client.reactions.get(reaction['id'])
+        expect(response['activity_id']).to eq @activity['id']
+        expect(response['user_id']).to eq 'vlad'
+        expect(response['kind']).to eq 'like'
+        expect(response['deleted_at']).to eq nil
+      end
       example 'filter reactions' do
         parent = @client.reactions.add('like', @activity['id'], 'jim')
         child = @client.reactions.add_child('like', parent['id'], 'juan')
