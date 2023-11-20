@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.1.0](https://github.com/GetStream/stream-ruby/compare/v5.0.0...v5.1.0) (2023-11-20)
+
+
+### Features
+
+* soft delete and restore ([4c974be](https://github.com/GetStream/stream-ruby/commit/4c974be02f3b6897515c2d79d1843e03ddebd00c))
+
 ## [5.0.0](https://github.com/GetStream/stream-ruby/compare/v4.6.0...v5.0.0) (2023-03-31)
 
 
