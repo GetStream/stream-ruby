@@ -675,6 +675,56 @@ describe 'Integration tests' do
         response = @client.get_activities(ids: [activity['id']], reactions: { own: true })
         expect(response['results'][0]['own_reactions']['like'][0]).to eq reaction
       end
+      example 'get multiple activities by IDs' do
+        # Create two different activities
+        activity1 = @feed42.add_activity({
+          actor: 'alice',
+          verb: 'tweet',
+          object: 'message1',
+          foreign_id: "tweet-#{Time.now.to_i}-1"
+        })
+        
+        activity2 = @feed42.add_activity({
+          actor: 'bob',
+          verb: 'like',
+          object: 'post1',
+          foreign_id: "like-#{Time.now.to_i}-2"
+        })
+
+        # Remove duration from comparison since it varies
+        activity1.delete('duration')
+        activity2.delete('duration')
+
+        # Wait a moment for activities to be indexed
+        sleep(2)
+
+        # Test: Get both activities by their IDs in a single call
+        response = @client.get_activities(
+          ids: [activity1['id'], activity2['id']]
+        )
+
+        expect(response).to include('duration', 'results')
+        expect(response['results'].count).to be 2
+
+        # Verify both activities are returned
+        returned_ids = response['results'].map { |a| a['id'] }
+        expect(returned_ids).to include(activity1['id'])
+        expect(returned_ids).to include(activity2['id'])
+
+        # Verify the returned activities match the original activities
+        response['results'].each do |returned_activity|
+          returned_activity.delete('duration')
+          
+          if returned_activity['id'] == activity1['id']
+            expect(returned_activity).to eq(activity1)
+          elsif returned_activity['id'] == activity2['id']
+            expect(returned_activity).to eq(activity2)
+          else
+            fail "Unexpected activity ID: #{returned_activity['id']}"
+          end
+        end
+      end
+
       example 'activity recent reaction enrichment' do
         activity = @feed42.add_activity({ actor: 'jim', verb: 'buy', object: 'wallet' })
         reaction = @client.reactions.add('dislike', activity['id'], 'jim')

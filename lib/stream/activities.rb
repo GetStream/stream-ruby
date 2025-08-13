@@ -52,6 +52,9 @@ module Stream
         end
       end
       %i[enrich reactions].each { |k| params.delete(k) }
+      
+      # Handle multiple IDs by joining with commas
+      params[:ids] = params[:ids].join(',') if params[:ids]&.is_a?(Array)
 
       signature = Stream::Signer.create_jwt_token('activities', '*', @api_secret, '*')
       make_request(:get, uri, signature, params)
