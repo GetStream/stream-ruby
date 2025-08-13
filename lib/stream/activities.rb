@@ -52,7 +52,7 @@ module Stream
         end
       end
       %i[enrich reactions].each { |k| params.delete(k) }
-      
+
       # Handle multiple IDs by joining with commas
       params[:ids] = params[:ids].join(',') if params[:ids]&.is_a?(Array)
 

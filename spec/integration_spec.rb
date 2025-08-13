@@ -179,7 +179,7 @@ describe 'Integration tests' do
       expect(results[0]['id']).to eq response['id']
       feed.remove_activity(response['id'])
       results = feed.get(limit: 1)['results']
-      expect(results[0]['id']).not_to eq response['id'] if results.count > 0
+      expect(results[0]['id']).not_to eq response['id'] if results.any?
     end
 
     example 'removing an activity by foreign_id' do
@@ -677,19 +677,19 @@ describe 'Integration tests' do
       end
       example 'get multiple activities by IDs' do
         # Create two different activities
-        activity1 = @feed42.add_activity({
+        activity1 = @feed42.add_activity(
           actor: 'alice',
           verb: 'tweet',
           object: 'message1',
           foreign_id: "tweet-#{Time.now.to_i}-1"
-        })
-        
-        activity2 = @feed42.add_activity({
+        )
+
+        activity2 = @feed42.add_activity(
           actor: 'bob',
           verb: 'like',
           object: 'post1',
           foreign_id: "like-#{Time.now.to_i}-2"
-        })
+        )
 
         # Remove duration from comparison since it varies
         activity1.delete('duration')
@@ -714,13 +714,13 @@ describe 'Integration tests' do
         # Verify the returned activities match the original activities
         response['results'].each do |returned_activity|
           returned_activity.delete('duration')
-          
+
           if returned_activity['id'] == activity1['id']
             expect(returned_activity).to eq(activity1)
           elsif returned_activity['id'] == activity2['id']
             expect(returned_activity).to eq(activity2)
           else
-            fail "Unexpected activity ID: #{returned_activity['id']}"
+            raise "Unexpected activity ID: #{returned_activity['id']}"
           end
         end
       end

@@ -144,9 +144,9 @@ describe Stream::Client do
     before do
       @client = Stream::Client.new('key', 'secret', 'app_id')
       @captured_requests = []
-      
+
       # Mock the HTTP client to capture requests
-      allow_any_instance_of(Stream::StreamHTTPClient).to receive(:make_http_request) do |instance, method, relative_url, params, data, headers|
+      allow_any_instance_of(Stream::StreamHTTPClient).to receive(:make_http_request) do |_instance, method, relative_url, params, data, headers|
         @captured_requests << {
           method: method,
           url: relative_url,
@@ -154,7 +154,7 @@ describe Stream::Client do
           data: data,
           headers: headers
         }
-        
+
         # Return mock response
         {
           'results' => [],
@@ -164,13 +164,13 @@ describe Stream::Client do
     end
 
     it 'should encode multiple activity IDs as comma-separated values' do
-      ids = ['id1', 'id2', 'id3']
-      
+      ids = %w[id1 id2 id3]
+
       @client.get_activities(ids: ids)
-      
+
       expect(@captured_requests.length).to eq(1)
       request = @captured_requests.first
-      
+
       # Verify the IDs are joined with commas, not passed as an array
       expect(request[:params][:ids]).to eq('id1,id2,id3')
       expect(request[:params][:ids]).not_to be_a(Array)
@@ -179,21 +179,21 @@ describe Stream::Client do
 
     it 'should handle single ID without comma separation' do
       @client.get_activities(ids: ['single-id'])
-      
+
       expect(@captured_requests.length).to eq(1)
       request = @captured_requests.first
-      
+
       # Single ID should still be encoded correctly
       expect(request[:params][:ids]).to eq('single-id')
       expect(request[:params][:ids]).not_to be_a(Array)
     end
 
     it 'should preserve other parameters when encoding IDs' do
-      @client.get_activities(ids: ['id1', 'id2'], limit: 10, offset: 20)
-      
+      @client.get_activities(ids: %w[id1 id2], limit: 10, offset: 20)
+
       expect(@captured_requests.length).to eq(1)
       request = @captured_requests.first
-      
+
       expect(request[:params][:ids]).to eq('id1,id2')
       expect(request[:params][:limit]).to eq(10)
       expect(request[:params][:offset]).to eq(20)
