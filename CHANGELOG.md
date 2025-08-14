@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/GetStream/stream-ruby/compare/v5.1.0...v6.0.0) (2025-08-14)
+
+
+### Bug Fixes
+
+* multiple ID encoding for get_activities ([bbf666b](https://github.com/GetStream/stream-ruby/commit/bbf666b26acdcc4af618e77a59fa703b8910bd9a))
+
 ## [5.1.0](https://github.com/GetStream/stream-ruby/compare/v5.0.0...v5.1.0) (2023-11-20)
 
 
