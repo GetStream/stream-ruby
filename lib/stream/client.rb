@@ -214,7 +214,7 @@ module Stream
     end
 
     def initialize(app)
-      super app
+      super
       @parser = nil
     end
 
