@@ -42,6 +42,8 @@ Style/DoubleCopDisableDirective:
   Enabled: false
 Style/FrozenStringLiteralComment:
   Enabled: false
+Style/OptionalArguments:
+  Enabled: false
 
 Gemspec/RequireMFA:
   Enabled: false
