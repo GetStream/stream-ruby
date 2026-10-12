@@ -1,3 +1,8 @@
+> **`stream-ruby` is a Feeds v2 client and is now in maintenance mode.** It will continue to
+> receive critical fixes, so it is safe to keep using with a v2 app. New projects should start
+> with Feeds v3 and [`getstream-ruby`](https://github.com/GetStream/getstream-ruby) (gem `getstream-ruby`).
+> Migration guide: https://getstream.io/activity-feeds/docs/ruby/v2-to-v3-migration/
+
 # Official Ruby SDK for [Stream Feeds](https://getstream.io/activity-feeds/)
 
 [![build](https://github.com/GetStream/stream-ruby/workflows/build/badge.svg)](https://github.com/GetStream/stream-ruby/actions) [![Gem Version](https://badge.fury.io/rb/stream-ruby.svg)](http://badge.fury.io/rb/stream-ruby)
